@@ -1,0 +1,223 @@
+{
+  "http://localhost:2375/networks/create": {
+    "post": {
+      "summary": "Create a network",
+      "operationId": "NetworkCreate",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "201": {
+          "description": "No error",
+          "schema": {
+            "type": "object",
+            "title": "NetworkCreateResponse",
+            "properties": {
+              "Id": {
+                "description": "The ID of the created network.",
+                "type": "string"
+              },
+              "Warning": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad parameter",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "operation not supported for pre-defined networks",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "plugin not found",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "networkConfig",
+          "in": "body",
+          "description": "Network configuration",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "title": "NetworkCreateRequest",
+            "required": [
+              "Name"
+            ],
+            "properties": {
+              "Name": {
+                "description": "The network's name.",
+                "type": "string"
+              },
+              "CheckDuplicate": {
+                "description": "Check for networks with duplicate names. Since Network is\nprimarily keyed based on a random ID and not on the name, and\nnetwork name is strictly a user-friendly alias to the network\nwhich is uniquely identified using ID, there is no guaranteed\nway to check for duplicates. CheckDuplicate is there to provide\na best effort checking of any networks which has the same name\nbut it is not guaranteed to catch all name collisions.\n",
+                "type": "boolean"
+              },
+              "Driver": {
+                "description": "Name of the network driver plugin to use.",
+                "type": "string",
+                "default": "bridge"
+              },
+              "Scope": {
+                "description": "The level at which the network exists (e.g. `swarm` for cluster-wide\nor `local` for machine level).\n",
+                "type": "string"
+              },
+              "Internal": {
+                "description": "Restrict external access to the network.",
+                "type": "boolean"
+              },
+              "Attachable": {
+                "description": "Globally scoped network is manually attachable by regular\ncontainers from workers in swarm mode.\n",
+                "type": "boolean"
+              },
+              "Ingress": {
+                "description": "Ingress network is the network which provides the routing-mesh\nin swarm mode.\n",
+                "type": "boolean"
+              },
+              "ConfigOnly": {
+                "description": "Creates a config-only network. Config-only networks are placeholder\nnetworks for network configurations to be used by other networks.\nConfig-only networks cannot be used directly to run containers\nor services.\n",
+                "type": "boolean",
+                "default": false
+              },
+              "ConfigFrom": {
+                "description": "The config-only network source to provide the configuration for\nthis network.\n",
+                "type": "object",
+                "properties": {
+                  "Network": {
+                    "description": "The name of the config-only network that provides the network's\nconfiguration. The specified network must be an existing config-only\nnetwork. Only network names are allowed, not network IDs.\n",
+                    "type": "string"
+                  }
+                }
+              },
+              "IPAM": {
+                "type": "object",
+                "properties": {
+                  "Driver": {
+                    "description": "Name of the IPAM driver to use.",
+                    "type": "string",
+                    "default": "default"
+                  },
+                  "Config": {
+                    "description": "List of IPAM configuration options, specified as a map:\n\n```\n{\"Subnet\": <CIDR>, \"IPRange\": <CIDR>, \"Gateway\": <IP address>, \"AuxAddress\": <device_name:IP address>}\n```\n",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "Subnet": {
+                          "type": "string"
+                        },
+                        "IPRange": {
+                          "type": "string"
+                        },
+                        "Gateway": {
+                          "type": "string"
+                        },
+                        "AuxiliaryAddresses": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "Options": {
+                    "description": "Driver-specific options, specified as a map.",
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "EnableIPv6": {
+                "description": "Enable IPv6 on the network.",
+                "type": "boolean"
+              },
+              "Options": {
+                "description": "Network specific options to be used by the drivers.",
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "Labels": {
+                "description": "User-defined key/value metadata.",
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "tags": [
+        "Network"
+      ]
+    }
+  }
+}

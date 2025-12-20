@@ -53,7 +53,7 @@ class MyRotatingFileHandler(BaseRotatingHandler):
 
 
 def get_matched_endpoint(api_spec: ReducedOpenAPISpec, plan: str):
-    pattern = r"\b(GET|POST|PATCH|DELETE|PUT)\s+(/\S+)*"
+    pattern = r"\b(GET|POST|PATCH|DELETE|PUT)\s+(\S+)"
     matches = re.findall(pattern, plan)
     plan_endpoints = [
         "{method} {route}".format(method=method, route=route.split("?")[0])

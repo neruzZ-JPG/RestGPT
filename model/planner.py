@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional, Tuple
 import re
-
+import logging
+logger = logging.getLogger(__name__)
 from langchain.chains.base import Chain
 from langchain.chains.llm import LLMChain
 from langchain.prompts.prompt import PromptTemplate
@@ -50,7 +51,17 @@ Plan step 5: Add the most popular songs by Coldplay, Yellow (3AJwUDP919kvQ9QcozQ
 API response: Successfully called POST /playlists/7LjHVU3t3fcxj5aiPFEW4T/tracks to add Yellow (3AJwUDP919kvQ9QcozQPxg), Viva La Vida (1mea3bSkSGXuIRvnydlB5b) in playlist "Love Coldplay" (7LjHVU3t3fcxj5aiPFEW4T). The playlist id is 7LjHVU3t3fcxj5aiPFEW4T.
 Thought: I am finished executing a plan and have the data the used asked to create
 Final Answer: I have made a new playlist called "Love Coldplay" containing Yellow and Viva La Vida by Coldplay.
-"""
+""",
+"chatops" : '''
+Example1:
+user query: compare github user harry and shirley's sign-up date.
+Plan step 1: query github for user harry.
+API response: harry signed up in 2011.
+Plan step 2: query github for user shirley.
+API response: shirley signed up in 2013.
+Thought: I've got all needed information
+Final Answer: harry signed up earlier than shirley by 2 years
+'''
 }
 
 
@@ -146,8 +157,9 @@ class Planner(Chain):
             input_variables=["input"]
         )
         planner_chain = LLMChain(llm=self.llm, prompt=planner_prompt)
-        planner_chain_output = planner_chain.run(input=inputs['input'], stop=self._stop)
-
-        planner_chain_output = re.sub(r"Plan step \d+: ", "", planner_chain_output).strip()
+        logger.info(f"planner received input: {inputs["input"]}")
+        planner_chain_output = planner_chain.run(input=inputs['input'])
+        logger.info(planner_chain_output)
+        # planner_chain_output = re.sub(r"Plan step \d+: ", "", planner_chain_output).strip()
 
         return {"result": planner_chain_output}

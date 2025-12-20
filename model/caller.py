@@ -22,8 +22,6 @@ from .parser import ResponseParser, SimpleResponseParser
 logger = logging.getLogger(__name__)
 
 
-
-
 CALLER_PROMPT = """You are an agent that gets a sequence of API calls and given their documentation, should execute them and return the final response.
 If you cannot complete them and run into issues, you should explain the issue. If you're able to resolve an API call, you can retry the API call. When interacting with API objects, you should extract ids for inputs to other API calls but ids and names for outputs returned to the User.
 Your task is to complete the corresponding api calls according to the plan.
@@ -99,14 +97,15 @@ The execution result should satisfy the following conditions:
 2. You should reorganize the response into natural language based on the plan. For example, if the plan is "GET /search/person to search for the director "Lee Chang dong"", the execution result should be "Successfully call GET /search/person to search for the director "Lee Chang dong". The id of Lee Chang dong is xxxx". Do not use pronouns if possible. For example, do not use "The id of this person is xxxx".
 3. If the plan includes expressions such as "most", you should choose the first item from the response. For example, if the plan is "GET /trending/tv/day to get the most trending TV show today", you should choose the first item from the response.
 4. The execution result should be natural language and as verbose as possible. It must contain the information needed in the plan.
-
+4. if calling a jenkins url, please  include username and token in the request url:
+   `username`: `123`
+   `token`: `113e5051d99d2857e9ce99981531101ada`
 Begin!
 
 Background: {background}
 Plan: {api_plan}
 Thought: {agent_scratchpad}
 """
-
 
 
 class Caller(Chain):
@@ -178,14 +177,24 @@ class Caller(Chain):
     def _get_action_and_input(self, llm_output: str) -> Tuple[str, str]:
         if "Execution Result:" in llm_output:
             return "Execution Result", llm_output.split("Execution Result:")[-1].strip()
+        
         # \s matches against tab/newline/whitespace
         regex = r"Operation:[\s]*(.*?)[\n]*Input:[\s]*(.*)"
         match = re.search(regex, llm_output, re.DOTALL)
         if not match:
             # TODO: not match, just return
             raise ValueError(f"Could not parse LLM output: `{llm_output}`")
+        
         action = match.group(1).strip()
         action_input = match.group(2)
+
+        # === FIX 1: 截断 LLM 产生的幻觉 Response ===
+        if "Response:" in action_input:
+            action_input = action_input.split("Response:")[0]
+        
+        action_input = action_input.strip().strip('`')
+        # ==========================================
+
         if action not in ["GET", "POST", "DELETE", "PUT"]:
             raise NotImplementedError
         
@@ -254,11 +263,22 @@ class Caller(Chain):
         assert len(matched_endpoints) == 1, f"Found {len(matched_endpoints)} matched endpoints, but expected 1."
         endpoint_name = matched_endpoints[0]
         tmp_docs = deepcopy(endpoint_docs_by_name.get(endpoint_name))
+        
+        # === FIX 2: 安全地提取 Response Schema (修复 KeyError) ===
         if 'responses' in tmp_docs and 'content' in tmp_docs['responses']:
+            target_content = None
             if 'application/json' in tmp_docs['responses']['content']:
-                tmp_docs['responses'] = tmp_docs['responses']['content']['application/json']['schema']['properties']
+                target_content = tmp_docs['responses']['content']['application/json']
             elif 'application/json; charset=utf-8' in tmp_docs['responses']['content']:
-                tmp_docs['responses'] = tmp_docs['responses']['content']['application/json; charset=utf-8']['schema']['properties']
+                target_content = tmp_docs['responses']['content']['application/json; charset=utf-8']
+            
+            if target_content and 'schema' in target_content:
+                schema = target_content['schema']
+                # 尝试获取 properties，如果不是对象类型（如 Array 或 ref），则直接使用整个 schema
+                # 这样可以保证代码不崩，LLM 也能看到 schema 结构
+                tmp_docs['responses'] = schema.get('properties', schema)
+        # ========================================================
+
         if not self.with_response and 'responses' in tmp_docs:
             tmp_docs.pop("responses")
         tmp_docs = yaml.dump(tmp_docs)
@@ -281,7 +301,7 @@ class Caller(Chain):
 
         while self._should_continue(iterations, time_elapsed):
             scratchpad = self._construct_scratchpad(intermediate_steps)
-            caller_chain_output = caller_chain.run(api_plan=api_plan, background=inputs['background'], agent_scratchpad=scratchpad, stop=self._stop)
+            caller_chain_output = caller_chain.run(api_plan=api_plan, background=inputs['background'], agent_scratchpad=scratchpad)
             logger.info(f"Caller: {caller_chain_output}")
 
             action, action_input = self._get_action_and_input(caller_chain_output)

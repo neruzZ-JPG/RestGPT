@@ -1,0 +1,52 @@
+{
+  "name": "exec_in_pod",
+  "description": "Execute a command in a Kubernetes pod or container and return the output",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Name of the pod to execute the command in"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Kubernetes namespace where the pod is located",
+        "default": "default"
+      },
+      "command": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Command to execute in the pod (string or array of args)"
+      },
+      "container": {
+        "type": "string",
+        "description": "Container name (required when pod has multiple containers)",
+        "optional": true
+      },
+      "shell": {
+        "type": "string",
+        "description": "Shell to use for command execution (e.g. '/bin/sh', '/bin/bash'). If not provided, will use command as-is.",
+        "optional": true
+      },
+      "timeout": {
+        "type": "number",
+        "description": "Timeout for command - 60000 milliseconds if not specified",
+        "optional": true
+      }
+    },
+    "required": [
+      "name",
+      "command"
+    ]
+  },
+  "annotations": null
+}

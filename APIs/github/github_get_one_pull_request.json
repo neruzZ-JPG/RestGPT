@@ -1,0 +1,2958 @@
+{
+    "https://api.github.com/repos/{owner}/{repo}/pulls/{pull_number}": {
+        "get": {
+            "summary": "Get a pull request",
+            "description": "Draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation.\n\nLists details of a pull request by providing its number.\n\nWhen you get, [create](https://docs.github.com/rest/pulls/pulls/#create-a-pull-request), or [edit](https://docs.github.com/rest/pulls/pulls#update-a-pull-request) a pull request, GitHub creates a merge commit to test whether the pull request can be automatically merged into the base branch. This test commit is not added to the base branch or the head branch. You can review the status of the test commit using the `mergeable` key. For more information, see \"[Checking mergeability of pull requests](https://docs.github.com/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests)\".\n\nThe value of the `mergeable` attribute can be `true`, `false`, or `null`. If the value is `null`, then GitHub has started a background job to compute the mergeability. After giving the job time to complete, resubmit the request. When the job finishes, you will see a non-`null` value for the `mergeable` attribute in the response. If `mergeable` is `true`, then `merge_commit_sha` will be the SHA of the _test_ merge commit.\n\nThe value of the `merge_commit_sha` attribute changes depending on the state of the pull request. Before merging a pull request, the `merge_commit_sha` attribute holds the SHA of the _test_ merge commit. After merging a pull request, the `merge_commit_sha` attribute changes depending on how you merged the pull request:\n\n*   If merged as a [merge commit](https://docs.github.com/articles/about-merge-methods-on-github/), `merge_commit_sha` represents the SHA of the merge commit.\n*   If merged via a [squash](https://docs.github.com/articles/about-merge-methods-on-github/#squashing-your-merge-commits), `merge_commit_sha` represents the SHA of the squashed commit on the base branch.\n*   If [rebased](https://docs.github.com/articles/about-merge-methods-on-github/#rebasing-and-merging-your-commits), `merge_commit_sha` represents the commit that the base branch was updated to.\n\nPass the appropriate [media type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types) to fetch diff and patch formats.\n\nThis endpoint supports the following custom media types. For more information, see \"[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types).\"\n\n- **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type.\n- **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`.\n- **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`.\n- **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.\n- **`application/vnd.github.diff`**: For more information, see \"[git-diff](https://git-scm.com/docs/git-diff)\" in the Git documentation. If a diff is corrupt, contact us through the [GitHub Support portal](https://support.github.com/). Include the repository name and pull request ID in your message.",
+            "tags": [
+                "pulls"
+            ],
+            "operationId": "pulls/get",
+            "externalDocs": {
+                "description": "API method documentation",
+                "url": "https://docs.github.com/rest/pulls/pulls#get-a-pull-request"
+            },
+            "parameters": [
+                {
+                    "name": "owner",
+                    "description": "The account owner of the repository. The name is not case sensitive.",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "repo",
+                    "description": "The name of the repository without the `.git` extension. The name is not case sensitive.",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "pull_number",
+                    "description": "The number that identifies the pull request.",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Pass the appropriate [media type](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types) to fetch diff and patch formats.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "title": "Pull Request",
+                                "description": "Pull requests let you tell others about changes you've pushed to a repository on GitHub. Once a pull request is sent, interested parties can review the set of changes, discuss potential modifications, and even push follow-up commits if necessary.",
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "node_id": {
+                                        "type": "string"
+                                    },
+                                    "html_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "diff_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "patch_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "issue_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "commits_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "review_comments_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "review_comment_url": {
+                                        "type": "string"
+                                    },
+                                    "comments_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "statuses_url": {
+                                        "type": "string",
+                                        "format": "uri"
+                                    },
+                                    "number": {
+                                        "description": "Number uniquely identifying the pull request within its repository.",
+                                        "type": "integer"
+                                    },
+                                    "state": {
+                                        "description": "State of this Pull Request. Either `open` or `closed`.",
+                                        "enum": [
+                                            "open",
+                                            "closed"
+                                        ],
+                                        "type": "string"
+                                    },
+                                    "locked": {
+                                        "type": "boolean"
+                                    },
+                                    "title": {
+                                        "description": "The title of the pull request.",
+                                        "type": "string"
+                                    },
+                                    "user": {
+                                        "title": "Simple User",
+                                        "description": "A GitHub user.",
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "nullable": true,
+                                                "type": "string"
+                                            },
+                                            "email": {
+                                                "nullable": true,
+                                                "type": "string"
+                                            },
+                                            "login": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "integer",
+                                                "format": "int64"
+                                            },
+                                            "node_id": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "gravatar_id": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "html_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "followers_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "following_url": {
+                                                "type": "string"
+                                            },
+                                            "gists_url": {
+                                                "type": "string"
+                                            },
+                                            "starred_url": {
+                                                "type": "string"
+                                            },
+                                            "subscriptions_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "organizations_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "repos_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "events_url": {
+                                                "type": "string"
+                                            },
+                                            "received_events_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "site_admin": {
+                                                "type": "boolean"
+                                            },
+                                            "starred_at": {
+                                                "type": "string"
+                                            },
+                                            "user_view_type": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "avatar_url",
+                                            "events_url",
+                                            "followers_url",
+                                            "following_url",
+                                            "gists_url",
+                                            "gravatar_id",
+                                            "html_url",
+                                            "id",
+                                            "node_id",
+                                            "login",
+                                            "organizations_url",
+                                            "received_events_url",
+                                            "repos_url",
+                                            "site_admin",
+                                            "starred_url",
+                                            "subscriptions_url",
+                                            "type",
+                                            "url"
+                                        ]
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "labels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "node_id": {
+                                                    "type": "string"
+                                                },
+                                                "url": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "color": {
+                                                    "type": "string"
+                                                },
+                                                "default": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "node_id",
+                                                "url",
+                                                "name",
+                                                "description",
+                                                "color",
+                                                "default"
+                                            ]
+                                        }
+                                    },
+                                    "milestone": {
+                                        "title": "Milestone",
+                                        "description": "A collection of related issues and pull requests.",
+                                        "type": "object",
+                                        "properties": {
+                                            "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "html_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "labels_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "node_id": {
+                                                "type": "string"
+                                            },
+                                            "number": {
+                                                "description": "The number of the milestone.",
+                                                "type": "integer"
+                                            },
+                                            "state": {
+                                                "description": "The state of the milestone.",
+                                                "type": "string",
+                                                "enum": [
+                                                    "open",
+                                                    "closed"
+                                                ],
+                                                "default": "open"
+                                            },
+                                            "title": {
+                                                "description": "The title of the milestone.",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "creator": {
+                                                "title": "Simple User",
+                                                "description": "A GitHub user.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "login": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "node_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "gravatar_id": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "html_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "followers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "following_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "gists_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "starred_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "subscriptions_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "organizations_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "repos_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "events_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "received_events_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "site_admin": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "starred_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_view_type": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "avatar_url",
+                                                    "events_url",
+                                                    "followers_url",
+                                                    "following_url",
+                                                    "gists_url",
+                                                    "gravatar_id",
+                                                    "html_url",
+                                                    "id",
+                                                    "node_id",
+                                                    "login",
+                                                    "organizations_url",
+                                                    "received_events_url",
+                                                    "repos_url",
+                                                    "site_admin",
+                                                    "starred_url",
+                                                    "subscriptions_url",
+                                                    "type",
+                                                    "url"
+                                                ],
+                                                "nullable": true
+                                            },
+                                            "open_issues": {
+                                                "type": "integer"
+                                            },
+                                            "closed_issues": {
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "closed_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "nullable": true
+                                            },
+                                            "due_on": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "nullable": true
+                                            }
+                                        },
+                                        "required": [
+                                            "closed_issues",
+                                            "creator",
+                                            "description",
+                                            "due_on",
+                                            "closed_at",
+                                            "id",
+                                            "node_id",
+                                            "labels_url",
+                                            "html_url",
+                                            "number",
+                                            "open_issues",
+                                            "state",
+                                            "title",
+                                            "url",
+                                            "created_at",
+                                            "updated_at"
+                                        ],
+                                        "nullable": true
+                                    },
+                                    "active_lock_reason": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "updated_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "closed_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "nullable": true
+                                    },
+                                    "merged_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "nullable": true
+                                    },
+                                    "merge_commit_sha": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "assignee": {
+                                        "title": "Simple User",
+                                        "description": "A GitHub user.",
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "nullable": true,
+                                                "type": "string"
+                                            },
+                                            "email": {
+                                                "nullable": true,
+                                                "type": "string"
+                                            },
+                                            "login": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "integer",
+                                                "format": "int64"
+                                            },
+                                            "node_id": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "gravatar_id": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "html_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "followers_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "following_url": {
+                                                "type": "string"
+                                            },
+                                            "gists_url": {
+                                                "type": "string"
+                                            },
+                                            "starred_url": {
+                                                "type": "string"
+                                            },
+                                            "subscriptions_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "organizations_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "repos_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "events_url": {
+                                                "type": "string"
+                                            },
+                                            "received_events_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "site_admin": {
+                                                "type": "boolean"
+                                            },
+                                            "starred_at": {
+                                                "type": "string"
+                                            },
+                                            "user_view_type": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "avatar_url",
+                                            "events_url",
+                                            "followers_url",
+                                            "following_url",
+                                            "gists_url",
+                                            "gravatar_id",
+                                            "html_url",
+                                            "id",
+                                            "node_id",
+                                            "login",
+                                            "organizations_url",
+                                            "received_events_url",
+                                            "repos_url",
+                                            "site_admin",
+                                            "starred_url",
+                                            "subscriptions_url",
+                                            "type",
+                                            "url"
+                                        ],
+                                        "nullable": true
+                                    },
+                                    "assignees": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "Simple User",
+                                            "description": "A GitHub user.",
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "nullable": true,
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "nullable": true,
+                                                    "type": "string"
+                                                },
+                                                "login": {
+                                                    "type": "string"
+                                                },
+                                                "id": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "node_id": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "gravatar_id": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "html_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "followers_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "following_url": {
+                                                    "type": "string"
+                                                },
+                                                "gists_url": {
+                                                    "type": "string"
+                                                },
+                                                "starred_url": {
+                                                    "type": "string"
+                                                },
+                                                "subscriptions_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "organizations_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "repos_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "events_url": {
+                                                    "type": "string"
+                                                },
+                                                "received_events_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "site_admin": {
+                                                    "type": "boolean"
+                                                },
+                                                "starred_at": {
+                                                    "type": "string"
+                                                },
+                                                "user_view_type": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "avatar_url",
+                                                "events_url",
+                                                "followers_url",
+                                                "following_url",
+                                                "gists_url",
+                                                "gravatar_id",
+                                                "html_url",
+                                                "id",
+                                                "node_id",
+                                                "login",
+                                                "organizations_url",
+                                                "received_events_url",
+                                                "repos_url",
+                                                "site_admin",
+                                                "starred_url",
+                                                "subscriptions_url",
+                                                "type",
+                                                "url"
+                                            ]
+                                        },
+                                        "nullable": true
+                                    },
+                                    "requested_reviewers": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "Simple User",
+                                            "description": "A GitHub user.",
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "nullable": true,
+                                                    "type": "string"
+                                                },
+                                                "email": {
+                                                    "nullable": true,
+                                                    "type": "string"
+                                                },
+                                                "login": {
+                                                    "type": "string"
+                                                },
+                                                "id": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "node_id": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "gravatar_id": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "html_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "followers_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "following_url": {
+                                                    "type": "string"
+                                                },
+                                                "gists_url": {
+                                                    "type": "string"
+                                                },
+                                                "starred_url": {
+                                                    "type": "string"
+                                                },
+                                                "subscriptions_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "organizations_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "repos_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "events_url": {
+                                                    "type": "string"
+                                                },
+                                                "received_events_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "site_admin": {
+                                                    "type": "boolean"
+                                                },
+                                                "starred_at": {
+                                                    "type": "string"
+                                                },
+                                                "user_view_type": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "avatar_url",
+                                                "events_url",
+                                                "followers_url",
+                                                "following_url",
+                                                "gists_url",
+                                                "gravatar_id",
+                                                "html_url",
+                                                "id",
+                                                "node_id",
+                                                "login",
+                                                "organizations_url",
+                                                "received_events_url",
+                                                "repos_url",
+                                                "site_admin",
+                                                "starred_url",
+                                                "subscriptions_url",
+                                                "type",
+                                                "url"
+                                            ]
+                                        },
+                                        "nullable": true
+                                    },
+                                    "requested_teams": {
+                                        "type": "array",
+                                        "items": {
+                                            "title": "Team Simple",
+                                            "description": "Groups of organization members that gives permissions on specified repositories.",
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Unique identifier of the team",
+                                                    "type": "integer"
+                                                },
+                                                "node_id": {
+                                                    "type": "string"
+                                                },
+                                                "url": {
+                                                    "description": "URL for the team",
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "members_url": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "description": "Name of the team",
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "description": "Description of the team",
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "permission": {
+                                                    "description": "Permission that the team will have for its repositories",
+                                                    "type": "string"
+                                                },
+                                                "privacy": {
+                                                    "description": "The level of privacy this team should have",
+                                                    "type": "string"
+                                                },
+                                                "notification_setting": {
+                                                    "description": "The notification setting the team has set",
+                                                    "type": "string"
+                                                },
+                                                "html_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "repositories_url": {
+                                                    "type": "string",
+                                                    "format": "uri"
+                                                },
+                                                "slug": {
+                                                    "type": "string"
+                                                },
+                                                "ldap_dn": {
+                                                    "description": "Distinguished Name (DN) that team maps to within LDAP environment",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "node_id",
+                                                "url",
+                                                "members_url",
+                                                "name",
+                                                "description",
+                                                "permission",
+                                                "html_url",
+                                                "repositories_url",
+                                                "slug"
+                                            ]
+                                        },
+                                        "nullable": true
+                                    },
+                                    "head": {
+                                        "type": "object",
+                                        "properties": {
+                                            "label": {
+                                                "type": "string"
+                                            },
+                                            "ref": {
+                                                "type": "string"
+                                            },
+                                            "repo": {
+                                                "title": "Repository",
+                                                "description": "A repository on GitHub.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Unique identifier of the repository",
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "node_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "The name of the repository.",
+                                                        "type": "string"
+                                                    },
+                                                    "full_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "license": {
+                                                        "title": "License Simple",
+                                                        "description": "License Simple",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "key": {
+                                                                "type": "string"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "nullable": true,
+                                                                "format": "uri"
+                                                            },
+                                                            "spdx_id": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "node_id": {
+                                                                "type": "string"
+                                                            },
+                                                            "html_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "key",
+                                                            "name",
+                                                            "url",
+                                                            "spdx_id",
+                                                            "node_id"
+                                                        ],
+                                                        "nullable": true
+                                                    },
+                                                    "forks": {
+                                                        "type": "integer"
+                                                    },
+                                                    "permissions": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "admin": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "pull": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "triage": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "push": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "maintain": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "admin",
+                                                            "pull",
+                                                            "push"
+                                                        ]
+                                                    },
+                                                    "owner": {
+                                                        "title": "Simple User",
+                                                        "description": "A GitHub user.",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "name": {
+                                                                "nullable": true,
+                                                                "type": "string"
+                                                            },
+                                                            "email": {
+                                                                "nullable": true,
+                                                                "type": "string"
+                                                            },
+                                                            "login": {
+                                                                "type": "string"
+                                                            },
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "node_id": {
+                                                                "type": "string"
+                                                            },
+                                                            "avatar_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "gravatar_id": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "html_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "followers_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "following_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "gists_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "starred_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "subscriptions_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "organizations_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "repos_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "events_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "received_events_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            },
+                                                            "site_admin": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "starred_at": {
+                                                                "type": "string"
+                                                            },
+                                                            "user_view_type": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "avatar_url",
+                                                            "events_url",
+                                                            "followers_url",
+                                                            "following_url",
+                                                            "gists_url",
+                                                            "gravatar_id",
+                                                            "html_url",
+                                                            "id",
+                                                            "node_id",
+                                                            "login",
+                                                            "organizations_url",
+                                                            "received_events_url",
+                                                            "repos_url",
+                                                            "site_admin",
+                                                            "starred_url",
+                                                            "subscriptions_url",
+                                                            "type",
+                                                            "url"
+                                                        ]
+                                                    },
+                                                    "private": {
+                                                        "description": "Whether the repository is private or public.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "html_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "fork": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "archive_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "assignees_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "blobs_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "branches_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "collaborators_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "comments_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "commits_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "compare_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "contents_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "contributors_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "deployments_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "downloads_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "events_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "forks_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "git_commits_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "git_refs_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "git_tags_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "git_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "issue_comment_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "issue_events_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "issues_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "keys_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "labels_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "languages_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "merges_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "milestones_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "notifications_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "pulls_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "releases_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "ssh_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "stargazers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "statuses_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "subscribers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "subscription_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "tags_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "teams_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "trees_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "clone_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "mirror_url": {
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "nullable": true
+                                                    },
+                                                    "hooks_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "svn_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "homepage": {
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "nullable": true
+                                                    },
+                                                    "language": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "forks_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "stargazers_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "watchers_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "size": {
+                                                        "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
+                                                        "type": "integer"
+                                                    },
+                                                    "default_branch": {
+                                                        "description": "The default branch of the repository.",
+                                                        "type": "string"
+                                                    },
+                                                    "open_issues_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "is_template": {
+                                                        "description": "Whether this repository acts as a template that can be used to generate new repositories.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "topics": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "has_issues": {
+                                                        "description": "Whether issues are enabled.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_projects": {
+                                                        "description": "Whether projects are enabled.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_wiki": {
+                                                        "description": "Whether the wiki is enabled.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_pages": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_downloads": {
+                                                        "description": "Whether downloads are enabled.",
+                                                        "default": true,
+                                                        "type": "boolean",
+                                                        "deprecated": true
+                                                    },
+                                                    "has_discussions": {
+                                                        "description": "Whether discussions are enabled.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "archived": {
+                                                        "description": "Whether the repository is archived.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "disabled": {
+                                                        "type": "boolean",
+                                                        "description": "Returns whether or not this repository disabled."
+                                                    },
+                                                    "visibility": {
+                                                        "description": "The repository visibility: public, private, or internal.",
+                                                        "default": "public",
+                                                        "type": "string"
+                                                    },
+                                                    "pushed_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "allow_rebase_merge": {
+                                                        "description": "Whether to allow rebase merges for pull requests.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "temp_clone_token": {
+                                                        "type": "string"
+                                                    },
+                                                    "allow_squash_merge": {
+                                                        "description": "Whether to allow squash merges for pull requests.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "allow_auto_merge": {
+                                                        "description": "Whether to allow Auto-merge to be used on pull requests.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "delete_branch_on_merge": {
+                                                        "description": "Whether to delete head branches when pull requests are merged",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "allow_update_branch": {
+                                                        "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "use_squash_pr_title_as_default": {
+                                                        "type": "boolean",
+                                                        "description": "Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.",
+                                                        "default": false,
+                                                        "deprecated": true
+                                                    },
+                                                    "squash_merge_commit_title": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_TITLE",
+                                                            "COMMIT_OR_PR_TITLE"
+                                                        ],
+                                                        "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit)."
+                                                    },
+                                                    "squash_merge_commit_message": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_BODY",
+                                                            "COMMIT_MESSAGES",
+                                                            "BLANK"
+                                                        ],
+                                                        "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message."
+                                                    },
+                                                    "merge_commit_title": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_TITLE",
+                                                            "MERGE_MESSAGE"
+                                                        ],
+                                                        "description": "The default value for a merge commit title.\n\n- `PR_TITLE` - default to the pull request's title.\n- `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name)."
+                                                    },
+                                                    "merge_commit_message": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_BODY",
+                                                            "PR_TITLE",
+                                                            "BLANK"
+                                                        ],
+                                                        "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message."
+                                                    },
+                                                    "allow_merge_commit": {
+                                                        "description": "Whether to allow merge commits for pull requests.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "allow_forking": {
+                                                        "description": "Whether to allow forking this repo",
+                                                        "type": "boolean"
+                                                    },
+                                                    "web_commit_signoff_required": {
+                                                        "description": "Whether to require contributors to sign off on web-based commits",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "open_issues": {
+                                                        "type": "integer"
+                                                    },
+                                                    "watchers": {
+                                                        "type": "integer"
+                                                    },
+                                                    "master_branch": {
+                                                        "type": "string"
+                                                    },
+                                                    "starred_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "anonymous_access_enabled": {
+                                                        "type": "boolean",
+                                                        "description": "Whether anonymous git access is enabled for this repository"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "archive_url",
+                                                    "assignees_url",
+                                                    "blobs_url",
+                                                    "branches_url",
+                                                    "collaborators_url",
+                                                    "comments_url",
+                                                    "commits_url",
+                                                    "compare_url",
+                                                    "contents_url",
+                                                    "contributors_url",
+                                                    "deployments_url",
+                                                    "description",
+                                                    "downloads_url",
+                                                    "events_url",
+                                                    "fork",
+                                                    "forks_url",
+                                                    "full_name",
+                                                    "git_commits_url",
+                                                    "git_refs_url",
+                                                    "git_tags_url",
+                                                    "hooks_url",
+                                                    "html_url",
+                                                    "id",
+                                                    "node_id",
+                                                    "issue_comment_url",
+                                                    "issue_events_url",
+                                                    "issues_url",
+                                                    "keys_url",
+                                                    "labels_url",
+                                                    "languages_url",
+                                                    "merges_url",
+                                                    "milestones_url",
+                                                    "name",
+                                                    "notifications_url",
+                                                    "owner",
+                                                    "private",
+                                                    "pulls_url",
+                                                    "releases_url",
+                                                    "stargazers_url",
+                                                    "statuses_url",
+                                                    "subscribers_url",
+                                                    "subscription_url",
+                                                    "tags_url",
+                                                    "teams_url",
+                                                    "trees_url",
+                                                    "url",
+                                                    "clone_url",
+                                                    "default_branch",
+                                                    "forks",
+                                                    "forks_count",
+                                                    "git_url",
+                                                    "has_downloads",
+                                                    "has_issues",
+                                                    "has_projects",
+                                                    "has_wiki",
+                                                    "has_pages",
+                                                    "homepage",
+                                                    "language",
+                                                    "archived",
+                                                    "disabled",
+                                                    "mirror_url",
+                                                    "open_issues",
+                                                    "open_issues_count",
+                                                    "license",
+                                                    "pushed_at",
+                                                    "size",
+                                                    "ssh_url",
+                                                    "stargazers_count",
+                                                    "svn_url",
+                                                    "watchers",
+                                                    "watchers_count",
+                                                    "created_at",
+                                                    "updated_at"
+                                                ]
+                                            },
+                                            "sha": {
+                                                "type": "string"
+                                            },
+                                            "user": {
+                                                "title": "Simple User",
+                                                "description": "A GitHub user.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "login": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "node_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "gravatar_id": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "html_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "followers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "following_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "gists_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "starred_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "subscriptions_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "organizations_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "repos_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "events_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "received_events_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "site_admin": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "starred_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_view_type": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "avatar_url",
+                                                    "events_url",
+                                                    "followers_url",
+                                                    "following_url",
+                                                    "gists_url",
+                                                    "gravatar_id",
+                                                    "html_url",
+                                                    "id",
+                                                    "node_id",
+                                                    "login",
+                                                    "organizations_url",
+                                                    "received_events_url",
+                                                    "repos_url",
+                                                    "site_admin",
+                                                    "starred_url",
+                                                    "subscriptions_url",
+                                                    "type",
+                                                    "url"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "label",
+                                            "ref",
+                                            "repo",
+                                            "sha",
+                                            "user"
+                                        ]
+                                    },
+                                    "base": {
+                                        "type": "object",
+                                        "properties": {
+                                            "label": {
+                                                "type": "string"
+                                            },
+                                            "ref": {
+                                                "type": "string"
+                                            },
+                                            "repo": {
+                                                "title": "Repository",
+                                                "description": "A repository on GitHub.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Unique identifier of the repository",
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "node_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "The name of the repository.",
+                                                        "type": "string"
+                                                    },
+                                                    "full_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "license": {
+                                                        "title": "License Simple",
+                                                        "description": "License Simple",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "key": {
+                                                                "type": "string"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "nullable": true,
+                                                                "format": "uri"
+                                                            },
+                                                            "spdx_id": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "node_id": {
+                                                                "type": "string"
+                                                            },
+                                                            "html_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "key",
+                                                            "name",
+                                                            "url",
+                                                            "spdx_id",
+                                                            "node_id"
+                                                        ],
+                                                        "nullable": true
+                                                    },
+                                                    "forks": {
+                                                        "type": "integer"
+                                                    },
+                                                    "permissions": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "admin": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "pull": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "triage": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "push": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "maintain": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "admin",
+                                                            "pull",
+                                                            "push"
+                                                        ]
+                                                    },
+                                                    "owner": {
+                                                        "title": "Simple User",
+                                                        "description": "A GitHub user.",
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "name": {
+                                                                "nullable": true,
+                                                                "type": "string"
+                                                            },
+                                                            "email": {
+                                                                "nullable": true,
+                                                                "type": "string"
+                                                            },
+                                                            "login": {
+                                                                "type": "string"
+                                                            },
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "node_id": {
+                                                                "type": "string"
+                                                            },
+                                                            "avatar_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "gravatar_id": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "html_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "followers_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "following_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "gists_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "starred_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "subscriptions_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "organizations_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "repos_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "events_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "received_events_url": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            },
+                                                            "site_admin": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "starred_at": {
+                                                                "type": "string"
+                                                            },
+                                                            "user_view_type": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "avatar_url",
+                                                            "events_url",
+                                                            "followers_url",
+                                                            "following_url",
+                                                            "gists_url",
+                                                            "gravatar_id",
+                                                            "html_url",
+                                                            "id",
+                                                            "node_id",
+                                                            "login",
+                                                            "organizations_url",
+                                                            "received_events_url",
+                                                            "repos_url",
+                                                            "site_admin",
+                                                            "starred_url",
+                                                            "subscriptions_url",
+                                                            "type",
+                                                            "url"
+                                                        ]
+                                                    },
+                                                    "private": {
+                                                        "description": "Whether the repository is private or public.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "html_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "fork": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "archive_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "assignees_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "blobs_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "branches_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "collaborators_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "comments_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "commits_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "compare_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "contents_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "contributors_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "deployments_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "downloads_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "events_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "forks_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "git_commits_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "git_refs_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "git_tags_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "git_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "issue_comment_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "issue_events_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "issues_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "keys_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "labels_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "languages_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "merges_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "milestones_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "notifications_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "pulls_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "releases_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "ssh_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "stargazers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "statuses_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "subscribers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "subscription_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "tags_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "teams_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "trees_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "clone_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "mirror_url": {
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "nullable": true
+                                                    },
+                                                    "hooks_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "svn_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "homepage": {
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "nullable": true
+                                                    },
+                                                    "language": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "forks_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "stargazers_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "watchers_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "size": {
+                                                        "description": "The size of the repository, in kilobytes. Size is calculated hourly. When a repository is initially created, the size is 0.",
+                                                        "type": "integer"
+                                                    },
+                                                    "default_branch": {
+                                                        "description": "The default branch of the repository.",
+                                                        "type": "string"
+                                                    },
+                                                    "open_issues_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "is_template": {
+                                                        "description": "Whether this repository acts as a template that can be used to generate new repositories.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "topics": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "has_issues": {
+                                                        "description": "Whether issues are enabled.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_projects": {
+                                                        "description": "Whether projects are enabled.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_wiki": {
+                                                        "description": "Whether the wiki is enabled.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_pages": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "has_downloads": {
+                                                        "description": "Whether downloads are enabled.",
+                                                        "default": true,
+                                                        "type": "boolean",
+                                                        "deprecated": true
+                                                    },
+                                                    "has_discussions": {
+                                                        "description": "Whether discussions are enabled.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "archived": {
+                                                        "description": "Whether the repository is archived.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "disabled": {
+                                                        "type": "boolean",
+                                                        "description": "Returns whether or not this repository disabled."
+                                                    },
+                                                    "visibility": {
+                                                        "description": "The repository visibility: public, private, or internal.",
+                                                        "default": "public",
+                                                        "type": "string"
+                                                    },
+                                                    "pushed_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    },
+                                                    "allow_rebase_merge": {
+                                                        "description": "Whether to allow rebase merges for pull requests.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "temp_clone_token": {
+                                                        "type": "string"
+                                                    },
+                                                    "allow_squash_merge": {
+                                                        "description": "Whether to allow squash merges for pull requests.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "allow_auto_merge": {
+                                                        "description": "Whether to allow Auto-merge to be used on pull requests.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "delete_branch_on_merge": {
+                                                        "description": "Whether to delete head branches when pull requests are merged",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "allow_update_branch": {
+                                                        "description": "Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging.",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "use_squash_pr_title_as_default": {
+                                                        "type": "boolean",
+                                                        "description": "Whether a squash merge commit can use the pull request title as default. **This property is closing down. Please use `squash_merge_commit_title` instead.",
+                                                        "default": false,
+                                                        "deprecated": true
+                                                    },
+                                                    "squash_merge_commit_title": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_TITLE",
+                                                            "COMMIT_OR_PR_TITLE"
+                                                        ],
+                                                        "description": "The default value for a squash merge commit title:\n\n- `PR_TITLE` - default to the pull request's title.\n- `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit)."
+                                                    },
+                                                    "squash_merge_commit_message": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_BODY",
+                                                            "COMMIT_MESSAGES",
+                                                            "BLANK"
+                                                        ],
+                                                        "description": "The default value for a squash merge commit message:\n\n- `PR_BODY` - default to the pull request's body.\n- `COMMIT_MESSAGES` - default to the branch's commit messages.\n- `BLANK` - default to a blank commit message."
+                                                    },
+                                                    "merge_commit_title": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_TITLE",
+                                                            "MERGE_MESSAGE"
+                                                        ],
+                                                        "description": "The default value for a merge commit title.\n\n- `PR_TITLE` - default to the pull request's title.\n- `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name)."
+                                                    },
+                                                    "merge_commit_message": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "PR_BODY",
+                                                            "PR_TITLE",
+                                                            "BLANK"
+                                                        ],
+                                                        "description": "The default value for a merge commit message.\n\n- `PR_TITLE` - default to the pull request's title.\n- `PR_BODY` - default to the pull request's body.\n- `BLANK` - default to a blank commit message."
+                                                    },
+                                                    "allow_merge_commit": {
+                                                        "description": "Whether to allow merge commits for pull requests.",
+                                                        "default": true,
+                                                        "type": "boolean"
+                                                    },
+                                                    "allow_forking": {
+                                                        "description": "Whether to allow forking this repo",
+                                                        "type": "boolean"
+                                                    },
+                                                    "web_commit_signoff_required": {
+                                                        "description": "Whether to require contributors to sign off on web-based commits",
+                                                        "default": false,
+                                                        "type": "boolean"
+                                                    },
+                                                    "open_issues": {
+                                                        "type": "integer"
+                                                    },
+                                                    "watchers": {
+                                                        "type": "integer"
+                                                    },
+                                                    "master_branch": {
+                                                        "type": "string"
+                                                    },
+                                                    "starred_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "anonymous_access_enabled": {
+                                                        "type": "boolean",
+                                                        "description": "Whether anonymous git access is enabled for this repository"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "archive_url",
+                                                    "assignees_url",
+                                                    "blobs_url",
+                                                    "branches_url",
+                                                    "collaborators_url",
+                                                    "comments_url",
+                                                    "commits_url",
+                                                    "compare_url",
+                                                    "contents_url",
+                                                    "contributors_url",
+                                                    "deployments_url",
+                                                    "description",
+                                                    "downloads_url",
+                                                    "events_url",
+                                                    "fork",
+                                                    "forks_url",
+                                                    "full_name",
+                                                    "git_commits_url",
+                                                    "git_refs_url",
+                                                    "git_tags_url",
+                                                    "hooks_url",
+                                                    "html_url",
+                                                    "id",
+                                                    "node_id",
+                                                    "issue_comment_url",
+                                                    "issue_events_url",
+                                                    "issues_url",
+                                                    "keys_url",
+                                                    "labels_url",
+                                                    "languages_url",
+                                                    "merges_url",
+                                                    "milestones_url",
+                                                    "name",
+                                                    "notifications_url",
+                                                    "owner",
+                                                    "private",
+                                                    "pulls_url",
+                                                    "releases_url",
+                                                    "stargazers_url",
+                                                    "statuses_url",
+                                                    "subscribers_url",
+                                                    "subscription_url",
+                                                    "tags_url",
+                                                    "teams_url",
+                                                    "trees_url",
+                                                    "url",
+                                                    "clone_url",
+                                                    "default_branch",
+                                                    "forks",
+                                                    "forks_count",
+                                                    "git_url",
+                                                    "has_downloads",
+                                                    "has_issues",
+                                                    "has_projects",
+                                                    "has_wiki",
+                                                    "has_pages",
+                                                    "homepage",
+                                                    "language",
+                                                    "archived",
+                                                    "disabled",
+                                                    "mirror_url",
+                                                    "open_issues",
+                                                    "open_issues_count",
+                                                    "license",
+                                                    "pushed_at",
+                                                    "size",
+                                                    "ssh_url",
+                                                    "stargazers_count",
+                                                    "svn_url",
+                                                    "watchers",
+                                                    "watchers_count",
+                                                    "created_at",
+                                                    "updated_at"
+                                                ]
+                                            },
+                                            "sha": {
+                                                "type": "string"
+                                            },
+                                            "user": {
+                                                "title": "Simple User",
+                                                "description": "A GitHub user.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "login": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "node_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "gravatar_id": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "html_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "followers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "following_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "gists_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "starred_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "subscriptions_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "organizations_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "repos_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "events_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "received_events_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "site_admin": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "starred_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_view_type": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "avatar_url",
+                                                    "events_url",
+                                                    "followers_url",
+                                                    "following_url",
+                                                    "gists_url",
+                                                    "gravatar_id",
+                                                    "html_url",
+                                                    "id",
+                                                    "node_id",
+                                                    "login",
+                                                    "organizations_url",
+                                                    "received_events_url",
+                                                    "repos_url",
+                                                    "site_admin",
+                                                    "starred_url",
+                                                    "subscriptions_url",
+                                                    "type",
+                                                    "url"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "label",
+                                            "ref",
+                                            "repo",
+                                            "sha",
+                                            "user"
+                                        ]
+                                    },
+                                    "_links": {
+                                        "type": "object",
+                                        "properties": {
+                                            "comments": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            },
+                                            "commits": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            },
+                                            "statuses": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            },
+                                            "html": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            },
+                                            "issue": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            },
+                                            "review_comments": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            },
+                                            "review_comment": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            },
+                                            "self": {
+                                                "title": "Link",
+                                                "description": "Hypermedia Link",
+                                                "type": "object",
+                                                "properties": {
+                                                    "href": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "href"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "comments",
+                                            "commits",
+                                            "statuses",
+                                            "html",
+                                            "issue",
+                                            "review_comments",
+                                            "review_comment",
+                                            "self"
+                                        ]
+                                    },
+                                    "author_association": {
+                                        "title": "author_association",
+                                        "type": "string",
+                                        "description": "How the author is associated with the repository.",
+                                        "enum": [
+                                            "COLLABORATOR",
+                                            "CONTRIBUTOR",
+                                            "FIRST_TIMER",
+                                            "FIRST_TIME_CONTRIBUTOR",
+                                            "MANNEQUIN",
+                                            "MEMBER",
+                                            "NONE",
+                                            "OWNER"
+                                        ]
+                                    },
+                                    "auto_merge": {
+                                        "title": "Auto merge",
+                                        "description": "The status of auto merging a pull request.",
+                                        "type": "object",
+                                        "properties": {
+                                            "enabled_by": {
+                                                "title": "Simple User",
+                                                "description": "A GitHub user.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "email": {
+                                                        "nullable": true,
+                                                        "type": "string"
+                                                    },
+                                                    "login": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "node_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "gravatar_id": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "html_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "followers_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "following_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "gists_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "starred_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "subscriptions_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "organizations_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "repos_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "events_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "received_events_url": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "site_admin": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "starred_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_view_type": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "avatar_url",
+                                                    "events_url",
+                                                    "followers_url",
+                                                    "following_url",
+                                                    "gists_url",
+                                                    "gravatar_id",
+                                                    "html_url",
+                                                    "id",
+                                                    "node_id",
+                                                    "login",
+                                                    "organizations_url",
+                                                    "received_events_url",
+                                                    "repos_url",
+                                                    "site_admin",
+                                                    "starred_url",
+                                                    "subscriptions_url",
+                                                    "type",
+                                                    "url"
+                                                ]
+                                            },
+                                            "merge_method": {
+                                                "type": "string",
+                                                "description": "The merge method to use.",
+                                                "enum": [
+                                                    "merge",
+                                                    "squash",
+                                                    "rebase"
+                                                ]
+                                            },
+                                            "commit_title": {
+                                                "type": "string",
+                                                "description": "Title for the merge commit message."
+                                            },
+                                            "commit_message": {
+                                                "type": "string",
+                                                "description": "Commit message for the merge commit."
+                                            }
+                                        },
+                                        "required": [
+                                            "enabled_by",
+                                            "merge_method",
+                                            "commit_title",
+                                            "commit_message"
+                                        ],
+                                        "nullable": true
+                                    },
+                                    "draft": {
+                                        "description": "Indicates whether or not the pull request is a draft.",
+                                        "type": "boolean"
+                                    },
+                                    "merged": {
+                                        "type": "boolean"
+                                    },
+                                    "mergeable": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    },
+                                    "rebaseable": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    },
+                                    "mergeable_state": {
+                                        "type": "string"
+                                    },
+                                    "merged_by": {
+                                        "title": "Simple User",
+                                        "description": "A GitHub user.",
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "nullable": true,
+                                                "type": "string"
+                                            },
+                                            "email": {
+                                                "nullable": true,
+                                                "type": "string"
+                                            },
+                                            "login": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "integer",
+                                                "format": "int64"
+                                            },
+                                            "node_id": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "gravatar_id": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "html_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "followers_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "following_url": {
+                                                "type": "string"
+                                            },
+                                            "gists_url": {
+                                                "type": "string"
+                                            },
+                                            "starred_url": {
+                                                "type": "string"
+                                            },
+                                            "subscriptions_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "organizations_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "repos_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "events_url": {
+                                                "type": "string"
+                                            },
+                                            "received_events_url": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "site_admin": {
+                                                "type": "boolean"
+                                            },
+                                            "starred_at": {
+                                                "type": "string"
+                                            },
+                                            "user_view_type": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "avatar_url",
+                                            "events_url",
+                                            "followers_url",
+                                            "following_url",
+                                            "gists_url",
+                                            "gravatar_id",
+                                            "html_url",
+                                            "id",
+                                            "node_id",
+                                            "login",
+                                            "organizations_url",
+                                            "received_events_url",
+                                            "repos_url",
+                                            "site_admin",
+                                            "starred_url",
+                                            "subscriptions_url",
+                                            "type",
+                                            "url"
+                                        ],
+                                        "nullable": true
+                                    },
+                                    "comments": {
+                                        "type": "integer"
+                                    },
+                                    "review_comments": {
+                                        "type": "integer"
+                                    },
+                                    "maintainer_can_modify": {
+                                        "description": "Indicates whether maintainers can modify the pull request.",
+                                        "type": "boolean"
+                                    },
+                                    "commits": {
+                                        "type": "integer"
+                                    },
+                                    "additions": {
+                                        "type": "integer"
+                                    },
+                                    "deletions": {
+                                        "type": "integer"
+                                    },
+                                    "changed_files": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "_links",
+                                    "assignee",
+                                    "labels",
+                                    "base",
+                                    "body",
+                                    "closed_at",
+                                    "comments_url",
+                                    "commits_url",
+                                    "created_at",
+                                    "diff_url",
+                                    "head",
+                                    "html_url",
+                                    "id",
+                                    "node_id",
+                                    "issue_url",
+                                    "merge_commit_sha",
+                                    "merged_at",
+                                    "milestone",
+                                    "number",
+                                    "patch_url",
+                                    "review_comment_url",
+                                    "review_comments_url",
+                                    "statuses_url",
+                                    "state",
+                                    "locked",
+                                    "title",
+                                    "updated_at",
+                                    "url",
+                                    "user",
+                                    "author_association",
+                                    "auto_merge",
+                                    "additions",
+                                    "changed_files",
+                                    "comments",
+                                    "commits",
+                                    "deletions",
+                                    "mergeable",
+                                    "mergeable_state",
+                                    "merged",
+                                    "maintainer_can_modify",
+                                    "merged_by",
+                                    "review_comments"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "304": {
+                    "description": "Not modified"
+                },
+                "404": {
+                    "description": "Resource not found",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "406": {
+                    "description": "Unacceptable",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal Error",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "503": {
+                    "description": "Service unavailable",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "x-github": {
+                "githubCloudOnly": false,
+                "enabledForGitHubApps": true,
+                "category": "pulls",
+                "subcategory": "pulls"
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}/raw": {
+        "get": {
+            "description": "This OAS provides a function to get raw file content from a project's repository. Inputs are project ID (integer) and file path (string). Response on success (200) is a JSON object with file_path and branch details.",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "file_path",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file_path": {
+                                        "type": "string"
+                                    },
+                                    "branch": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

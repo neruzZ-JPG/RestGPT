@@ -1,0 +1,702 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitLabMergeRequestsList",
+        "version": "1.0.0",
+        "description": "The GitLabMergeRequestsList API enables authenticated users to retrieve a list of merge requests they have access to. It offers various filtering and sorting options like by state, author, milestone, labels etc. You can also paginate the results. For example, get merge requests by a specific author, in a particular state, or assigned to a certain user. It provides flexibility in fetching the desired subset of merge requests with detailed information about each."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/merge_requests": {
+            "get": {
+                "operationId": "getGitLabMergeRequests",
+                "description": "Retrieves a list of merge requests based on various filtering and sorting options.",
+                "parameters": [
+                    {
+                        "name": "approved_by_ids",
+                        "in": "query",
+                        "description": "Optional. Integer array. (Returns the merge requests approved by all the users with the given id, up to 5 users. None returns merge requests with no approvals. Any returns merge requests with an approval. Premium and Ultimate only.)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    {
+                        "name": "approver_ids",
+                        "in": "query",
+                        "description": "Optional. Integer array. (Returns merge requests which have specified all the users with the given id as individual approvers. None returns merge requests without approvers. Any returns merge requests with an approver. Premium and Ultimate only.)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    {
+                        "name": "approved",
+                        "in": "query",
+                        "description": "Optional. String. (Filters merge requests by their approved status. yes returns only approved merge requests. no returns only non-approved merge requests. Introduced in GitLab 15.11 with the flag mr_approved_filter. Disabled by default.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "assignee_id",
+                        "in": "query",
+                        "description": "Optional. Integer. (Returns merge requests assigned to the given user id. None returns unassigned merge requests. Any returns merge requests with an assignee.)",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "author_id",
+                        "in": "query",
+                        "description": "Optional. Integer. (Returns merge requests created by the given user id. Mutually exclusive with author_username. Combine with scope=all or scope=assigned_to_me.)",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "author_username",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests created by the given username. Mutually exclusive with author_id.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "created_after",
+                        "in": "query",
+                        "description": "Optional. Datetime. (Returns merge requests created on or after the given time. Expected in ISO 8601 format (2019-03-15T08:00:00Z).)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "created_before",
+                        "in": "query",
+                        "description": "Optional. Datetime. (Returns merge requests created on or before the given time. Expected in ISO 8601 format (2019-03-15T08:00:00Z).)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "deployed_after",
+                        "in": "query",
+                        "description": "Optional. Datetime. (Returns merge requests deployed after the given date/time. Expected in ISO 8601 format (2019-03-15T08:00:00Z).)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "deployed_before",
+                        "in": "query",
+                        "description": "Optional. Datetime. (Returns merge requests deployed before the given date/time. Expected in ISO 8601 format (2019-03-15T08:00:00Z).)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "environment",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests deployed to the given environment.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "in",
+                        "in": "query",
+                        "description": "Optional. String. (Change the scope of the search attribute. title, description, or a string joining them with comma. Default is title,description.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "labels",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests matching a comma-separated list of labels. None lists all merge requests with no labels. Any lists all merge requests with at least one label. Predefined names are case-insensitive.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "merge_user_id",
+                        "in": "query",
+                        "description": "Optional. Integer. (Returns the merge requests merged by the user with the given user id. Mutually exclusive with merge_user_username. Introduced in GitLab 17.0.)",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "merge_user_username",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests merged by the user with the given username. Mutually exclusive with merge_user_id. Introduced in GitLab 17.0.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "milestone",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests for a specific milestone. None returns merge requests with no milestone. Any returns merge requests that have an assigned milestone.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "my_reaction_emoji",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests reacted by the authenticated user by the given emoji. None returns issues not given a reaction. Any returns issues given at least one reaction.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "not",
+                        "in": "query",
+                        "description": "Optional. Hash. (Returns merge requests that do not match the parameters supplied. Accepts: labels, milestone, author_id, author_username, assignee_id, assignee_username, reviewer_id, reviewer_username, my_reaction_emoji.)",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Optional. String. (Returns requests ordered by created_at, title, merged_at (introduced in GitLab 17.2), or updated_at fields. Default is created_at.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reviewer_id",
+                        "in": "query",
+                        "description": "Optional. Integer. (Returns merge requests which have the user as a reviewer with the given user id. None returns merge requests with no reviewers. Any returns merge requests with any reviewer. Mutually exclusive with reviewer_username.)",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "reviewer_username",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests which have the user as a reviewer with the given username. None returns merge requests with no reviewers. Any returns merge requests with any reviewer. Mutually exclusive with reviewer_id.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests for the given scope: created_by_me, assigned_to_me or all. Defaults to created_by_me.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Optional. String. (Search merge requests against their title and description.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Optional. String. (Returns requests sorted in asc or desc order. Default is desc.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "source_branch",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests with the given source branch.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "description": "Optional. String. (Returns all merge requests or just those that are opened, closed, locked, or merged.)",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "opened",
+                                "closed",
+                                "locked",
+                                "merged",
+                                "all"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "target_branch",
+                        "in": "query",
+                        "description": "Optional. String. (Returns merge requests with the given target branch.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "updated_after",
+                        "in": "query",
+                        "description": "Optional. Datetime. (Returns merge requests updated on or after the given time. Expected in ISO 8601 format (2019-03-15T08:00:00Z).)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "updated_before",
+                        "in": "query",
+                        "description": "Optional. Datetime. (Returns merge requests updated on or before the given time. Expected in ISO 8601 format (2019-03-15T08:00:00Z).)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "view",
+                        "in": "query",
+                        "description": "Optional. String. (If simple, returns the iid, URL, title, description, and basic state of merge request.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "with_labels_details",
+                        "in": "query",
+                        "description": "Optional. Boolean. (If true, response returns more details for each label in labels field: :name, :color, :description, :description_html, :text_color. Default is false.)",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "with_merge_status_recheck",
+                        "in": "query",
+                        "description": "Optional. Boolean. (If true, this projection requests (but does not guarantee) an asynchronous recalculation of the  merge_status field. Default is false. In GitLab 15.11 and later, enable the restrict_merge_status_recheck feature flag to ignore this attribute when requested by users without at least the Developer role.)",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "wip",
+                        "in": "query",
+                        "description": "Optional. String. (Filter merge requests against their wip status. Use yes to return only draft merge requests, no to return non-draft merge requests.)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with an array of merge request objects.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "iid": {
+                                                "type": "integer"
+                                            },
+                                            "project_id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "imported": {
+                                                "type": "boolean"
+                                            },
+                                            "imported_from": {
+                                                "type": "string"
+                                            },
+                                            "merged_by": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "merge_user": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "merged_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "merge_after": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "prepared_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "closed_by": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "closed_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "target_branch": {
+                                                "type": "string"
+                                            },
+                                            "source_branch": {
+                                                "type": "string"
+                                            },
+                                            "upvotes": {
+                                                "type": "integer"
+                                            },
+                                            "downvotes": {
+                                                "type": "integer"
+                                            },
+                                            "author": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "assignee": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "assignees": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "username": {
+                                                            "type": "string"
+                                                        },
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "state": {
+                                                            "type": "string"
+                                                        },
+                                                        "avatar_url": {
+                                                            "type": "string"
+                                                        },
+                                                        "web_url": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "reviewers": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "username": {
+                                                            "type": "string"
+                                                        },
+                                                        "state": {
+                                                            "type": "string"
+                                                        },
+                                                        "avatar_url": {
+                                                            "type": "string"
+                                                        },
+                                                        "web_url": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "source_project_id": {
+                                                "type": "integer"
+                                            },
+                                            "target_project_id": {
+                                                "type": "integer"
+                                            },
+                                            "labels": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "draft": {
+                                                "type": "boolean"
+                                            },
+                                            "work_in_progress": {
+                                                "type": "boolean"
+                                            },
+                                            "milestone": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "iid": {
+                                                        "type": "integer"
+                                                    },
+                                                    "project_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "due_date": {
+                                                        "type": "string"
+                                                    },
+                                                    "start_date": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "merge_when_pipeline_succeeds": {
+                                                "type": "boolean"
+                                            },
+                                            "merge_status": {
+                                                "type": "string"
+                                            },
+                                            "detailed_merge_status": {
+                                                "type": "string"
+                                            },
+                                            "sha": {
+                                                "type": "string"
+                                            },
+                                            "merge_commit_sha": {
+                                                "type": "string"
+                                            },
+                                            "squash_commit_sha": {
+                                                "type": "string"
+                                            },
+                                            "user_notes_count": {
+                                                "type": "integer"
+                                            },
+                                            "discussion_locked": {
+                                                "type": "boolean"
+                                            },
+                                            "should_remove_source_branch": {
+                                                "type": "boolean"
+                                            },
+                                            "force_remove_source_branch": {
+                                                "type": "boolean"
+                                            },
+                                            "allow_collaboration": {
+                                                "type": "boolean"
+                                            },
+                                            "allow_maintainer_to_push": {
+                                                "type": "boolean"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            },
+                                            "references": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "short": {
+                                                        "type": "string"
+                                                    },
+                                                    "relative": {
+                                                        "type": "string"
+                                                    },
+                                                    "full": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "time_stats": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "time_estimate": {
+                                                        "type": "integer"
+                                                    },
+                                                    "total_time_spent": {
+                                                        "type": "integer"
+                                                    },
+                                                    "human_time_estimate": {
+                                                        "type": "string"
+                                                    },
+                                                    "human_total_time_spent": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "squash": {
+                                                "type": "boolean"
+                                            },
+                                            "task_completion_status": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "completed_count": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. The request was malformed or incorrect parameters were provided."
+                    },
+                    "401": {
+                        "description": "Unauthorized. The user is not authenticated or does not have the necessary permissions."
+                    },
+                    "403": {
+                        "description": "Forbidden. The user is authenticated but does not have the necessary permissions to access the resource."
+                    },
+                    "404": {
+                        "description": "Not Found. The requested resource could not be found."
+                    },
+                    "500": {
+                        "description": "Internal Server Error. An unexpected error occurred on the server side."
+                    }
+                }
+            }
+        }
+    }
+}

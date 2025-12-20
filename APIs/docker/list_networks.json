@@ -1,0 +1,206 @@
+{
+  "http://localhost:2375/networks": {
+    "get": {
+      "summary": "List networks",
+      "description": "Returns a list of networks. For details on the format, see the\n[network inspect endpoint](#operation/NetworkInspect).\n\nNote that it uses a different, smaller representation of a network than\ninspecting a single network. For example, the list of containers attached\nto the network is not propagated in API versions 1.28 and up.\n",
+      "operationId": "NetworkList",
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "No error",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Name": {
+                  "description": "Name of the network.\n",
+                  "type": "string"
+                },
+                "Id": {
+                  "description": "ID that uniquely identifies a network on a single machine.\n",
+                  "type": "string"
+                },
+                "Created": {
+                  "description": "Date and time at which the network was created in\n[RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.\n",
+                  "type": "string",
+                  "format": "dateTime"
+                },
+                "Scope": {
+                  "description": "The level at which the network exists (e.g. `swarm` for cluster-wide\nor `local` for machine level)\n",
+                  "type": "string"
+                },
+                "Driver": {
+                  "description": "The name of the driver used to create the network (e.g. `bridge`,\n`overlay`).\n",
+                  "type": "string"
+                },
+                "EnableIPv6": {
+                  "description": "Whether the network was created with IPv6 enabled.\n",
+                  "type": "boolean"
+                },
+                "IPAM": {
+                  "type": "object",
+                  "properties": {
+                    "Driver": {
+                      "description": "Name of the IPAM driver to use.",
+                      "type": "string",
+                      "default": "default"
+                    },
+                    "Config": {
+                      "description": "List of IPAM configuration options, specified as a map:\n\n```\n{\"Subnet\": <CIDR>, \"IPRange\": <CIDR>, \"Gateway\": <IP address>, \"AuxAddress\": <device_name:IP address>}\n```\n",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Subnet": {
+                            "type": "string"
+                          },
+                          "IPRange": {
+                            "type": "string"
+                          },
+                          "Gateway": {
+                            "type": "string"
+                          },
+                          "AuxiliaryAddresses": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "Options": {
+                      "description": "Driver-specific options, specified as a map.",
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "Internal": {
+                  "description": "Whether the network is created to only allow internal networking\nconnectivity.\n",
+                  "type": "boolean",
+                  "default": false
+                },
+                "Attachable": {
+                  "description": "Whether a global / swarm scope network is manually attachable by regular\ncontainers from workers in swarm mode.\n",
+                  "type": "boolean",
+                  "default": false
+                },
+                "Ingress": {
+                  "description": "Whether the network is providing the routing-mesh for the swarm cluster.\n",
+                  "type": "boolean",
+                  "default": false
+                },
+                "ConfigFrom": {
+                  "description": "The config-only network source to provide the configuration for\nthis network.\n",
+                  "type": "object",
+                  "properties": {
+                    "Network": {
+                      "description": "The name of the config-only network that provides the network's\nconfiguration. The specified network must be an existing config-only\nnetwork. Only network names are allowed, not network IDs.\n",
+                      "type": "string"
+                    }
+                  }
+                },
+                "ConfigOnly": {
+                  "description": "Whether the network is a config-only network. Config-only networks are\nplaceholder networks for network configurations to be used by other\nnetworks. Config-only networks cannot be used directly to run containers\nor services.\n",
+                  "type": "boolean",
+                  "default": false
+                },
+                "Containers": {
+                  "description": "Contains endpoints attached to the network.\n",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "Name": {
+                        "type": "string"
+                      },
+                      "EndpointID": {
+                        "type": "string"
+                      },
+                      "MacAddress": {
+                        "type": "string"
+                      },
+                      "IPv4Address": {
+                        "type": "string"
+                      },
+                      "IPv6Address": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "Options": {
+                  "description": "Network-specific options uses when creating the network.\n",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "Labels": {
+                  "description": "User-defined key/value metadata.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "Peers": {
+                  "description": "List of peer nodes for an overlay network. This field is only present\nfor overlay networks, and omitted for other network types.\n",
+                  "type": "array",
+                  "items": {
+                    "description": "PeerInfo represents one peer of an overlay network.\n",
+                    "type": "object",
+                    "properties": {
+                      "Name": {
+                        "description": "ID of the peer-node in the Swarm cluster.",
+                        "type": "string"
+                      },
+                      "IP": {
+                        "description": "IP-address of the peer-node in the Swarm cluster.",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "x-nullable": true
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "filters",
+          "in": "query",
+          "description": "JSON encoded value of the filters (a `map[string][]string`) to process\non the networks list.\n\nAvailable filters:\n\n- `dangling=<boolean>` When set to `true` (or `1`), returns all\n   networks that are not in use by a container. When set to `false`\n   (or `0`), only networks that are in use by one or more\n   containers are returned.\n- `driver=<driver-name>` Matches a network's driver.\n- `id=<network-id>` Matches all or part of a network ID.\n- `label=<key>` or `label=<key>=<value>` of a network label.\n- `name=<network-name>` Matches all or part of a network name.\n- `scope=[\"swarm\"|\"global\"|\"local\"]` Filters networks by scope (`swarm`, `global`, or `local`).\n- `type=[\"custom\"|\"builtin\"]` Filters networks by type. The `custom` keyword returns all user-defined networks.\n",
+          "type": "string"
+        }
+      ],
+      "tags": [
+        "Network"
+      ]
+    }
+  }
+}

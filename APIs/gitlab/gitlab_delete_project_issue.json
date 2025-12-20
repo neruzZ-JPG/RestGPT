@@ -1,0 +1,42 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/issues/{issue_iid}": {
+        "delete": {
+            "description": "Function: Delete an issue in a project. Inputs: 'id' (project's ID/URL-encoded path, string/int) and 'issue_iid' (issue's internal ID, int). Response: '200' indicates success. Allows authenticated user to remove specific project issue.",
+            "tags": [
+                "Issues"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ]
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID or URL-encoded path of the project owned by the authenticated user"
+                },
+                {
+                    "name": "issue_iid",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The internal ID of a project\u2019s issue"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success"
+                }
+            }
+        }
+    }
+}

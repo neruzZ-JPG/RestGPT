@@ -7,9 +7,10 @@ import yaml
 
 import spotipy
 from langchain.requests import Requests
-from langchain import OpenAI
+from langchain.llms import OpenAIChat
 
 from utils import reduce_openapi_spec, ColorPrint
+from utils import ReducedOpenAPISpec
 from model import RestGPT
 
 logger = logging.getLogger()
@@ -17,6 +18,7 @@ logger = logging.getLogger()
 
 def main():
     config = yaml.load(open('config.yaml', 'r'), Loader=yaml.FullLoader)
+    os.environ["OPENAI_API_BASE"] = config["openai_api_base"]
     os.environ["OPENAI_API_KEY"] = config['openai_api_key']
     os.environ["TMDB_ACCESS_TOKEN"] = config['tmdb_access_token']
     os.environ['SPOTIPY_CLIENT_ID'] = config['spotipy_client_id']
@@ -53,18 +55,70 @@ def main():
         headers = {
             'Authorization': f'Bearer {access_token}'
         }
+    elif scenario in ['github', 'gitlab', 'docker', 'kubernetes', 'jenkins']:
+        with open(f"specs/{scenario}.json") as f:
+            raw_api_spec = json.load(f)
+        endpoints_list = []
+        # 新增一个变量来存储 base_url
+        detected_base_url = "http://localhost" 
+
+        # 兼容两种格式：
+        paths_source = raw_api_spec.get("paths", raw_api_spec) 
+
+        for url, methods in paths_source.items():
+            if not isinstance(methods, dict): continue
+            
+            if url.startswith("http"):
+                from urllib.parse import urlparse
+                parsed = urlparse(url)
+                detected_base_url = f"{parsed.scheme}://{parsed.netloc}"
+
+            for method_name, details in methods.items():
+                if method_name.lower() in ['get', 'post', 'put', 'delete', 'patch']:
+                    # 构造符合 RestGPT 要求的元组：(Name, Description, DocsDict)
+                    endpoint_name = f"{method_name.upper()} {url}"
+                    description = details.get("summary", "") or details.get("description", "")
+                    
+                    endpoints_list.append(
+                        (endpoint_name, description, details)
+                    )
+        # 3. 重新赋值给 api_spec
+        api_spec = ReducedOpenAPISpec(
+            # === 修复点：填入 servers 列表 ===
+            servers=[{"url": detected_base_url}], 
+            # ==============================
+            description=f"{scenario} Data", 
+            endpoints=endpoints_list
+        )
+        if scenario == 'github':
+            headers = {
+                "Authorization" : "Bearer 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"
+            }
+        elif scenario == 'gitlab':
+            headers = {
+                "PRIVATE-TOKEN" : "glpat-g73bERuXv9jomlbbVrk4cW86MQp1OmVxbXU3Cw.01.120ws7pth"
+            }
+        else:
+            headers = {}
+        scenario = "chatops"
     else:
         raise ValueError(f"Unsupported scenario: {scenario}")
 
     requests_wrapper = Requests(headers=headers)
 
-    llm = OpenAI(model_name="text-davinci-003", temperature=0.0, max_tokens=700)
+    llm = OpenAIChat(
+        model_name="deepseek-v3.2", 
+        temperature=1.0, 
+        max_tokens=700,
+    )
     rest_gpt = RestGPT(llm, api_spec=api_spec, scenario=scenario, requests_wrapper=requests_wrapper, simple_parser=False)
 
     if scenario == 'tmdb':
         query_example = "Give me the number of movies directed by Sofia Coppola"
     elif scenario == 'spotify':
         query_example = "Add Summertime Sadness by Lana Del Rey in my first playlist"
+    else:
+        query_example = "No query example for your scenario, input your query"
     print(f"Example instruction: {query_example}")
     query = input("Please input an instruction (Press ENTER to use the example instruction): ")
     if query == '':

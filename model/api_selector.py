@@ -65,7 +65,14 @@ Background: The ids and names of the tracks of the album 1JnjcAIKQ9TSJFVFierTB8 
 User query: append the first song of the newest album 1JnjcAIKQ9TSJFVFierTB8 of Coldplay (id 4gzpq5DPGxSnKTe4SA8HAU) to my player queue.
 API calling 1: POST /me/player/queue to add Yellow (3AJwUDP919kvQ9QcozQPxg) to the player queue
 API response: Yellow is added to the player queue
-"""
+""",
+"chatops":'''
+Example 1:
+Background: github user harry signed up in 2011.
+User query: compare github user harry and shirley, who signed up earlier?
+API calling 1: GET https://api.github.com/user/shirley to get shirley sign up date
+API response: shirley signed up in 2013.
+'''
 }
 
 # Thought: I am finished executing the plan and have the information the user asked for or the data the used asked to create
@@ -88,7 +95,7 @@ Starting below, you should follow this format:
 
 Background: background information which you can use to execute the plan, e.g., the id of a person, the id of tracks by Faye Wong. In most cases, you must use the background information instead of requesting these information again. For example, if the query is "get the poster for any other movie directed by Wong Kar-Wai (12453)", and the background includes the movies directed by Wong Kar-Wai, you should use the background information instead of requesting the movies directed by Wong Kar-Wai again.
 User query: the query a User wants help with related to the API
-API calling 1: the first api call you want to make. Note the API calling can contain conditions such as filtering, sorting, etc. For example, "GET /movie/18329/credits to get the director of the movie Happy Together", "GET /movie/popular to get the top-1 most popular movie". If user query contains some filter condition, such as the latest, the most popular, the highest rated, then the API calling plan should also contain the filter condition. If you think there is no need to call an API, output "No API call needed." and then output the final answer according to the user query and background information.
+API calling 1: the first api call you want to make. Note the API calling can contain conditions such as filtering, sorting, etc. For example, "GET /movie/18329/credits to get the director of the movie Happy Together", "GET https://movie/popular to get the top-1 most popular movie". If user query contains some filter condition, such as the latest, the most popular, the highest rated, then the API calling plan should also contain the filter condition. If you think there is no need to call an API, output "No API call needed." and then output the final answer according to the user query and background information.
 API response: the response of API calling 1
 Instruction: Another model will evaluate whether the user query has been fulfilled. If the instruction contains "continue", then you should make another API call following this instruction.
 ... (this API calling n and API response can repeat N times, but most queries can be solved in 1-2 step)
@@ -174,7 +181,7 @@ class APISelector(Chain):
         else:
             scratchpad = ""
         api_selector_chain = LLMChain(llm=self.llm, prompt=self.api_selector_prompt)
-        api_selector_chain_output = api_selector_chain.run(plan=inputs['plan'], background=inputs['background'], agent_scratchpad=scratchpad, stop=self._stop)
+        api_selector_chain_output = api_selector_chain.run(plan=inputs['plan'], background=inputs['background'], agent_scratchpad=scratchpad)
         
         api_plan = re.sub(r"API calling \d+: ", "", api_selector_chain_output).strip()
 
@@ -188,7 +195,7 @@ class APISelector(Chain):
         while get_matched_endpoint(self.api_spec, api_plan) is None:
             logger.info("API Selector: The API you called is not in the list of available APIs. Please use another API.")
             scratchpad += api_selector_chain_output + "\nThe API you called is not in the list of available APIs. Please use another API.\n"
-            api_selector_chain_output = api_selector_chain.run(plan=inputs['plan'], background=inputs['background'], agent_scratchpad=scratchpad, stop=self._stop)
+            api_selector_chain_output = api_selector_chain.run(plan=inputs['plan'], background=inputs['background'], agent_scratchpad=scratchpad)
             api_plan = re.sub(r"API calling \d+: ", "", api_selector_chain_output).strip()
             logger.info(f"API Selector: {api_plan}")
 

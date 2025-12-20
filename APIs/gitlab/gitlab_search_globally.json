@@ -1,0 +1,134 @@
+{
+    "https://gitlab.com/api/v4/search": {
+        "get": {
+            "description": "The OAS for '/search' (GET) enables searching. Inputs: scope, search query, optional filters like state, confidential. Can sort results. Responses (200): JSON array of objects with details like id, name. Returns relevant search results based on provided parameters.",
+            "tags": [
+                "search-api"
+            ],
+            "parameters": [
+                {
+                    "name": "scope",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": true,
+                    "in": "query",
+                    "description": "The scope to search in"
+                },
+                {
+                    "name": "search",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": true,
+                    "in": "query",
+                    "description": "The search query"
+                },
+                {
+                    "name": "state",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Filter by state. Issues and merge requests are supported; it is ignored for other scopes."
+                },
+                {
+                    "name": "confidential",
+                    "schema": {
+                        "type": "boolean"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Filter by confidentiality. Issues scope is supported; it is ignored for other scopes."
+                },
+                {
+                    "name": "order_by",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Allowed values are created_at only. If this is not set, the results will either be sorted by created_at in descending order for basic search, or by the most relevant documents when using advanced search."
+                },
+                {
+                    "name": "sort",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Allowed values are asc or desc only. If this is not set, the results will either be sorted by created_at in descending order for basic search, or by the most relevant documents when using advanced search."
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "name_with_namespace": {
+                                            "type": "string"
+                                        },
+                                        "path": {
+                                            "type": "string"
+                                        },
+                                        "path_with_namespace": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "default_branch": {
+                                            "type": "string"
+                                        },
+                                        "tag_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "ssh_url_to_repo": {
+                                            "type": "string"
+                                        },
+                                        "http_url_to_repo": {
+                                            "type": "string"
+                                        },
+                                        "web_url": {
+                                            "type": "string"
+                                        },
+                                        "avatar_url": {
+                                            "type": "string"
+                                        },
+                                        "star_count": {
+                                            "type": "integer"
+                                        },
+                                        "forks_count": {
+                                            "type": "integer"
+                                        },
+                                        "last_activity_at": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

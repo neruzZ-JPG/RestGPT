@@ -1,0 +1,65 @@
+{
+  "name": "kubectl_rollout",
+  "description": "Manage the rollout of a resource (e.g., deployment, daemonset, statefulset)",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "subCommand": {
+        "type": "string",
+        "description": "Rollout subcommand to execute",
+        "enum": [
+          "history",
+          "pause",
+          "restart",
+          "resume",
+          "status",
+          "undo"
+        ],
+        "default": "status"
+      },
+      "resourceType": {
+        "type": "string",
+        "description": "Type of resource to manage rollout for",
+        "enum": [
+          "deployment",
+          "daemonset",
+          "statefulset"
+        ],
+        "default": "deployment"
+      },
+      "name": {
+        "type": "string",
+        "description": "Name of the resource"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Namespace of the resource",
+        "default": "default"
+      },
+      "revision": {
+        "type": "number",
+        "description": "Revision to rollback to (for undo subcommand)"
+      },
+      "toRevision": {
+        "type": "number",
+        "description": "Revision to roll back to (for history subcommand)"
+      },
+      "timeout": {
+        "type": "string",
+        "description": "The length of time to wait before giving up (e.g., '30s', '1m', '2m30s')"
+      },
+      "watch": {
+        "type": "boolean",
+        "description": "Watch the rollout status in real-time until completion",
+        "default": false
+      }
+    },
+    "required": [
+      "subCommand",
+      "resourceType",
+      "name",
+      "namespace"
+    ]
+  },
+  "annotations": null
+}

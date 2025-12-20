@@ -1,0 +1,91 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitLabInvitationsApi",
+        "version": "1.0.0",
+        "description": "The GitLab Invitations API enables users to manage group invitations. It allows sending invitations with specific access levels (ranging from no access to owner) and updating pending invitations' access level or access expiry date. You can specify details like the group ID, email address, and optional access level and expiry date. Responses provide information such as the updated access level and expiry date of the invitation."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/groups/{id}/invitations/{email}": {
+            "put": {
+                "operationId": "updateGroupInvitation",
+                "summary": "Updates a pending invitation's access level or access expiry date for a specific group.",
+                "description": "This endpoint updates a pending invitation's access level or access expiry date for a given group. You need to provide the group ID and the email address the invitation was previously sent to. Optionally, you can also specify a new access level and/or an expiry date.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the group.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "oneOf": [
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "The email address the invitation was previously sent to.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "access_level",
+                        "in": "query",
+                        "description": "A valid access level (defaults: 30, the Developer role).",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "expires_at",
+                        "in": "query",
+                        "description": "A date string in ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ).",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful update of the invitation.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "expires_at": {
+                                            "type": "string",
+                                            "description": "The updated expiry date of the invitation in ISO 8601 format."
+                                        },
+                                        "access_level": {
+                                            "type": "integer",
+                                            "description": "The updated access level of the invitation."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Check your input parameters."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Please check your access token."
+                    },
+                    "404": {
+                        "description": "Group or invitation not found."
+                    }
+                }
+            }
+        }
+    }
+}

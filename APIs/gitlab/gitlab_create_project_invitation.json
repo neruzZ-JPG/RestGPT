@@ -1,0 +1,109 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitLabInvitations API",
+        "version": "1.0.0",
+        "description": "The GitLab Invitations API enables adding new members to a project. You can specify a user ID or invite by email. It requires valid access levels for the inviter. Attributes like project ID, email/user ID, access level, etc., need to be provided. It returns success status on successful email sends or error details otherwise. Also handles cases like queued requests for administrator approval when applicable."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/invitations": {
+            "post": {
+                "operationId": "addProjectMember",
+                "summary": "Adds a new member to a project by specifying a user ID or inviting by email.",
+                "description": "This endpoint allows you to add a new member to a project. You can either provide a user ID or an email address to invite the new member. Various attributes such as access level, expiration date, etc., can be specified as needed.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project. This is a required parameter.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The request body should contain the details of the new member to be added to the project. You can provide either an email or a user ID along with other optional attributes like access level, expiration date, etc.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "description": "The email of the new member or multiple emails separated by commas. This is required if user_id isn\u2019t provided.",
+                                        "type": "string"
+                                    },
+                                    "user_id": {
+                                        "description": "The ID of the new member or multiple IDs separated by commas. This is required if email isn\u2019t provided.",
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "access_level": {
+                                        "description": "A valid access level. This is a required parameter.",
+                                        "type": "integer"
+                                    },
+                                    "expires_at": {
+                                        "description": "A date string in the format YEAR-MONTH-DAY. This is an optional parameter.",
+                                        "type": "string"
+                                    },
+                                    "invite_source": {
+                                        "description": "The source of the invitation that starts the member creation process. See this issue. This is an optional parameter.",
+                                        "type": "string"
+                                    },
+                                    "member_role_id": {
+                                        "description": "Assigns the new member to the provided custom role. (Introduced) in GitLab 16.6. Ultimate only. This is an optional parameter.",
+                                        "type": "integer",
+                                        "format": "int64"
+                                    }
+                                },
+                                "required": [
+                                    "email",
+                                    "user_id",
+                                    "access_level"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation. Returns a JSON object with status indicating success if all emails were successfully sent, or error along with a message object containing error details for each email/user_id if there was an error sending the email. If administrator approval for role promotions is applicable, it may also return a JSON object with queued_users object containing details about queued requests for administrator approval and status set to success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "description": "Indicates the status of the operation. Can be either 'success' or 'error'.",
+                                            "type": "string",
+                                            "enum": [
+                                                "success",
+                                                "error"
+                                            ]
+                                        },
+                                        "message": {
+                                            "description": "If the status is 'error', this object contains error details for each email/user_id. The keys are the email addresses or user names and the values are the corresponding error messages.",
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "queued_users": {
+                                            "description": "If administrator approval for role promotions is applicable, this object contains details about queued requests for administrator approval. The keys are the user names and the values are the corresponding status messages.",
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

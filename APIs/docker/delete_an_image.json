@@ -1,0 +1,110 @@
+{
+  "http://localhost:2375/images/{name}": {
+    "delete": {
+      "summary": "Remove an image",
+      "description": "Remove an image, along with any untagged parent images that were\nreferenced by that image.\n\nImages can't be removed if they have descendant images, are being\nused by a running container or are being used by a build.\n",
+      "operationId": "ImageDelete",
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "The image was deleted successfully",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Untagged": {
+                  "description": "The image ID of an image that was untagged",
+                  "type": "string"
+                },
+                "Deleted": {
+                  "description": "The image ID of an image that was deleted",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No such image",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Conflict",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "description": "Image name or ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "force",
+          "in": "query",
+          "description": "Remove the image even if it is being used by stopped containers or has other tags",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "noprune",
+          "in": "query",
+          "description": "Do not delete untagged parent images",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "tags": [
+        "Image"
+      ]
+    }
+  }
+}

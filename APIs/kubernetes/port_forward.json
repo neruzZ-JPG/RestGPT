@@ -1,0 +1,31 @@
+{
+  "name": "port_forward",
+  "description": "Forward a local port to a port on a Kubernetes resource",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "resourceType": {
+        "type": "string"
+      },
+      "resourceName": {
+        "type": "string"
+      },
+      "localPort": {
+        "type": "number"
+      },
+      "targetPort": {
+        "type": "number"
+      },
+      "namespace": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "resourceType",
+      "resourceName",
+      "localPort",
+      "targetPort"
+    ]
+  },
+  "annotations": null
+}

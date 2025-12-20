@@ -1,0 +1,119 @@
+{
+    "https://api.github.com/user/following/{username}": {
+        "delete": {
+            "summary": "Unfollow a user",
+            "description": "OAuth app tokens and personal access tokens (classic) need the `user:follow` scope to use this endpoint.",
+            "tags": [
+                "users"
+            ],
+            "operationId": "users/unfollow",
+            "externalDocs": {
+                "description": "API method documentation",
+                "url": "https://docs.github.com/rest/users/followers#unfollow-a-user"
+            },
+            "parameters": [
+                {
+                    "name": "username",
+                    "description": "The handle for the GitHub user account.",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "204": {
+                    "description": "Response"
+                },
+                "304": {
+                    "description": "Not modified"
+                },
+                "404": {
+                    "description": "Resource not found",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "403": {
+                    "description": "Forbidden",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "Requires authentication",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "x-github": {
+                "githubCloudOnly": false,
+                "enabledForGitHubApps": false,
+                "category": "users",
+                "subcategory": "followers"
+            }
+        }
+    }
+}

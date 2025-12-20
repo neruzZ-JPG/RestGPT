@@ -1,0 +1,76 @@
+{
+  "http://localhost:2375/networks/{id}": {
+    "delete": {
+      "summary": "Remove a network",
+      "operationId": "NetworkDelete",
+      "responses": {
+        "204": {
+          "description": "No error"
+        },
+        "403": {
+          "description": "operation not supported for pre-defined networks",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "no such network",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Network ID or name",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "tags": [
+        "Network"
+      ]
+    }
+  }
+}

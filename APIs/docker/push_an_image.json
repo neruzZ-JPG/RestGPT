@@ -1,0 +1,76 @@
+{
+  "http://localhost:2375/images/{name}/push": {
+    "post": {
+      "summary": "Push an image",
+      "description": "Push an image to a registry.\n\nIf you wish to push an image on to a private registry, that image must\nalready have a tag which references the registry. For example,\n`registry.example.com/myimage:latest`.\n\nThe push is cancelled if the HTTP connection is closed.\n",
+      "operationId": "ImagePush",
+      "consumes": [
+        "application/octet-stream"
+      ],
+      "responses": {
+        "200": {
+          "description": "No error"
+        },
+        "404": {
+          "description": "No such image",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "description": "Name of the image to push. For example, `registry.example.com/myimage`.\nThe image must be present in the local image store with the same name.\n\nThe name should be provided without tag; if a tag is provided, it\nis ignored. For example, `registry.example.com/myimage:latest` is\nconsidered equivalent to `registry.example.com/myimage`.\n\nUse the `tag` parameter to specify the tag to push.\n",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "in": "query",
+          "description": "Tag of the image to push. For example, `latest`. If no tag is provided,\nall tags of the given image that are present in the local image store\nare pushed.\n",
+          "type": "string"
+        },
+        {
+          "name": "X-Registry-Auth",
+          "in": "header",
+          "description": "A base64url-encoded auth configuration.\n\nRefer to the [authentication section](#section/Authentication) for\ndetails.\n",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "tags": [
+        "Image"
+      ]
+    }
+  }
+}

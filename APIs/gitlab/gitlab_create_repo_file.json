@@ -1,0 +1,69 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}": {
+        "post": {
+            "description": "Function: Manages files in a project's repository. Input: Project ID (integer) and file path (string). Response (200): Returns details like file name, size etc. as a JSON object on successful operation.",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "file_path",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file_name": {
+                                        "type": "string"
+                                    },
+                                    "file_path": {
+                                        "type": "string"
+                                    },
+                                    "size": {
+                                        "type": "integer"
+                                    },
+                                    "encoding": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "content_sha256": {
+                                        "type": "string"
+                                    },
+                                    "ref": {
+                                        "type": "string"
+                                    },
+                                    "blob_id": {
+                                        "type": "string"
+                                    },
+                                    "commit_id": {
+                                        "type": "string"
+                                    },
+                                    "last_commit_id": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

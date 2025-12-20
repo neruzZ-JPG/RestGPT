@@ -1,0 +1,793 @@
+{
+  "http://{username}:{token}@localhost:8080/queue/item/{number}/api/json": {
+    "get": {
+      "description": "Retrieve queued item details",
+      "operationId": "getQueueItem",
+      "parameters": [
+        {
+          "name": "number",
+          "description": "Queue number",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved queued item details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "_class": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "_class": {
+                          "type": "string"
+                        },
+                        "actions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "_class": {
+                                "type": "string"
+                              },
+                              "causes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "_class": {
+                                      "type": "string"
+                                    },
+                                    "shortDescription": {
+                                      "type": "string"
+                                    },
+                                    "userId": {
+                                      "type": "string"
+                                    },
+                                    "userName": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "blocked": {
+                          "type": "boolean"
+                        },
+                        "buildable": {
+                          "type": "boolean"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "inQueueSince": {
+                          "type": "integer"
+                        },
+                        "params": {
+                          "type": "string"
+                        },
+                        "stuck": {
+                          "type": "boolean"
+                        },
+                        "task": {
+                          "type": "object",
+                          "properties": {
+                            "_class": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            },
+                            "color": {
+                              "type": "string"
+                            },
+                            "actions": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "_class": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "description": {
+                              "type": "string"
+                            },
+                            "displayName": {
+                              "type": "string"
+                            },
+                            "displayNameOrNull": {
+                              "type": "string"
+                            },
+                            "fullDisplayName": {
+                              "type": "string"
+                            },
+                            "fullName": {
+                              "type": "string"
+                            },
+                            "buildable": {
+                              "type": "boolean"
+                            },
+                            "builds": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "_class": {
+                                    "type": "string"
+                                  },
+                                  "number": {
+                                    "type": "integer"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "actions": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "_class": {
+                                          "type": "string"
+                                        },
+                                        "causes": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "_class": {
+                                                "type": "string"
+                                              },
+                                              "shortDescription": {
+                                                "type": "string"
+                                              },
+                                              "userId": {
+                                                "type": "string"
+                                              },
+                                              "userName": {
+                                                "type": "string"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "building": {
+                                    "type": "boolean"
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  },
+                                  "displayName": {
+                                    "type": "string"
+                                  },
+                                  "duration": {
+                                    "type": "integer"
+                                  },
+                                  "estimatedDuration": {
+                                    "type": "integer"
+                                  },
+                                  "executor": {
+                                    "type": "string"
+                                  },
+                                  "fullDisplayName": {
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "keepLog": {
+                                    "type": "boolean"
+                                  },
+                                  "queueId": {
+                                    "type": "integer"
+                                  },
+                                  "result": {
+                                    "type": "string"
+                                  },
+                                  "timestamp": {
+                                    "type": "integer"
+                                  },
+                                  "builtOn": {
+                                    "type": "string"
+                                  },
+                                  "changeSet": {
+                                    "type": "object",
+                                    "properties": {
+                                      "_class": {
+                                        "type": "string"
+                                      },
+                                      "kind": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "firstBuild": {
+                              "type": "object",
+                              "properties": {
+                                "_class": {
+                                  "type": "string"
+                                },
+                                "number": {
+                                  "type": "integer"
+                                },
+                                "url": {
+                                  "type": "string"
+                                },
+                                "actions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "_class": {
+                                        "type": "string"
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "_class": {
+                                              "type": "string"
+                                            },
+                                            "shortDescription": {
+                                              "type": "string"
+                                            },
+                                            "userId": {
+                                              "type": "string"
+                                            },
+                                            "userName": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "building": {
+                                  "type": "boolean"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "duration": {
+                                  "type": "integer"
+                                },
+                                "estimatedDuration": {
+                                  "type": "integer"
+                                },
+                                "executor": {
+                                  "type": "string"
+                                },
+                                "fullDisplayName": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "keepLog": {
+                                  "type": "boolean"
+                                },
+                                "queueId": {
+                                  "type": "integer"
+                                },
+                                "result": {
+                                  "type": "string"
+                                },
+                                "timestamp": {
+                                  "type": "integer"
+                                },
+                                "builtOn": {
+                                  "type": "string"
+                                },
+                                "changeSet": {
+                                  "type": "object",
+                                  "properties": {
+                                    "_class": {
+                                      "type": "string"
+                                    },
+                                    "kind": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "healthReport": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "description": {
+                                    "type": "string"
+                                  },
+                                  "iconClassName": {
+                                    "type": "string"
+                                  },
+                                  "iconUrl": {
+                                    "type": "string"
+                                  },
+                                  "score": {
+                                    "type": "integer"
+                                  },
+                                  "_class": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "inQueue": {
+                              "type": "boolean"
+                            },
+                            "keepDependencies": {
+                              "type": "boolean"
+                            },
+                            "lastBuild": {
+                              "type": "object",
+                              "properties": {
+                                "_class": {
+                                  "type": "string"
+                                },
+                                "number": {
+                                  "type": "integer"
+                                },
+                                "url": {
+                                  "type": "string"
+                                },
+                                "actions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "_class": {
+                                        "type": "string"
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "_class": {
+                                              "type": "string"
+                                            },
+                                            "shortDescription": {
+                                              "type": "string"
+                                            },
+                                            "userId": {
+                                              "type": "string"
+                                            },
+                                            "userName": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "building": {
+                                  "type": "boolean"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "duration": {
+                                  "type": "integer"
+                                },
+                                "estimatedDuration": {
+                                  "type": "integer"
+                                },
+                                "executor": {
+                                  "type": "string"
+                                },
+                                "fullDisplayName": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "keepLog": {
+                                  "type": "boolean"
+                                },
+                                "queueId": {
+                                  "type": "integer"
+                                },
+                                "result": {
+                                  "type": "string"
+                                },
+                                "timestamp": {
+                                  "type": "integer"
+                                },
+                                "builtOn": {
+                                  "type": "string"
+                                },
+                                "changeSet": {
+                                  "type": "object",
+                                  "properties": {
+                                    "_class": {
+                                      "type": "string"
+                                    },
+                                    "kind": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "lastCompletedBuild": {
+                              "type": "object",
+                              "properties": {
+                                "_class": {
+                                  "type": "string"
+                                },
+                                "number": {
+                                  "type": "integer"
+                                },
+                                "url": {
+                                  "type": "string"
+                                },
+                                "actions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "_class": {
+                                        "type": "string"
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "_class": {
+                                              "type": "string"
+                                            },
+                                            "shortDescription": {
+                                              "type": "string"
+                                            },
+                                            "userId": {
+                                              "type": "string"
+                                            },
+                                            "userName": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "building": {
+                                  "type": "boolean"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "duration": {
+                                  "type": "integer"
+                                },
+                                "estimatedDuration": {
+                                  "type": "integer"
+                                },
+                                "executor": {
+                                  "type": "string"
+                                },
+                                "fullDisplayName": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "keepLog": {
+                                  "type": "boolean"
+                                },
+                                "queueId": {
+                                  "type": "integer"
+                                },
+                                "result": {
+                                  "type": "string"
+                                },
+                                "timestamp": {
+                                  "type": "integer"
+                                },
+                                "builtOn": {
+                                  "type": "string"
+                                },
+                                "changeSet": {
+                                  "type": "object",
+                                  "properties": {
+                                    "_class": {
+                                      "type": "string"
+                                    },
+                                    "kind": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "lastFailedBuild": {
+                              "type": "string"
+                            },
+                            "lastStableBuild": {
+                              "type": "object",
+                              "properties": {
+                                "_class": {
+                                  "type": "string"
+                                },
+                                "number": {
+                                  "type": "integer"
+                                },
+                                "url": {
+                                  "type": "string"
+                                },
+                                "actions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "_class": {
+                                        "type": "string"
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "_class": {
+                                              "type": "string"
+                                            },
+                                            "shortDescription": {
+                                              "type": "string"
+                                            },
+                                            "userId": {
+                                              "type": "string"
+                                            },
+                                            "userName": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "building": {
+                                  "type": "boolean"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "duration": {
+                                  "type": "integer"
+                                },
+                                "estimatedDuration": {
+                                  "type": "integer"
+                                },
+                                "executor": {
+                                  "type": "string"
+                                },
+                                "fullDisplayName": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "keepLog": {
+                                  "type": "boolean"
+                                },
+                                "queueId": {
+                                  "type": "integer"
+                                },
+                                "result": {
+                                  "type": "string"
+                                },
+                                "timestamp": {
+                                  "type": "integer"
+                                },
+                                "builtOn": {
+                                  "type": "string"
+                                },
+                                "changeSet": {
+                                  "type": "object",
+                                  "properties": {
+                                    "_class": {
+                                      "type": "string"
+                                    },
+                                    "kind": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "lastSuccessfulBuild": {
+                              "type": "object",
+                              "properties": {
+                                "_class": {
+                                  "type": "string"
+                                },
+                                "number": {
+                                  "type": "integer"
+                                },
+                                "url": {
+                                  "type": "string"
+                                },
+                                "actions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "_class": {
+                                        "type": "string"
+                                      },
+                                      "causes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "_class": {
+                                              "type": "string"
+                                            },
+                                            "shortDescription": {
+                                              "type": "string"
+                                            },
+                                            "userId": {
+                                              "type": "string"
+                                            },
+                                            "userName": {
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "building": {
+                                  "type": "boolean"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "displayName": {
+                                  "type": "string"
+                                },
+                                "duration": {
+                                  "type": "integer"
+                                },
+                                "estimatedDuration": {
+                                  "type": "integer"
+                                },
+                                "executor": {
+                                  "type": "string"
+                                },
+                                "fullDisplayName": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "keepLog": {
+                                  "type": "boolean"
+                                },
+                                "queueId": {
+                                  "type": "integer"
+                                },
+                                "result": {
+                                  "type": "string"
+                                },
+                                "timestamp": {
+                                  "type": "integer"
+                                },
+                                "builtOn": {
+                                  "type": "string"
+                                },
+                                "changeSet": {
+                                  "type": "object",
+                                  "properties": {
+                                    "_class": {
+                                      "type": "string"
+                                    },
+                                    "kind": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "lastUnstableBuild": {
+                              "type": "string"
+                            },
+                            "lastUnsuccessfulBuild": {
+                              "type": "string"
+                            },
+                            "nextBuildNumber": {
+                              "type": "integer"
+                            },
+                            "queueItem": {
+                              "type": "string"
+                            },
+                            "concurrentBuild": {
+                              "type": "boolean"
+                            },
+                            "scm": {
+                              "type": "object",
+                              "properties": {
+                                "_class": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "why": {
+                          "type": "string"
+                        },
+                        "buildableStartMilliseconds": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Authentication failed - incorrect username and/or password"
+        },
+        "403": {
+          "description": "Jenkins requires authentication - please set username and password"
+        }
+      },
+      "security": [
+        {
+          "jenkins_auth": []
+        }
+      ],
+      "tags": [
+        "remoteAccess"
+      ]
+    }
+  }
+}

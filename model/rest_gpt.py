@@ -46,12 +46,12 @@ class RestGPT(Chain):
         callback_manager: Optional[BaseCallbackManager] = None,
         **kwargs: Any,
     ) -> None:
-        if scenario in ['TMDB', 'Tmdb']:
-            scenario = 'tmdb'
-        if scenario in ['Spotify']:
-            scenario = 'spotify' 
-        if scenario not in ['tmdb', 'spotify']:
-            raise ValueError(f"Invalid scenario {scenario}")
+        # if scenario in ['TMDB', 'Tmdb']:
+        #     scenario = 'tmdb'
+        # if scenario in ['Spotify']:
+        #     scenario = 'spotify' 
+        # if scenario not in ['tmdb', 'spotify']:
+        #     raise ValueError(f"Invalid scenario {scenario}")
         
         planner = Planner(llm=llm, scenario=scenario)
         api_selector = APISelector(llm=llm, scenario=scenario, api_spec=api_spec)
@@ -139,7 +139,7 @@ class RestGPT(Chain):
         iterations = 0
         time_elapsed = 0.0
         start_time = time.time()
-
+        logger.info(f"query is {query}")
         plan = self.planner.run(input=query, history=planner_history)
         logger.info(f"Planner: {plan}")
 

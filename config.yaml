@@ -1,7 +1,9 @@
-openai_api_key: 
+openai_api_base: https://vip.apiyi.com/v1
 
-tmdb_access_token: 
+openai_api_key: sk-5PYQRpTeWXyM9ibd96B5737aFdCc47B1B89a3937F6447eEe
 
-spotipy_client_id: 
-spotipy_client_secret: 
-spotipy_redirect_uri: 
+tmdb_access_token: gasdg
+
+spotipy_client_id: gasdg
+spotipy_client_secret: gasgd
+spotipy_redirect_uri: gasdg

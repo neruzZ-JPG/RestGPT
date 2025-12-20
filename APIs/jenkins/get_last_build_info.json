@@ -1,0 +1,140 @@
+{
+  "http://{username}:{token}@localhost:8080/job/{name}/lastBuild/api/json": {
+    "get": {
+      "description": "Retrieve job's last build details",
+      "operationId": "getJobLastBuild",
+      "parameters": [
+        {
+          "name": "name",
+          "description": "Name of the job",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully retrieved job's last build details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "_class": {
+                    "type": "string"
+                  },
+                  "number": {
+                    "type": "integer"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "_class": {
+                          "type": "string"
+                        },
+                        "causes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "_class": {
+                                "type": "string"
+                              },
+                              "shortDescription": {
+                                "type": "string"
+                              },
+                              "userId": {
+                                "type": "string"
+                              },
+                              "userName": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "building": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "integer"
+                  },
+                  "estimatedDuration": {
+                    "type": "integer"
+                  },
+                  "executor": {
+                    "type": "string"
+                  },
+                  "fullDisplayName": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "keepLog": {
+                    "type": "boolean"
+                  },
+                  "queueId": {
+                    "type": "integer"
+                  },
+                  "result": {
+                    "type": "string"
+                  },
+                  "timestamp": {
+                    "type": "integer"
+                  },
+                  "builtOn": {
+                    "type": "string"
+                  },
+                  "changeSet": {
+                    "type": "object",
+                    "properties": {
+                      "_class": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Authentication failed - incorrect username and/or password"
+        },
+        "403": {
+          "description": "Jenkins requires authentication - please set username and password"
+        },
+        "404": {
+          "description": "Job cannot be found on Jenkins instance"
+        }
+      },
+      "security": [
+        {
+          "jenkins_auth": []
+        }
+      ],
+      "tags": [
+        "remoteAccess"
+      ]
+    }
+  }
+}

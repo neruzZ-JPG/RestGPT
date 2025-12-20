@@ -333,7 +333,7 @@ class ResponseParser(Chain):
 class SimpleResponseParser(Chain):
     """Implements Program-Aided Language Models."""
 
-    llm: BaseLLM
+    llm: Any
     llm_parsing_prompt: PromptTemplate = None
     encoder: tiktoken.Encoding = None
     max_json_length: int = 1000
@@ -341,7 +341,7 @@ class SimpleResponseParser(Chain):
     return_intermediate_steps: bool = False
 
 
-    def __init__(self, llm: BaseLLM, api_path: str, api_doc: Dict, with_example: bool = False) -> None:
+    def __init__(self, llm: Any, api_path: str, api_doc: Dict, with_example: bool = False) -> None:
         if 'responses' not in api_doc or 'content' not in api_doc['responses']:
             llm_parsing_prompt = PromptTemplate(
                 template=LLM_SUMMARIZE_TEMPLATE,

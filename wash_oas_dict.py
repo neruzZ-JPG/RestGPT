@@ -61,7 +61,8 @@ def merge_all_jsons(input_folder, output_file):
 
 if __name__ == "__main__":
     # 配置路径
-    INPUT_FOLDER = "./chatops_raw_APIs"  # 你的原始文件目录
-    OUTPUT_FILE = "./specs/chatops_OAS.json" # 输出给 RestGPT 用的文件
+    system = "kubernetes"
+    INPUT_FOLDER = f"./APIs/{system}"  # 你的原始文件目录
+    OUTPUT_FILE = f"./specs/{system}.json" # 输出给 RestGPT 用的文件
     
     merge_all_jsons(INPUT_FOLDER, OUTPUT_FILE)

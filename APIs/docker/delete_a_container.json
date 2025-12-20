@@ -1,0 +1,114 @@
+{
+  "http://localhost:2375/containers/{id}": {
+    "delete": {
+      "summary": "Remove a container",
+      "operationId": "ContainerDelete",
+      "responses": {
+        "204": {
+          "description": "no error"
+        },
+        "400": {
+          "description": "bad parameter",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "no such container",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "conflict",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID or name of the container",
+          "type": "string"
+        },
+        {
+          "name": "v",
+          "in": "query",
+          "description": "Remove anonymous volumes associated with the container.",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "force",
+          "in": "query",
+          "description": "If the container is running, kill it before removing it.",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "link",
+          "in": "query",
+          "description": "Remove the specified link associated with the container.",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "tags": [
+        "Container"
+      ]
+    }
+  }
+}

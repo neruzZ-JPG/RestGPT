@@ -1,0 +1,5 @@
+colorama==0.4.6
+langchain==0.0.292
+openai==0.28.0
+spotipy==2.23.0
+tqdm==4.66.1

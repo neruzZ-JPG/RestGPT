@@ -1,0 +1,9 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "chatops",
+    "version": "1.0.0",
+    "description": "chatops APIs"
+  },
+  "paths": {}
+}

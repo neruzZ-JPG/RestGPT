@@ -1,0 +1,65 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/star": {
+        "post": {
+            "description": "The OAS function is to handle starring a project. Input is the project's integer ID in the path. Response on 200 is success with details like ID, description, etc. in JSON format about the project.",
+            "tags": [
+                "projects-api"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID or URL-encoded path of the project."
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "default_branch": {
+                                        "type": "string"
+                                    },
+                                    "visibility": {
+                                        "type": "string"
+                                    },
+                                    "ssh_url_to_repo": {
+                                        "type": "string"
+                                    },
+                                    "http_url_to_repo": {
+                                        "type": "string"
+                                    },
+                                    "web_url": {
+                                        "type": "string"
+                                    },
+                                    "readme_url": {
+                                        "type": "string"
+                                    },
+                                    "tag_list": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

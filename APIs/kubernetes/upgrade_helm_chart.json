@@ -1,0 +1,38 @@
+{
+  "name": "upgrade_helm_chart",
+  "description": "Upgrade a Helm release",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Release name"
+      },
+      "chart": {
+        "type": "string",
+        "description": "Chart name"
+      },
+      "repo": {
+        "type": "string",
+        "description": "Chart repository URL"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Kubernetes namespace"
+      },
+      "values": {
+        "type": "object",
+        "description": "Chart values",
+        "properties": {},
+        "additionalProperties": true
+      }
+    },
+    "required": [
+      "name",
+      "chart",
+      "repo",
+      "namespace"
+    ]
+  },
+  "annotations": null
+}

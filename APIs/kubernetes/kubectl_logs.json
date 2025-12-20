@@ -1,0 +1,69 @@
+{
+  "name": "kubectl_logs",
+  "description": "Get logs from Kubernetes resources like pods, deployments, or jobs",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "resourceType": {
+        "type": "string",
+        "enum": [
+          "pod",
+          "deployment",
+          "job",
+          "cronjob"
+        ],
+        "description": "Type of resource to get logs from"
+      },
+      "name": {
+        "type": "string",
+        "description": "Name of the resource"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Namespace of the resource",
+        "default": "default"
+      },
+      "container": {
+        "type": "string",
+        "description": "Container name (required when pod has multiple containers)"
+      },
+      "tail": {
+        "type": "number",
+        "description": "Number of lines to show from end of logs"
+      },
+      "since": {
+        "type": "string",
+        "description": "Show logs since relative time (e.g. '5s', '2m', '3h')"
+      },
+      "sinceTime": {
+        "type": "string",
+        "description": "Show logs since absolute time (RFC3339)"
+      },
+      "timestamps": {
+        "type": "boolean",
+        "description": "Include timestamps in logs",
+        "default": false
+      },
+      "previous": {
+        "type": "boolean",
+        "description": "Include logs from previously terminated containers",
+        "default": false
+      },
+      "follow": {
+        "type": "boolean",
+        "description": "Follow logs output (not recommended, may cause timeouts)",
+        "default": false
+      },
+      "labelSelector": {
+        "type": "string",
+        "description": "Filter resources by label selector"
+      }
+    },
+    "required": [
+      "resourceType",
+      "name",
+      "namespace"
+    ]
+  },
+  "annotations": null
+}

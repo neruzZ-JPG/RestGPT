@@ -1,0 +1,34 @@
+{
+  "name": "kubectl_apply",
+  "description": "Apply a Kubernetes YAML manifest from a string or file",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "manifest": {
+        "type": "string",
+        "description": "YAML manifest to apply"
+      },
+      "filename": {
+        "type": "string",
+        "description": "Path to a YAML file to apply (optional - use either manifest or filename)"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Namespace to apply the resource to (optional)",
+        "default": "default"
+      },
+      "dryRun": {
+        "type": "boolean",
+        "description": "If true, only validate the resource, don't apply it",
+        "default": false
+      },
+      "force": {
+        "type": "boolean",
+        "description": "If true, immediately remove resources from API and bypass graceful deletion",
+        "default": false
+      }
+    },
+    "required": []
+  },
+  "annotations": null
+}

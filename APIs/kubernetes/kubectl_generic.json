@@ -1,0 +1,57 @@
+{
+  "name": "kubectl_generic",
+  "description": "Execute any kubectl command with the provided arguments and flags",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "command": {
+        "type": "string",
+        "description": "The kubectl command to execute (e.g. patch, rollout, top)"
+      },
+      "subCommand": {
+        "type": "string",
+        "description": "Subcommand if applicable (e.g. 'history' for rollout)"
+      },
+      "resourceType": {
+        "type": "string",
+        "description": "Resource type (e.g. pod, deployment)"
+      },
+      "name": {
+        "type": "string",
+        "description": "Resource name"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Namespace",
+        "default": "default"
+      },
+      "outputFormat": {
+        "type": "string",
+        "description": "Output format (e.g. json, yaml, wide)",
+        "enum": [
+          "json",
+          "yaml",
+          "wide",
+          "name",
+          "custom"
+        ]
+      },
+      "flags": {
+        "type": "object",
+        "description": "Command flags as key-value pairs",
+        "additionalProperties": true
+      },
+      "args": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Additional command arguments"
+      }
+    },
+    "required": [
+      "command"
+    ]
+  },
+  "annotations": null
+}

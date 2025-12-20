@@ -1,0 +1,202 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitLabEventsApi",
+        "version": "1.0.0",
+        "description": "The GitLab Events API enables users to retrieve a list of visible events for a specific project. It offers various filtering options like by action type, target type, and date range. You can sort the events in ascending or descending order. Note that some features like certain epic details and some types of notes on merge requests are not available. Dates for before and after parameters should be in YYYY-MM-DD format, and events older than 3 years are removed for performance reasons."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{project_id}/events": {
+            "get": {
+                "operationId": "getProjectVisibleEvents",
+                "summary": "Get a list of visible events for a particular project.",
+                "description": "This endpoint retrieves a list of visible events for a specific project. Optional parameters can be used to filter the events by action type, target type, date range, and sort the events in ascending or descending order.",
+                "parameters": [
+                    {
+                        "name": "project_id",
+                        "in": "path",
+                        "description": "Required. The ID or URL-encoded path of the project.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "action",
+                        "in": "query",
+                        "description": "Optional. Include only events of a particular action type. See User contribution events for available types for the action parameter. These options are in lowercase.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "target_type",
+                        "in": "query",
+                        "description": "Optional. Include only events of a particular target type. Available target types are: epic (Your administrator must have enabled the new look for epics), issue, milestone, merge_request, note (Some notes on merge requests may be of the type DiscussionNote, instead of Note. DiscussionNote items are not available using the API), project, snippet, user. These options are in lowercase.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "epic",
+                                "issue",
+                                "milestone",
+                                "merge_request",
+                                "note",
+                                "project",
+                                "snippet",
+                                "user"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Optional. Include only events created before a particular date. Dates should be supplied in the YYYY-MM-DD format.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "after",
+                        "in": "query",
+                        "description": "Optional. Include only events created after a particular date. Dates should be supplied in the YYYY-MM-DD format.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Optional. Sort events in asc or desc order by created_at. Default is desc.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation. Returns an array of event objects.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "description": "The ID of the event."
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "description": "The title of the event (may be null)."
+                                            },
+                                            "project_id": {
+                                                "type": "integer",
+                                                "description": "The ID of the project associated with the event."
+                                            },
+                                            "action_name": {
+                                                "type": "string",
+                                                "description": "The name of the action associated with the event."
+                                            },
+                                            "target_id": {
+                                                "type": "integer",
+                                                "description": "The ID of the target associated with the event."
+                                            },
+                                            "target_iid": {
+                                                "type": "integer",
+                                                "description": "The internal ID of the target associated with the event."
+                                            },
+                                            "target_type": {
+                                                "type": "string",
+                                                "description": "The type of the target associated with the event."
+                                            },
+                                            "author_id": {
+                                                "type": "integer",
+                                                "description": "The ID of the author of the event."
+                                            },
+                                            "target_title": {
+                                                "type": "string",
+                                                "description": "The title of the target associated with the event (may be null)."
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "The date and time when the event was created."
+                                            },
+                                            "author": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "The name of the author."
+                                                    },
+                                                    "username": {
+                                                        "type": "string",
+                                                        "description": "The username of the author."
+                                                    },
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "description": "The ID of the author."
+                                                    },
+                                                    "state": {
+                                                        "type": "string",
+                                                        "description": "The state of the author (e.g., active)."
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string",
+                                                        "description": "The URL of the author's avatar."
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string",
+                                                        "description": "The web URL of the author."
+                                                    }
+                                                },
+                                                "description": "Information about the author of the event."
+                                            },
+                                            "author_username": {
+                                                "type": "string",
+                                                "description": "The username of the author."
+                                            },
+                                            "imported": {
+                                                "type": "boolean",
+                                                "description": "The imported status of the event."
+                                            },
+                                            "imported_from": {
+                                                "type": "string",
+                                                "description": "The source from which the event was imported (if applicable)."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Invalid parameters were provided."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Authentication credentials were missing or incorrect."
+                    },
+                    "403": {
+                        "description": "Forbidden. The user does not have permission to access the events for the given project."
+                    },
+                    "404": {
+                        "description": "Not found. The project with the given ID was not found."
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,280 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/issues/{issue_iid}": {
+        "get": {
+            "description": "Function: Retrieves details of a specific issue in a project. Inputs: 'id' (project ID/URL-encoded path) and 'issue_iid' (issue internal ID). Response: On success (200), returns detailed JSON data about the issue including various properties like author, state, labels etc.",
+            "tags": [
+                "Issues"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ]
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID or URL-encoded path of the project owned by the authenticated user"
+                },
+                {
+                    "name": "issue_iid",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The internal ID of a project\u2019s issue"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "project_id": {
+                                        "type": "integer"
+                                    },
+                                    "milestone": {
+                                        "type": "object",
+                                        "properties": {
+                                            "due_date": {
+                                                "type": "string"
+                                            },
+                                            "project_id": {
+                                                "type": "integer"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "iid": {
+                                                "type": "integer"
+                                            },
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string"
+                                            },
+                                            "updated_at": {
+                                                "type": "string"
+                                            },
+                                            "closed_at": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "author": {
+                                        "type": "object",
+                                        "properties": {
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "type": "string"
+                                    },
+                                    "iid": {
+                                        "type": "integer"
+                                    },
+                                    "assignees": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "assignee": {
+                                        "type": "object",
+                                        "properties": {
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "labels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "upvotes": {
+                                        "type": "integer"
+                                    },
+                                    "downvotes": {
+                                        "type": "integer"
+                                    },
+                                    "merge_requests_count": {
+                                        "type": "integer"
+                                    },
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "updated_at": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string"
+                                    },
+                                    "closed_at": {
+                                        "type": "string"
+                                    },
+                                    "closed_by": {
+                                        "type": "string"
+                                    },
+                                    "subscribed": {
+                                        "type": "boolean"
+                                    },
+                                    "user_notes_count": {
+                                        "type": "integer"
+                                    },
+                                    "due_date": {
+                                        "type": "string"
+                                    },
+                                    "web_url": {
+                                        "type": "string"
+                                    },
+                                    "references": {
+                                        "type": "object",
+                                        "properties": {
+                                            "short": {
+                                                "type": "string"
+                                            },
+                                            "relative": {
+                                                "type": "string"
+                                            },
+                                            "full": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "time_stats": {
+                                        "type": "object",
+                                        "properties": {
+                                            "time_estimate": {
+                                                "type": "integer"
+                                            },
+                                            "total_time_spent": {
+                                                "type": "integer"
+                                            },
+                                            "human_time_estimate": {
+                                                "type": "string"
+                                            },
+                                            "human_total_time_spent": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "confidential": {
+                                        "type": "boolean"
+                                    },
+                                    "discussion_locked": {
+                                        "type": "boolean"
+                                    },
+                                    "_links": {
+                                        "type": "object",
+                                        "properties": {
+                                            "self": {
+                                                "type": "string"
+                                            },
+                                            "notes": {
+                                                "type": "string"
+                                            },
+                                            "award_emoji": {
+                                                "type": "string"
+                                            },
+                                            "project": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "task_completion_status": {
+                                        "type": "object",
+                                        "properties": {
+                                            "count": {
+                                                "type": "integer"
+                                            },
+                                            "completed_count": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "kubectl_get",
+  "description": "Get or list Kubernetes resources by resource type, name, and optionally namespace",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "resourceType": {
+        "type": "string",
+        "description": "Type of resource to get (e.g., pods, deployments, services, configmaps, events, etc.)"
+      },
+      "name": {
+        "type": "string",
+        "description": "Name of the resource (optional - if not provided, lists all resources of the specified type)"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Namespace of the resource (optional - defaults to 'default' for namespaced resources)",
+        "default": "default"
+      },
+      "output": {
+        "type": "string",
+        "enum": [
+          "json",
+          "yaml",
+          "wide",
+          "name",
+          "custom"
+        ],
+        "description": "Output format",
+        "default": "json"
+      },
+      "allNamespaces": {
+        "type": "boolean",
+        "description": "If true, list resources across all namespaces",
+        "default": false
+      },
+      "labelSelector": {
+        "type": "string",
+        "description": "Filter resources by label selector (e.g. 'app=nginx')"
+      },
+      "fieldSelector": {
+        "type": "string",
+        "description": "Filter resources by field selector (e.g. 'metadata.name=my-pod')"
+      },
+      "sortBy": {
+        "type": "string",
+        "description": "Sort events by a field (default: lastTimestamp). Only applicable for events."
+      }
+    },
+    "required": [
+      "resourceType",
+      "name",
+      "namespace"
+    ]
+  },
+  "annotations": null
+}

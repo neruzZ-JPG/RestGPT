@@ -1,0 +1,117 @@
+{
+    "https://api.github.com/repos/{owner}/{repo}": {
+        "delete": {
+            "summary": "Delete a repository",
+            "description": "Deleting a repository requires admin access.\n\nIf an organization owner has configured the organization to prevent members from deleting organization-owned\nrepositories, you will get a `403 Forbidden` response.\n\nOAuth app tokens and personal access tokens (classic) need the `delete_repo` scope to use this endpoint.",
+            "tags": [
+                "repos"
+            ],
+            "operationId": "repos/delete",
+            "externalDocs": {
+                "description": "API method documentation",
+                "url": "https://docs.github.com/rest/repos/repos#delete-a-repository"
+            },
+            "parameters": [
+                {
+                    "name": "owner",
+                    "description": "The account owner of the repository. The name is not case sensitive.",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "repo",
+                    "description": "The name of the repository without the `.git` extension. The name is not case sensitive.",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "204": {
+                    "description": "Response"
+                },
+                "403": {
+                    "description": "If an organization owner has configured the organization to prevent members from deleting organization-owned repositories, a member will get this response:",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "307": {
+                    "description": "Temporary Redirect",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Resource not found",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "title": "Basic Error",
+                                "description": "Basic Error",
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "documentation_url": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "x-github": {
+                "githubCloudOnly": false,
+                "enabledForGitHubApps": true,
+                "category": "repos",
+                "subcategory": "repos"
+            }
+        }
+    }
+}

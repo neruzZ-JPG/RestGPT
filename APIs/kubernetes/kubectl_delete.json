@@ -1,0 +1,54 @@
+{
+  "name": "kubectl_delete",
+  "description": "Delete Kubernetes resources by resource type, name, labels, or from a manifest file",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "resourceType": {
+        "type": "string",
+        "description": "Type of resource to delete (e.g., pods, deployments, services, etc.)"
+      },
+      "name": {
+        "type": "string",
+        "description": "Name of the resource to delete"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Namespace of the resource (optional - defaults to 'default' for namespaced resources)",
+        "default": "default"
+      },
+      "labelSelector": {
+        "type": "string",
+        "description": "Delete resources matching this label selector (e.g. 'app=nginx')"
+      },
+      "manifest": {
+        "type": "string",
+        "description": "YAML manifest defining resources to delete (optional)"
+      },
+      "filename": {
+        "type": "string",
+        "description": "Path to a YAML file to delete resources from (optional)"
+      },
+      "allNamespaces": {
+        "type": "boolean",
+        "description": "If true, delete resources across all namespaces",
+        "default": false
+      },
+      "force": {
+        "type": "boolean",
+        "description": "If true, immediately remove resources from API and bypass graceful deletion",
+        "default": false
+      },
+      "gracePeriodSeconds": {
+        "type": "number",
+        "description": "Period of time in seconds given to the resource to terminate gracefully"
+      }
+    },
+    "required": [
+      "resourceType",
+      "name",
+      "namespace"
+    ]
+  },
+  "annotations": null
+}
