@@ -1,0 +1,65 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/unstar": {
+        "post": {
+            "description": "Function: Unstar a project. Input: 'id' (integer, project's ID or URL-encoded path). Response: On success (200), returns JSON object with details like id, description, etc. of the project.",
+            "tags": [
+                "projects-api"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID or URL-encoded path of the project."
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "default_branch": {
+                                        "type": "string"
+                                    },
+                                    "visibility": {
+                                        "type": "string"
+                                    },
+                                    "ssh_url_to_repo": {
+                                        "type": "string"
+                                    },
+                                    "http_url_to_repo": {
+                                        "type": "string"
+                                    },
+                                    "web_url": {
+                                        "type": "string"
+                                    },
+                                    "readme_url": {
+                                        "type": "string"
+                                    },
+                                    "tag_list": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

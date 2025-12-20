@@ -1,0 +1,116 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/repository/branches/{branch}": {
+        "get": {
+            "description": "Function: Get branch details of a project. Input: 'id' (project ID/URL-encoded path) and 'branch' name. Responses: On 200, returns JSON with branch info like name, merge status, permissions, and commit details.",
+            "tags": [
+                "branch"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "oneOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "ID or URL-encoded path of the project owned by the authenticated user."
+                },
+                {
+                    "name": "branch",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "Name of the branch."
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "merged": {
+                                        "type": "boolean"
+                                    },
+                                    "protected": {
+                                        "type": "boolean"
+                                    },
+                                    "default": {
+                                        "type": "boolean"
+                                    },
+                                    "developers_can_push": {
+                                        "type": "boolean"
+                                    },
+                                    "developers_can_merge": {
+                                        "type": "boolean"
+                                    },
+                                    "can_push": {
+                                        "type": "boolean"
+                                    },
+                                    "web_url": {
+                                        "type": "string"
+                                    },
+                                    "commit": {
+                                        "type": "object",
+                                        "properties": {
+                                            "author_email": {
+                                                "type": "string"
+                                            },
+                                            "author_name": {
+                                                "type": "string"
+                                            },
+                                            "authored_date": {
+                                                "type": "string"
+                                            },
+                                            "committed_date": {
+                                                "type": "string"
+                                            },
+                                            "committer_email": {
+                                                "type": "string"
+                                            },
+                                            "committer_name": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "short_id": {
+                                                "type": "string"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "message": {
+                                                "type": "string"
+                                            },
+                                            "parent_ids": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,138 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitLabInvitationsApi",
+        "version": "1.0.0",
+        "description": "The GitLab Invitations API enables adding new members to a group. It supports specifying a user ID or inviting by email. You can set a valid access level for the new member. It provides functionality to send invitations and returns responses indicating success or error. Error responses detail issues like duplicate emails or incorrect access levels. In some cases, like promoting users to billable roles with administrator approval enabled, requests may be queued for approval."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/groups/{id}/invitations": {
+            "post": {
+                "operationId": "addGroupMember",
+                "summary": "Adds a new member to a group by specifying a user ID or inviting by email and sets a valid access level for the new member.",
+                "description": "This endpoint allows you to add a new member to a specific group. You can either provide a user ID or an email address to invite the new member. Additionally, you need to set a valid access level for the new member. There are also optional parameters like 'expires_at', 'invite_source', and'member_role_id' (Ultimate only, introduced in GitLab 16.6) that can be used to further customize the invitation process.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the group. This is required to identify the specific group to which the new member will be added.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "oneOf": [
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "The email of the new member or multiple emails separated by commas. This is required if 'user_id' isn't provided.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "The ID of the new member or multiple IDs separated by commas. This is required if 'email' isn't provided.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "oneOf": [
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "access_level",
+                        "in": "query",
+                        "description": "A valid access level. This is required to set the appropriate access rights for the new member.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "expires_at",
+                        "in": "query",
+                        "description": "A date string in the format YEAR-MONTH-DAY. This is an optional parameter that can be used to set an expiration date for the invitation.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invite_source",
+                        "in": "query",
+                        "description": "The source of the invitation that starts the member creation process. See this issue. This is an optional parameter that can be used to track the origin of the invitation.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "member_role_id",
+                        "in": "query",
+                        "description": "Assigns the new member to the provided custom role. (Introduced in GitLab 16.6. Ultimate only). This is an optional parameter that can be used to assign a specific custom role to the new member if available in the Ultimate tier.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The request body is not used for this endpoint. The required and optional parameters are passed as query parameters or path parameters as described above.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {}
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation. Returns a JSON object with'status' key indicating'success' if all emails were successfully sent or 'error' if there was an error sending the email. In case of error, the'message' key contains details about the errors for each email/user. If administrator approval for role promotions is turned on and relevant conditions are met, the output may also include a 'queued_users' key with details about queued requests for administrator approval and'status' as'success'.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "success",
+                                                "error"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "object",
+                                            "description": "Details about the errors for each email/user in case of error. The keys are the email addresses or usernames and the values are the error messages.",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "queued_users": {
+                                            "type": "object",
+                                            "description": "Details about queued requests for administrator approval if relevant conditions are met. The keys are the usernames and the values are the status messages related to the queued requests.",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

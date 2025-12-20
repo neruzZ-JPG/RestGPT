@@ -1,0 +1,710 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}": {
+        "put": {
+            "description": "Function: Update project details. Inputs: Project ID and various settings in JSON body. Responses: Success with detailed project info like ID, branches, access levels etc. in JSON. Allows modifying multiple project aspects via PUT request to /projects/{id}.",
+            "tags": [
+                "projects-api"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID or URL-encoded path of the project."
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "allow_merge_on_skipped_pipeline": {
+                                    "type": "boolean",
+                                    "description": "Set whether or not merge requests can be merged with skipped jobs."
+                                },
+                                "approvals_before_merge": {
+                                    "type": "integer",
+                                    "description": "How many approvers should approve merge request by default."
+                                },
+                                "auto_cancel_pending_pipelines": {
+                                    "type": "string",
+                                    "description": "Auto-cancel pending pipelines. This isn\u2019t a boolean, but enabled/disabled."
+                                },
+                                "auto_devops_deploy_strategy": {
+                                    "type": "string",
+                                    "description": "Auto Deploy strategy (continuous, manual, or timed_incremental)."
+                                },
+                                "auto_devops_enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable Auto DevOps for this project."
+                                },
+                                "autoclose_referenced_issues": {
+                                    "type": "boolean",
+                                    "description": "Set whether auto-closing referenced issues on default branch."
+                                },
+                                "avatar": {
+                                    "type": "object",
+                                    "description": "Image file for avatar of the project."
+                                },
+                                "build_coverage_regex": {
+                                    "type": "string",
+                                    "description": "Test coverage parsing."
+                                },
+                                "build_git_strategy": {
+                                    "type": "string",
+                                    "description": "The Git strategy. Defaults to fetch."
+                                },
+                                "build_timeout": {
+                                    "type": "integer",
+                                    "description": "The maximum amount of time in minutes that a job is able run (in seconds)."
+                                },
+                                "builds_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, or enabled."
+                                },
+                                "ci_config_path": {
+                                    "type": "string",
+                                    "description": "The path to CI configuration file."
+                                },
+                                "ci_default_git_depth": {
+                                    "type": "integer",
+                                    "description": "Default number of revisions for shallow cloning."
+                                },
+                                "ci_forward_deployment_enabled": {
+                                    "type": "boolean",
+                                    "description": "When a new deployment job starts, skip older deployment jobs that are still pending"
+                                },
+                                "container_expiration_policy_attributes": {
+                                    "type": "object",
+                                    "description": "Update the image cleanup policy for this project. Accepts: cadence (string), keep_n (string), older_than (string), name_regex (string), name_regex_delete (string), name_regex_keep (string), enabled (boolean)."
+                                },
+                                "container_registry_enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable container registry for this project."
+                                },
+                                "default_branch": {
+                                    "type": "string",
+                                    "description": "master by default."
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Short project description."
+                                },
+                                "emails_disabled": {
+                                    "type": "boolean",
+                                    "description": "Disable email notifications."
+                                },
+                                "external_authorization_classification_label": {
+                                    "type": "string",
+                                    "description": "The classification label for the project."
+                                },
+                                "forking_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, or enabled."
+                                },
+                                "import_url": {
+                                    "type": "string",
+                                    "description": "URL to import repository from."
+                                },
+                                "issues_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, or enabled."
+                                },
+                                "issues_enabled": {
+                                    "type": "boolean",
+                                    "description": "(Deprecated) Enable issues for this project. Use issues_access_level instead."
+                                },
+                                "jobs_enabled": {
+                                    "type": "boolean",
+                                    "description": "(Deprecated) Enable jobs for this project. Use builds_access_level instead."
+                                },
+                                "lfs_enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable LFS."
+                                },
+                                "merge_method": {
+                                    "type": "string",
+                                    "description": "Set the merge method used."
+                                },
+                                "merge_requests_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, or enabled."
+                                },
+                                "merge_requests_enabled": {
+                                    "type": "boolean",
+                                    "description": "(Deprecated) Enable merge requests for this project. Use merge_requests_access_level instead."
+                                },
+                                "mirror_overwrites_diverged_branches": {
+                                    "type": "boolean",
+                                    "description": "Pull mirror overwrites diverged branches."
+                                },
+                                "mirror_trigger_builds": {
+                                    "type": "boolean",
+                                    "description": "Pull mirroring triggers builds."
+                                },
+                                "mirror_user_id": {
+                                    "type": "integer",
+                                    "description": "User responsible for all the activity surrounding a pull mirror event. (admins only)"
+                                },
+                                "mirror": {
+                                    "type": "boolean",
+                                    "description": "Enables pull mirroring in a project."
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "The name of the project."
+                                },
+                                "only_allow_merge_if_all_discussions_are_resolved": {
+                                    "type": "boolean",
+                                    "description": "Set whether merge requests can only be merged when all the discussions are resolved."
+                                },
+                                "only_allow_merge_if_pipeline_succeeds": {
+                                    "type": "boolean",
+                                    "description": "Set whether merge requests can only be merged with successful jobs."
+                                },
+                                "only_mirror_protected_branches": {
+                                    "type": "boolean",
+                                    "description": "Only mirror protected branches."
+                                },
+                                "packages_enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable or disable packages repository feature."
+                                },
+                                "pages_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, enabled, or public."
+                                },
+                                "requirements_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, enabled or public"
+                                },
+                                "path": {
+                                    "type": "string",
+                                    "description": "Custom repository name for the project. By default generated based on name."
+                                },
+                                "public_builds": {
+                                    "type": "boolean",
+                                    "description": "If true, jobs can be viewed by non-project members."
+                                },
+                                "remove_source_branch_after_merge": {
+                                    "type": "boolean",
+                                    "description": "Enable Delete source branch option by default for all new merge requests."
+                                },
+                                "repository_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, or enabled."
+                                },
+                                "repository_storage": {
+                                    "type": "string",
+                                    "description": "Which storage shard the repository is on. (admins only)"
+                                },
+                                "request_access_enabled": {
+                                    "type": "boolean",
+                                    "description": "Allow users to request member access."
+                                },
+                                "resolve_outdated_diff_discussions": {
+                                    "type": "boolean",
+                                    "description": "Automatically resolve merge request diffs discussions on lines changed with a push."
+                                },
+                                "service_desk_enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable or disable Service Desk feature."
+                                },
+                                "shared_runners_enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable shared runners for this project."
+                                },
+                                "show_default_award_emojis": {
+                                    "type": "boolean",
+                                    "description": "Show default award emojis."
+                                },
+                                "snippets_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, or enabled."
+                                },
+                                "snippets_enabled": {
+                                    "type": "boolean",
+                                    "description": "(Deprecated) Enable snippets for this project. Use snippets_access_level instead."
+                                },
+                                "suggestion_commit_message": {
+                                    "type": "string",
+                                    "description": "The commit message used to apply merge request suggestions."
+                                },
+                                "tag_list": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    },
+                                    "description": "The list of tags for a project; put array of tags, that should be finally assigned to a project."
+                                },
+                                "visibility": {
+                                    "type": "string",
+                                    "enum": [
+                                        "private",
+                                        "internal",
+                                        "public"
+                                    ],
+                                    "description": "See project visibility level."
+                                },
+                                "wiki_access_level": {
+                                    "type": "string",
+                                    "description": "One of disabled, private, or enabled."
+                                },
+                                "wiki_enabled": {
+                                    "type": "boolean",
+                                    "description": "(Deprecated) Enable wiki for this project. Use wiki_access_level instead."
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "default_branch": {
+                                        "type": "string"
+                                    },
+                                    "ssh_url_to_repo": {
+                                        "type": "string"
+                                    },
+                                    "http_url_to_repo": {
+                                        "type": "string"
+                                    },
+                                    "web_url": {
+                                        "type": "string"
+                                    },
+                                    "readme_url": {
+                                        "type": "string"
+                                    },
+                                    "tag_list": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "topics": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "avatar_url": {
+                                        "type": "string"
+                                    },
+                                    "forks_count": {
+                                        "type": "integer"
+                                    },
+                                    "owner": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "container_expiration_policy": {
+                                        "type": "object",
+                                        "properties": {
+                                            "cadence": {
+                                                "type": "string"
+                                            },
+                                            "enabled": {
+                                                "type": "boolean"
+                                            },
+                                            "keep_n": {
+                                                "type": "integer"
+                                            },
+                                            "older_than": {
+                                                "type": "string"
+                                            },
+                                            "name_regex": {
+                                                "type": "string"
+                                            },
+                                            "name_regex_keep": {
+                                                "type": "string"
+                                            },
+                                            "next_run_at": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "empty_repo": {
+                                        "type": "boolean"
+                                    },
+                                    "visibility": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "name_with_namespace": {
+                                        "type": "string"
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    },
+                                    "path_with_namespace": {
+                                        "type": "string"
+                                    },
+                                    "issues_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "open_issues_count": {
+                                        "type": "integer"
+                                    },
+                                    "merge_requests_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "jobs_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "wiki_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "snippets_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "can_create_merge_request_in": {
+                                        "type": "boolean"
+                                    },
+                                    "resolve_outdated_diff_discussions": {
+                                        "type": "boolean"
+                                    },
+                                    "container_registry_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "container_registry_access_level": {
+                                        "type": "string"
+                                    },
+                                    "created_at": {
+                                        "type": "string"
+                                    },
+                                    "last_activity_at": {
+                                        "type": "string"
+                                    },
+                                    "creator_id": {
+                                        "type": "integer"
+                                    },
+                                    "namespace": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "kind": {
+                                                "type": "string"
+                                            },
+                                            "full_path": {
+                                                "type": "string"
+                                            },
+                                            "parent_id": {
+                                                "type": "integer"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "import_status": {
+                                        "type": "string"
+                                    },
+                                    "import_error": {
+                                        "type": "string"
+                                    },
+                                    "permissions": {
+                                        "type": "object",
+                                        "properties": {
+                                            "project_access": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "access_level": {
+                                                        "type": "integer"
+                                                    },
+                                                    "notification_level": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            },
+                                            "group_access": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "access_level": {
+                                                        "type": "integer"
+                                                    },
+                                                    "notification_level": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "archived": {
+                                        "type": "boolean"
+                                    },
+                                    "shared_runners_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "star_count": {
+                                        "type": "integer"
+                                    },
+                                    "runners_token": {
+                                        "type": "string"
+                                    },
+                                    "ci_default_git_depth": {
+                                        "type": "integer"
+                                    },
+                                    "ci_forward_deployment_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "public_jobs": {
+                                        "type": "boolean"
+                                    },
+                                    "shared_with_groups": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "only_allow_merge_if_pipeline_succeeds": {
+                                        "type": "boolean"
+                                    },
+                                    "allow_merge_on_skipped_pipeline": {
+                                        "type": "boolean"
+                                    },
+                                    "restrict_user_defined_variables": {
+                                        "type": "boolean"
+                                    },
+                                    "only_allow_merge_if_all_discussions_are_resolved": {
+                                        "type": "boolean"
+                                    },
+                                    "remove_source_branch_after_merge": {
+                                        "type": "boolean"
+                                    },
+                                    "request_access_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "merge_method": {
+                                        "type": "string"
+                                    },
+                                    "squash_option": {
+                                        "type": "string"
+                                    },
+                                    "auto_devops_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "auto_devops_deploy_strategy": {
+                                        "type": "string"
+                                    },
+                                    "repository_storage": {
+                                        "type": "string"
+                                    },
+                                    "approvals_before_merge": {
+                                        "type": "integer"
+                                    },
+                                    "mirror": {
+                                        "type": "boolean"
+                                    },
+                                    "mirror_user_id": {
+                                        "type": "integer"
+                                    },
+                                    "mirror_trigger_builds": {
+                                        "type": "boolean"
+                                    },
+                                    "only_mirror_protected_branches": {
+                                        "type": "boolean"
+                                    },
+                                    "mirror_overwrites_diverged_branches": {
+                                        "type": "boolean"
+                                    },
+                                    "external_authorization_classification_label": {
+                                        "type": "string"
+                                    },
+                                    "packages_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "service_desk_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "service_desk_address": {
+                                        "type": "string"
+                                    },
+                                    "autoclose_referenced_issues": {
+                                        "type": "boolean"
+                                    },
+                                    "suggestion_commit_message": {
+                                        "type": "string"
+                                    },
+                                    "statistics": {
+                                        "type": "object",
+                                        "properties": {
+                                            "commit_count": {
+                                                "type": "integer"
+                                            },
+                                            "storage_size": {
+                                                "type": "integer"
+                                            },
+                                            "repository_size": {
+                                                "type": "integer"
+                                            },
+                                            "wiki_size": {
+                                                "type": "integer"
+                                            },
+                                            "lfs_objects_size": {
+                                                "type": "integer"
+                                            },
+                                            "job_artifacts_size": {
+                                                "type": "integer"
+                                            },
+                                            "packages_size": {
+                                                "type": "integer"
+                                            },
+                                            "snippets_size": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    },
+                                    "container_registry_image_prefix": {
+                                        "type": "string"
+                                    },
+                                    "_links": {
+                                        "type": "object",
+                                        "properties": {
+                                            "self": {
+                                                "type": "string"
+                                            },
+                                            "issues": {
+                                                "type": "string"
+                                            },
+                                            "merge_requests": {
+                                                "type": "string"
+                                            },
+                                            "repo_branches": {
+                                                "type": "string"
+                                            },
+                                            "labels": {
+                                                "type": "string"
+                                            },
+                                            "events": {
+                                                "type": "string"
+                                            },
+                                            "members": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "issues_access_level": {
+                                        "type": "string"
+                                    },
+                                    "repository_access_level": {
+                                        "type": "string"
+                                    },
+                                    "merge_requests_access_level": {
+                                        "type": "string"
+                                    },
+                                    "forking_access_level": {
+                                        "type": "string"
+                                    },
+                                    "wiki_access_level": {
+                                        "type": "string"
+                                    },
+                                    "builds_access_level": {
+                                        "type": "string"
+                                    },
+                                    "snippets_access_level": {
+                                        "type": "string"
+                                    },
+                                    "pages_access_level": {
+                                        "type": "string"
+                                    },
+                                    "operations_access_level": {
+                                        "type": "string"
+                                    },
+                                    "analytics_access_level": {
+                                        "type": "string"
+                                    },
+                                    "emails_disabled": {
+                                        "type": "boolean"
+                                    },
+                                    "lfs_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "ci_job_token_scope_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "build_git_strategy": {
+                                        "type": "string"
+                                    },
+                                    "build_timeout": {
+                                        "type": "integer"
+                                    },
+                                    "auto_cancel_pending_pipelines": {
+                                        "type": "string"
+                                    },
+                                    "build_coverage_regex": {
+                                        "type": "string"
+                                    },
+                                    "ci_config_path": {
+                                        "type": "string"
+                                    },
+                                    "printing_merge_request_link_enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "keep_latest_artifact": {
+                                        "type": "boolean"
+                                    },
+                                    "requirements_enabled": {
+                                        "type": "string"
+                                    },
+                                    "security_and_compliance_enabled": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

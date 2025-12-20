@@ -1,0 +1,22 @@
+{
+  "name": "uninstall_helm_chart",
+  "description": "Uninstall a Helm release",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Release name"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Kubernetes namespace"
+      }
+    },
+    "required": [
+      "name",
+      "namespace"
+    ]
+  },
+  "annotations": null
+}

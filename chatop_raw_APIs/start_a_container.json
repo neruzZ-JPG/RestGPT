@@ -1,0 +1,68 @@
+{
+  "http://localhost:2375/containers/{id}/start": {
+    "post": {
+      "summary": "Start a container",
+      "operationId": "ContainerStart",
+      "responses": {
+        "204": {
+          "description": "no error"
+        },
+        "304": {
+          "description": "container already started"
+        },
+        "404": {
+          "description": "no such container",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID or name of the container",
+          "type": "string"
+        },
+        {
+          "name": "detachKeys",
+          "in": "query",
+          "description": "Override the key sequence for detaching a container. Format is a\nsingle character `[a-Z]` or `ctrl-<value>` where `<value>` is one\nof: `a-z`, `@`, `^`, `[`, `,` or `_`.\n",
+          "type": "string"
+        }
+      ],
+      "tags": [
+        "Container"
+      ]
+    }
+  }
+}

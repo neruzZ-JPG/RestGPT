@@ -1,0 +1,254 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/search": {
+        "get": {
+            "description": "Function: Search within a project. Inputs: Project ID, search scope, query, etc. Responses: Returns array of objects with details like ID, title, state etc. on success. Filters results by various criteria like state, confidentiality for specific scopes.",
+            "tags": [
+                "search-api"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ]
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID or URL-encoded path of the project owned by the authenticated user"
+                },
+                {
+                    "name": "scope",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": true,
+                    "in": "query",
+                    "description": "The scope to search in"
+                },
+                {
+                    "name": "search",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": true,
+                    "in": "query",
+                    "description": "The search query"
+                },
+                {
+                    "name": "ref",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "The name of a repository branch or tag to search on. The project\u2019s default branch is used by default. This is only applicable for scopes: commits, blobs, and wiki_blobs."
+                },
+                {
+                    "name": "state",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Filter by state. Issues and merge requests are supported; it is ignored for other scopes."
+                },
+                {
+                    "name": "confidential",
+                    "schema": {
+                        "type": "boolean"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Filter by confidentiality. Issues scope is supported; it is ignored for other scopes."
+                },
+                {
+                    "name": "order_by",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Allowed values are created_at only. If this is not set, the results will either be sorted by created_at in descending order for basic search, or by the most relevant documents when using advanced search."
+                },
+                {
+                    "name": "sort",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": false,
+                    "in": "query",
+                    "description": "Allowed values are asc or desc only. If this is not set, the results will either be sorted by created_at in descending order for basic search, or by the most relevant documents when using advanced search."
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "iid": {
+                                            "type": "integer"
+                                        },
+                                        "project_id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "updated_at": {
+                                            "type": "string"
+                                        },
+                                        "closed_at": {
+                                            "type": "string"
+                                        },
+                                        "labels": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "milestone": {
+                                            "type": "string"
+                                        },
+                                        "assignees": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "author": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "assignee": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "user_notes_count": {
+                                            "type": "integer"
+                                        },
+                                        "upvotes": {
+                                            "type": "integer"
+                                        },
+                                        "downvotes": {
+                                            "type": "integer"
+                                        },
+                                        "due_date": {
+                                            "type": "string"
+                                        },
+                                        "confidential": {
+                                            "type": "boolean"
+                                        },
+                                        "discussion_locked": {
+                                            "type": "string"
+                                        },
+                                        "web_url": {
+                                            "type": "string"
+                                        },
+                                        "time_stats": {
+                                            "type": "object",
+                                            "properties": {
+                                                "time_estimate": {
+                                                    "type": "integer"
+                                                },
+                                                "total_time_spent": {
+                                                    "type": "integer"
+                                                },
+                                                "human_time_estimate": {
+                                                    "type": "string"
+                                                },
+                                                "human_total_time_spent": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

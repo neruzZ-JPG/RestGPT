@@ -1,0 +1,163 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitLabEventsApi",
+        "version": "1.0.0",
+        "description": "The GitLab Events API enables retrieval of events related to the currently authenticated user. It offers functions like getting a list of events with optional filtering by action type, target type, date range, and sorting. Filter parameters include action, target_type, before, and after. Some features like events associated with epics and certain note types on merge requests are not available. Dates should be in YYYY-MM-DD format. Requires scope read_user or api."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/events": {
+            "get": {
+                "operationId": "getAuthenticatedUserEvents",
+                "summary": "Retrieves a list of events for the currently authenticated user with optional filtering and sorting.",
+                "description": "This endpoint retrieves a list of events for the currently authenticated user. You can optionally filter the events by action type, target type, date range, and sort them in ascending or descending order by created_at.",
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "query",
+                        "description": "Optional. String. Include only events of a particular action type. See User contribution events for available types for the action parameter. These options are in lowercase.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "target_type",
+                        "in": "query",
+                        "description": "Optional. String. Include only events of a particular target type. Available target types are: epic, issue, milestone, merge_request, note, project, snippet, user. These options are in lowercase. Some epic features and certain note types on merge requests are not available using the API. Your administrator must have enabled the new look for epics.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "epic",
+                                "issue",
+                                "milestone",
+                                "merge_request",
+                                "note",
+                                "project",
+                                "snippet",
+                                "user"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Optional. Date in YYYY-MM-DD format. Include only events created before a particular date.",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "after",
+                        "in": "query",
+                        "description": "Optional. Date in YYYY-MM-DD format. Include only events created after a particular date.",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "query",
+                        "description": "Optional. String. Include all events across a user\u2019s projects.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Optional. String. Sort events in asc or desc order by created_at. Default is desc.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with an array of event objects.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "number"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "project_id": {
+                                                "type": "number"
+                                            },
+                                            "action_name": {
+                                                "type": "string"
+                                            },
+                                            "target_id": {
+                                                "type": "number"
+                                            },
+                                            "target_iid": {
+                                                "type": "number"
+                                            },
+                                            "target_type": {
+                                                "type": "string"
+                                            },
+                                            "author_id": {
+                                                "type": "number"
+                                            },
+                                            "target_title": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "author": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "number"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "author_username": {
+                                                "type": "string"
+                                            },
+                                            "imported": {
+                                                "type": "boolean"
+                                            },
+                                            "imported_from": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

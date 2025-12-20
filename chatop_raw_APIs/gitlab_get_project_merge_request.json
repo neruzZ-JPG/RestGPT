@@ -1,0 +1,702 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GetSingleMergeRequest",
+        "version": "1.0.0",
+        "description": "The GetSingleMergeRequest API allows retrieval of detailed information about a single merge request. It provides various details such as author, status, assignees, and more. You can get data like merge status, approvals required, and timestamps related to creation, update, and merge of the request. It also offers options to include additional details like commits count and rebase progress."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/merge_requests/{merge_request_iid}": {
+            "get": {
+                "operationId": "getSingleMergeRequest",
+                "description": "Retrieves detailed information about a single merge request based on the provided project ID and merge request internal ID. Optionally includes additional details like commits count and rebase progress.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project.",
+                        "required": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "merge_request_iid",
+                        "in": "path",
+                        "description": "The internal ID of the merge request.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "include_diverged_commits_count",
+                        "in": "query",
+                        "description": "If true, response includes the commits behind the target branch.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "include_rebase_in_progress",
+                        "in": "query",
+                        "description": "If true, response includes whether a rebase operation is in progress.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "render_html",
+                        "in": "query",
+                        "description": "If true, response includes rendered HTML for title and description.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of merge request details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "approvals_before_merge": {
+                                            "description": "Number of approvals required before this merge request can merge. To configure approval rules, see Merge request approvals API. Deprecated in GitLab 16.0. Premium and Ultimate only.",
+                                            "type": "integer"
+                                        },
+                                        "assignee": {
+                                            "description": "First assignee of the merge request.",
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "assignees": {
+                                            "description": "Assignees of the merge request.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "author": {
+                                            "description": "User who created this merge request.",
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "blocking_discussions_resolved": {
+                                            "description": "Indicates if all discussions are resolved only if all are required before merge request can be merged.",
+                                            "type": "boolean"
+                                        },
+                                        "changes_count": {
+                                            "description": "Number of changes made on the merge request. Empty when the merge request is created, and populates asynchronously. A string, not an integer. When a merge request has too many changes to display and store, the value is capped at 1000 and returns the string \"1000+\". See Empty API Fields for new merge requests.",
+                                            "type": "string"
+                                        },
+                                        "closed_at": {
+                                            "description": "Timestamp of when the merge request was closed.",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "closed_by": {
+                                            "description": "User who closed this merge request.",
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "created_at": {
+                                            "description": "Timestamp of when the merge request was created.",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "description": {
+                                            "description": "Description of the merge request. Contains Markdown rendered as HTML for caching.",
+                                            "type": "string"
+                                        },
+                                        "detailed_merge_status": {
+                                            "description": "Detailed merge status of the merge request. See merge status for a list of potential values.",
+                                            "type": "string"
+                                        },
+                                        "diff_refs": {
+                                            "description": "References of the base SHA, the head SHA, and the start SHA for this merge request. Corresponds to the latest diff version of the merge request. Empty when the merge request is created, and populates asynchronously. See Empty API fields for new merge requests.",
+                                            "type": "object",
+                                            "properties": {
+                                                "base_sha": {
+                                                    "type": "string"
+                                                },
+                                                "head_sha": {
+                                                    "type": "string"
+                                                },
+                                                "start_sha": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "discussion_locked": {
+                                            "description": "Indicates if comments on the merge request are locked to members only.",
+                                            "type": "boolean"
+                                        },
+                                        "downvotes": {
+                                            "description": "Number of downvotes for the merge request.",
+                                            "type": "integer"
+                                        },
+                                        "draft": {
+                                            "description": "Indicates if the merge request is a draft.",
+                                            "type": "boolean"
+                                        },
+                                        "first_contribution": {
+                                            "description": "Indicates if the merge request is the first contribution of the author.",
+                                            "type": "boolean"
+                                        },
+                                        "first_deployed_to_production_at": {
+                                            "description": "Timestamp of when the first deployment finished.",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "force_remove_source_branch": {
+                                            "description": "Indicates if the project settings lead to source branch deletion after merge.",
+                                            "type": "boolean"
+                                        },
+                                        "has_conflicts": {
+                                            "description": "Indicates if merge request has conflicts and cannot merge. Dependent on the merge_status property. Returns false unless merge_status is cannot_be_merged.",
+                                            "type": "boolean"
+                                        },
+                                        "head_pipeline": {
+                                            "description": "Pipeline running on the branch HEAD of the merge request. Use instead of pipeline, because it contains more complete information.",
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "iid": {
+                                                    "type": "integer"
+                                                },
+                                                "project_id": {
+                                                    "type": "integer"
+                                                },
+                                                "sha": {
+                                                    "type": "string"
+                                                },
+                                                "ref": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "source": {
+                                                    "type": "string"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                },
+                                                "before_sha": {
+                                                    "type": "string"
+                                                },
+                                                "tag": {
+                                                    "type": "boolean"
+                                                },
+                                                "yaml_errors": {
+                                                    "type": "string"
+                                                },
+                                                "user": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "username": {
+                                                            "type": "string"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "state": {
+                                                            "type": "string"
+                                                        },
+                                                        "avatar_url": {
+                                                            "type": "string"
+                                                        },
+                                                        "web_url": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "started_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "finished_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "committed_at": {
+                                                    "type": "string"
+                                                },
+                                                "duration": {
+                                                    "type": "integer"
+                                                },
+                                                "queued_duration": {
+                                                    "type": "integer"
+                                                },
+                                                "coverage": {
+                                                    "type": "string"
+                                                },
+                                                "detailed_status": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "icon": {
+                                                            "type": "string"
+                                                        },
+                                                        "text": {
+                                                            "type": "string"
+                                                        },
+                                                        "label": {
+                                                            "type": "string"
+                                                        },
+                                                        "group": {
+                                                            "type": "string"
+                                                        },
+                                                        "tooltip": {
+                                                            "type": "string"
+                                                        },
+                                                        "has_details": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "details_path": {
+                                                            "type": "string"
+                                                        },
+                                                        "illustration": {
+                                                            "type": "string"
+                                                        },
+                                                        "favicon": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "id": {
+                                            "description": "ID of the merge request.",
+                                            "type": "integer"
+                                        },
+                                        "iid": {
+                                            "description": "Internal ID of the merge request.",
+                                            "type": "integer"
+                                        },
+                                        "labels": {
+                                            "description": "Labels of the merge request.",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "latest_build_finished_at": {
+                                        "description": "Timestamp of when the latest build for the merge request finished.",
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "latest_build_started_at": {
+                                        "description": "Timestamp of when the latest build for the merge request started.",
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "merge_commit_sha": {
+                                        "description": "SHA of the merge request commit. Returns null until merged.",
+                                        "type": "string"
+                                    },
+                                    "merge_error": {
+                                        "description": "Error message shown when a merge has failed. To check mergeability, use detailed_merge_status instead",
+                                        "type": "string"
+                                    },
+                                    "merge_user": {
+                                        "description": "The user who merged this merge request, the user who set it to auto-merge, or null.",
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "merge_status": {
+                                        "description": "Status of the merge request. Can be unchecked, checking, can_be_merged, cannot_be_merged, or cannot_be_merged_recheck. Affects the has_conflicts property. For important notes on response data, see Single merge request response notes. Deprecated in GitLab 15.6. Use detailed_merge_status instead.",
+                                        "type": "string"
+                                    },
+                                    "merge_when_pipeline_succeeds": {
+                                        "description": "Indicates if the merge is set to merge when its pipeline succeeds.",
+                                        "type": "boolean"
+                                    },
+                                    "merged_at": {
+                                        "description": "Timestamp of when the merge request merged.",
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "merged_by": {
+                                        "description": "User who merged this merge request or set it to auto-merge. Deprecated in GitLab 14.7, and scheduled for removal in API version 5. Use merge_user instead.",
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "milestone": {
+                                        "description": "Milestone of the merge request.",
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "pipeline": {
+                                        "description": "Pipeline running on the branch HEAD of the merge request. Consider using head_pipeline instead, as it contains more information.",
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "iid": {
+                                                "type": "integer"
+                                            },
+                                            "project_id": {
+                                                "type": "integer"
+                                            },
+                                            "sha": {
+                                                "type": "string"
+                                            },
+                                            "ref": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "type": "string"
+                                            },
+                                            "source": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "prepared_at": {
+                                        "description": "Timestamp of when the merge request was prepared. This field populates one time, only after all the preparation steps complete, and is not updated if more changes are added.",
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "project_id": {
+                                        "description": "ID of the merge request project.",
+                                        "type": "integer"
+                                    },
+                                    "reference": {
+                                        "description": "Internal reference of the merge request. Returned in shortened format by default. Deprecated in GitLab 12.7, and scheduled for removal in API version 5. Use references instead.",
+                                        "type": "string"
+                                    },
+                                    "references": {
+                                        "description": "Internal references of the merge request. Includes short, relative, and full references. references.relative is relative to the merge request\u2019s group or project. When fetched from the merge request\u2019s project, relative and short formats are identical. When requested across groups or projects, relative and full formats are identical.",
+                                        "type": "object",
+                                        "properties": {
+                                            "short": {
+                                                "type": "string"
+                                            },
+                                            "relative": {
+                                                "string": "string"
+                                            },
+                                            "full": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "reviewers": {
+                                        "description": "Reviewers of the merge request.",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "sha": {
+                                        "description": "Diff head SHA of the merge request.",
+                                        "type": "string"
+                                    },
+                                    "should_remove_source_branch": {
+                                        "description": "Indicates if the source branch of the merge request should be deleted after merge.",
+                                        "type": "boolean"
+                                    },
+                                    "source_branch": {
+                                        "description": "Source branch of the matter request.",
+                                        "type": "string"
+                                    },
+                                    "source_project_id": {
+                                        "description": "ID of the merge request source project.",
+                                        "type": "integer"
+                                    },
+                                    "squash": {
+                                        "description": "Indicates if squash on merge is enabled.",
+                                        "type": "boolean"
+                                    },
+                                    "squash_commit_sha": {
+                                        "description": "SHA of the squash commit. Empty until merged.",
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "description": "State of the merge request. Can be opened, closed, merged or locked.",
+                                        "type": "string"
+                                    },
+                                    "subscribed": {
+                                        "description": "Indicates if the current authenticated user subscribes to this merge request.",
+                                        "type": "boolean"
+                                    },
+                                    "target_branch": {
+                                        "description": "Target branch of the merge request.",
+                                        "type": "string"
+                                    },
+                                    "target_project_id": {
+                                        "description": "ID of the merge request target project.",
+                                        "type": "integer"
+                                    },
+                                    "task_completion_status": {
+                                        "description": "Completion status of tasks.",
+                                        "type": "object",
+                                        "properties": {
+                                            "count": {
+                                                "type": "integer"
+                                            },
+                                            "completed_count": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    },
+                                    "title": {
+                                        "description": "Title of the merge request.",
+                                        "type": "string"
+                                    },
+                                    "updated_at": {
+                                        "description": "Timestamp of when the merge request was updated.",
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "upvotes": {
+                                        "description": "Number of upvotes for the merge request.",
+                                        "type": "integer"
+                                    },
+                                    "user": {
+                                        "description": "Permissions of the user requested for the merge request.",
+                                        "type": "object",
+                                        "properties": {
+                                            "can_merge": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "user_notes_count": {
+                                        "description": "User notes count of the merge request.",
+                                        "type": "integer"
+                                    },
+                                    "web_url": {
+                                        "description": "Web URL of the merge request.",
+                                        "type": "string"
+                                    },
+                                    "work_in_progress": {
+                                        "description": "Deprecated: Use draft instead. Indicates if the merge request is a draft.",
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad request. Check your input parameters."
+                },
+                "404": {
+                    "description": "Merge request not found."
+                }
+            }
+        }
+    }
+}

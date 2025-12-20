@@ -1,0 +1,111 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitlabInvitationsApi",
+        "version": "1.0.0",
+        "description": "The Gitlab Invitations API enables users to manage and retrieve information about pending invitations for a project. It allows listing all invitations pending for a project, with options to restrict the results using pagination parameters (page and per_page). It returns invitations to direct project members only. Users can also search for invited members by invite email. Different access levels are defined for sending invitations."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/invitations": {
+            "get": {
+                "operationId": "listProjectInvitations",
+                "summary": "List all invitations pending for a project",
+                "description": "Gets a list of invited project members viewable by the authenticated user. Returns invitations to direct members only, and not through inherited ancestors\u2019 groups. This function takes pagination parameters page and per_page to restrict the list of members. Also allows searching for invited members by invite email.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page to retrieve. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of member invitations to return per page. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "A query string to search for invited members by invite email. Query text must match email address exactly. When empty, returns all invitations. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "description": "The unique identifier of the invitation"
+                                            },
+                                            "invite_email": {
+                                                "type": "string",
+                                                "description": "The email address to which the invitation was sent"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "The date and time when the invitation was created"
+                                            },
+                                            "access_level": {
+                                                "type": "integer",
+                                                "description": "The access level of the invited member. Valid access levels are: 0 (No access), 5 (Minimal access), 10 (Guest), 15 (Planner), 20 (Reporter), 30 (Developer), 40 (Maintainer), 50 (Owner)"
+                                            },
+                                            "expires_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "The date and time when the invitation expires"
+                                            },
+                                            "user_name": {
+                                                "type": "string",
+                                                "description": "The name of the invited user"
+                                            },
+                                            "created_by_name": {
+                                                "type": "string",
+                                                "description": "The name of the user who created the invitation"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Project not found"
+                    }
+                }
+            }
+        }
+    }
+}

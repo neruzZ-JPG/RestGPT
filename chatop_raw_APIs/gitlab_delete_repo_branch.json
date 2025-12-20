@@ -1,0 +1,42 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/repository/branches/{branch}": {
+        "delete": {
+            "description": "Function: Delete a branch in a project's repository. Inputs: 'id' (project's ID/URL-encoded path, int/string) and 'branch' (branch name, string). Response: '200' indicates success.",
+            "tags": [
+                "branch"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "oneOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "ID or URL-encoded path of the project owned by the authenticated user."
+                },
+                {
+                    "name": "branch",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "Name of the branch."
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success"
+                }
+            }
+        }
+    }
+}

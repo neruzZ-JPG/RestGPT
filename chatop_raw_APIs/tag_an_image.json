@@ -1,0 +1,106 @@
+{
+  "http://localhost:2375/images/{name}/tag": {
+    "post": {
+      "summary": "Tag an image",
+      "description": "Tag an image so that it becomes part of a repository.",
+      "operationId": "ImageTag",
+      "responses": {
+        "201": {
+          "description": "No error"
+        },
+        "400": {
+          "description": "Bad parameter",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No such image",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Conflict",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "description": "Image name or ID to tag.",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "repo",
+          "in": "query",
+          "description": "The repository to tag in. For example, `someuser/someimage`.",
+          "type": "string"
+        },
+        {
+          "name": "tag",
+          "in": "query",
+          "description": "The name of the new tag.",
+          "type": "string"
+        }
+      ],
+      "tags": [
+        "Image"
+      ]
+    }
+  }
+}

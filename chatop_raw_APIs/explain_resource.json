@@ -1,0 +1,35 @@
+{
+  "name": "explain_resource",
+  "description": "Get documentation for a Kubernetes resource or field",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "resource": {
+        "type": "string",
+        "description": "Resource name or field path (e.g. 'pods' or 'pods.spec.containers')"
+      },
+      "apiVersion": {
+        "type": "string",
+        "description": "API version to use (e.g. 'apps/v1')"
+      },
+      "recursive": {
+        "type": "boolean",
+        "description": "Print the fields of fields recursively",
+        "default": false
+      },
+      "output": {
+        "type": "string",
+        "description": "Output format (plaintext or plaintext-openapiv2)",
+        "enum": [
+          "plaintext",
+          "plaintext-openapiv2"
+        ],
+        "default": "plaintext"
+      }
+    },
+    "required": [
+      "resource"
+    ]
+  },
+  "annotations": null
+}

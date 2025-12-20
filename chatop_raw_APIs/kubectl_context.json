@@ -1,0 +1,48 @@
+{
+  "name": "kubectl_context",
+  "description": "Manage Kubernetes contexts - list, get, or set the current context",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "operation": {
+        "type": "string",
+        "enum": [
+          "list",
+          "get",
+          "set"
+        ],
+        "description": "Operation to perform: list contexts, get current context, or set current context",
+        "default": "list"
+      },
+      "name": {
+        "type": "string",
+        "description": "Name of the context to set as current (required for set operation)"
+      },
+      "showCurrent": {
+        "type": "boolean",
+        "description": "When listing contexts, highlight which one is currently active",
+        "default": true
+      },
+      "detailed": {
+        "type": "boolean",
+        "description": "Include detailed information about the context",
+        "default": false
+      },
+      "output": {
+        "type": "string",
+        "enum": [
+          "json",
+          "yaml",
+          "name",
+          "custom"
+        ],
+        "description": "Output format",
+        "default": "json"
+      }
+    },
+    "required": [
+      "operation"
+    ]
+  },
+  "annotations": null
+}

@@ -1,0 +1,35 @@
+{
+  "name": "list_api_resources",
+  "description": "List the API resources available in the cluster",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "apiGroup": {
+        "type": "string",
+        "description": "API group to filter by"
+      },
+      "namespaced": {
+        "type": "boolean",
+        "description": "If true, only show namespaced resources"
+      },
+      "verbs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "List of verbs to filter by"
+      },
+      "output": {
+        "type": "string",
+        "description": "Output format (wide, name, or no-headers)",
+        "enum": [
+          "wide",
+          "name",
+          "no-headers"
+        ],
+        "default": "wide"
+      }
+    }
+  },
+  "annotations": null
+}

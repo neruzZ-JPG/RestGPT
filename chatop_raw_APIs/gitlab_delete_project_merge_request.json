@@ -1,0 +1,126 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "DeleteMergeRequest API",
+        "version": "1.0.0",
+        "description": "The DeleteMergeRequest API enables administrators and project owners to delete a specific merge request. It requires the ID or URL-encoded path of the project and the internal ID of the merge request. By sending a DELETE request with the appropriate headers and URL, the targeted merge request can be removed from the system."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/merge_requests/{merge_request_iid}": {
+            "delete": {
+                "operationId": "deleteMergeRequest",
+                "summary": "Deletes a specific merge request",
+                "description": "Only accessible to administrators and project owners. Deletes the merge request in question.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project. Required. Can be an integer or a string.",
+                        "required": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "merge_request_iid",
+                        "in": "path",
+                        "description": "The internal ID of the merge request. Required. Must be an integer.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The merge request has been successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "A confirmation message indicating the merge request has been successfully deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. The request was incorrect in some way.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "description": "An error message explaining the reason for the bad request"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. The user does not have the necessary permissions.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "description": "An error message indicating unauthorized access"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. The project or merge request was not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "description": "An error message indicating that the project or merge request was not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error. An error occurred on the server side.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "description": "An error message explaining the internal server error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

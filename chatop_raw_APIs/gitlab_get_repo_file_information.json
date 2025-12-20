@@ -1,0 +1,93 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GetFileFromRepository API",
+        "version": "1.0.0",
+        "description": "The GetFileFromRepository API enables retrieval of information about a file in a repository, such as its name, size, and Base64 encoded content. It allows access to this data via a specific endpoint. You can use it to get details like file name, path, size, and content SHA256. Works for publicly accessible repositories without authentication or with a provided access token for others."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}": {
+            "get": {
+                "operationId": "getFileFromRepository",
+                "summary": "Retrieve file information from repository",
+                "description": "Retrieves information about a file in a repository including name, size, and Base64 encoded content.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Required. Integer or string. (The ID or URL-encoded path of the project.)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "file_path",
+                        "in": "path",
+                        "description": "Required. String. (URL encoded full path to new file, such as lib%2Fclass%2Erb.)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ref",
+                        "in": "query",
+                        "description": "Required. String. (The name of branch, tag or commit.)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of file information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "file_name": {
+                                            "type": "string"
+                                        },
+                                        "file_path": {
+                                            "type": "string"
+                                        },
+                                        "size": {
+                                            "type": "integer"
+                                        },
+                                        "encoding": {
+                                            "type": "string"
+                                        },
+                                        "content": {
+                                            "type": "string"
+                                        },
+                                        "content_sha256": {
+                                            "type": "string"
+                                        },
+                                        "ref": {
+                                            "type": "string"
+                                        },
+                                        "blob_id": {
+                                            "type": "string"
+                                        },
+                                        "commit_id": {
+                                            "type": "string"
+                                        },
+                                        "last_commit_id": {
+                                            "type": "string"
+                                        },
+                                        "execute_filemode": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

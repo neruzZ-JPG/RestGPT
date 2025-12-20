@@ -1,0 +1,276 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitLabUserContributionEventsApi",
+        "version": "1.0.0",
+        "description": "The GitLab User Contribution Events API enables retrieval of contribution events for a specified user. It offers filtering by action type, target type, and date range. You can sort the results and specify the page and number of results per page. However, some features like events associated with epics and certain note types are not available. Dates for filtering should be in YYYY-MM-DD format."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/users/{id}/events": {
+            "get": {
+                "operationId": "getGitLabUserContributionEvents",
+                "summary": "Get the contribution events for the specified user, sorted from newest to oldest.",
+                "description": "Retrieves the contribution events for the specified user, sorted from newest to oldest with optional filtering and pagination capabilities. Scope read_user or api is required. Events associated with epics are not available using API.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Required. Integer. (The ID or Username of the user)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "action",
+                        "in": "query",
+                        "description": "Optional. String. (Include only events of a particular action type)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "target_type",
+                        "in": "query",
+                        "description": "Optional. String. (Include only events of a particular target type)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "epic",
+                                "issue",
+                                "milestone",
+                                "merge_request",
+                                "note",
+                                "project",
+                                "snippet",
+                                "user"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "before",
+                        "in": "query",
+                        "description": "Optional. Date. (Include only events created before a particular date, in YYYY-MM-DD format)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "after",
+                        "in": "query",
+                        "description": "Optional. Date. (Include only events created after a particular date, in YYYY-MM-DD format)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Optional. String. (Sort events in asc or desc order by created_at. Default is desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Optional. Integer. (The page of results to return. Defaults to 1)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Optional. Integer. (The number of results per page. Defaults to 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with an array of contribution events",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "project_id": {
+                                                "type": "integer"
+                                            },
+                                            "action_name": {
+                                                "type": "string"
+                                            },
+                                            "target_id": {
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "target_iid": {
+                                                "type": "integer",
+                                                "nullable": true
+                                            },
+                                            "target_type": {
+                                                "type": "string"
+                                            },
+                                            "author_id": {
+                                                "type": "integer"
+                                            },
+                                            "target_title": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "author": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "author_username": {
+                                                "type": "string"
+                                            },
+                                            "imported": {
+                                                "type": "boolean"
+                                            },
+                                            "imported_from": {
+                                                "type": "string"
+                                            },
+                                            "push_data": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "commit_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "action": {
+                                                        "type": "string"
+                                                    },
+                                                    "ref_type": {
+                                                        "type": "string"
+                                                    },
+                                                    "commit_from": {
+                                                        "type": "string"
+                                                    },
+                                                    "commit_to": {
+                                                        "type": "string"
+                                                    },
+                                                    "ref": {
+                                                        "type": "string"
+                                                    },
+                                                    "commit_title": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "note": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "body": {
+                                                        "type": "string"
+                                                    },
+                                                    "attachment": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "author": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "username": {
+                                                                "type": "string"
+                                                            },
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "state": {
+                                                                "type": "string"
+                                                            },
+                                                            "avatar_url": {
+                                                                "type": "string"
+                                                            },
+                                                            "web_url": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "system": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "noteable_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "noteable_type": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Check the input parameters."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Please provide a valid access token."
+                    },
+                    "403": {
+                        "description": "Forbidden. You may not have the required permissions."
+                    },
+                    "404": {
+                        "description": "Not found. The specified user or resource may not exist."
+                    }
+                }
+            }
+        }
+    }
+}

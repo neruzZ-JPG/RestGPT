@@ -1,0 +1,16 @@
+{
+  "name": "stop_port_forward",
+  "description": "Stop a port-forward process",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id"
+    ]
+  },
+  "annotations": null
+}

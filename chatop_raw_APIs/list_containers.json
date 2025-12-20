@@ -1,0 +1,330 @@
+{
+  "http://localhost:2375/containers/json": {
+    "get": {
+      "summary": "List containers",
+      "description": "Returns a list of containers. For details on the format, see the\n[inspect endpoint](#operation/ContainerInspect).\n\nNote that it uses a different, smaller representation of a container\nthan inspecting a single container. For example, the list of linked\ncontainers is not propagated .\n",
+      "operationId": "ContainerList",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "name": "all",
+          "in": "query",
+          "description": "Return all containers. By default, only running containers are shown.\n",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "description": "Return this number of most recently created containers, including\nnon-running ones.\n",
+          "type": "integer"
+        },
+        {
+          "name": "size",
+          "in": "query",
+          "description": "Return the size of container as fields `SizeRw` and `SizeRootFs`.\n",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "filters",
+          "in": "query",
+          "description": "Filters to process on the container list, encoded as JSON (a\n`map[string][]string`). For example, `{\"status\": [\"paused\"]}` will\nonly return paused containers.\n\nAvailable filters:\n\n- `ancestor`=(`<image-name>[:<tag>]`, `<image id>`, or `<image@digest>`)\n- `before`=(`<container id>` or `<container name>`)\n- `expose`=(`<port>[/<proto>]`|`<startport-endport>/[<proto>]`)\n- `exited=<int>` containers with exit code of `<int>`\n- `health`=(`starting`|`healthy`|`unhealthy`|`none`)\n- `id=<ID>` a container's ID\n- `isolation=`(`default`|`process`|`hyperv`) (Windows daemon only)\n- `is-task=`(`true`|`false`)\n- `label=key` or `label=\"key=value\"` of a container label\n- `name=<name>` a container's name\n- `network`=(`<network id>` or `<network name>`)\n- `publish`=(`<port>[/<proto>]`|`<startport-endport>/[<proto>]`)\n- `since`=(`<container id>` or `<container name>`)\n- `status=`(`created`|`restarting`|`running`|`removing`|`paused`|`exited`|`dead`)\n- `volume`=(`<volume name>` or `<mount point destination>`)\n",
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "no error",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Id": {
+                  "description": "The ID of this container",
+                  "type": "string",
+                  "x-go-name": "ID"
+                },
+                "Names": {
+                  "description": "The names that this container has been given",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "Image": {
+                  "description": "The name of the image used when creating this container",
+                  "type": "string"
+                },
+                "ImageID": {
+                  "description": "The ID of the image that this container was created from",
+                  "type": "string"
+                },
+                "Command": {
+                  "description": "Command to run when starting the container",
+                  "type": "string"
+                },
+                "Created": {
+                  "description": "When the container was created",
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "Ports": {
+                  "description": "The ports exposed by this container",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "An open port on a container",
+                    "required": [
+                      "PrivatePort",
+                      "Type"
+                    ],
+                    "properties": {
+                      "IP": {
+                        "type": "string",
+                        "format": "ip-address",
+                        "description": "Host IP address that the container's port is mapped to"
+                      },
+                      "PrivatePort": {
+                        "type": "integer",
+                        "format": "uint16",
+                        "x-nullable": false,
+                        "description": "Port on the container"
+                      },
+                      "PublicPort": {
+                        "type": "integer",
+                        "format": "uint16",
+                        "description": "Port exposed on the host"
+                      },
+                      "Type": {
+                        "type": "string",
+                        "x-nullable": false,
+                        "enum": [
+                          "tcp",
+                          "udp",
+                          "sctp"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "SizeRw": {
+                  "description": "The size of files that have been created or changed by this container",
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "SizeRootFs": {
+                  "description": "The total size of all the files in this container",
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "Labels": {
+                  "description": "User-defined key/value metadata.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "State": {
+                  "description": "The state of this container (e.g. `Exited`)",
+                  "type": "string"
+                },
+                "Status": {
+                  "description": "Additional human-readable status of this container (e.g. `Exit 0`)",
+                  "type": "string"
+                },
+                "HostConfig": {
+                  "type": "object",
+                  "properties": {
+                    "NetworkMode": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "NetworkSettings": {
+                  "description": "A summary of the container's network settings",
+                  "type": "object",
+                  "properties": {
+                    "Networks": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "description": "Configuration for a network endpoint.",
+                        "type": "object",
+                        "properties": {
+                          "IPAMConfig": {
+                            "description": "EndpointIPAMConfig represents an endpoint's IPAM configuration.\n",
+                            "type": "object",
+                            "x-nullable": true,
+                            "properties": {
+                              "IPv4Address": {
+                                "type": "string"
+                              },
+                              "IPv6Address": {
+                                "type": "string"
+                              },
+                              "LinkLocalIPs": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "Links": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "Aliases": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "NetworkID": {
+                            "description": "Unique ID of the network.\n",
+                            "type": "string"
+                          },
+                          "EndpointID": {
+                            "description": "Unique ID for the service endpoint in a Sandbox.\n",
+                            "type": "string"
+                          },
+                          "Gateway": {
+                            "description": "Gateway address for this network.\n",
+                            "type": "string"
+                          },
+                          "IPAddress": {
+                            "description": "IPv4 address.\n",
+                            "type": "string"
+                          },
+                          "IPPrefixLen": {
+                            "description": "Mask length of the IPv4 address.\n",
+                            "type": "integer"
+                          },
+                          "IPv6Gateway": {
+                            "description": "IPv6 gateway address.\n",
+                            "type": "string"
+                          },
+                          "GlobalIPv6Address": {
+                            "description": "Global IPv6 address.\n",
+                            "type": "string"
+                          },
+                          "GlobalIPv6PrefixLen": {
+                            "description": "Mask length of the global IPv6 address.\n",
+                            "type": "integer",
+                            "format": "int64"
+                          },
+                          "MacAddress": {
+                            "description": "MAC address for the endpoint on this network.\n",
+                            "type": "string"
+                          },
+                          "DriverOpts": {
+                            "description": "DriverOpts is a mapping of driver options and values. These options\nare passed directly to the driver and are driver specific.\n",
+                            "type": "object",
+                            "x-nullable": true,
+                            "additionalProperties": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "Mounts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "MountPoint represents a mount point configuration inside the container.\nThis is used for reporting the mountpoints in use by a container.\n",
+                    "properties": {
+                      "Type": {
+                        "description": "The mount type:\n\n- `bind` a mount of a file or directory from the host into the container.\n- `volume` a docker volume with the given `Name`.\n- `tmpfs` a `tmpfs`.\n- `npipe` a named pipe from the host into the container.\n- `cluster` a Swarm cluster volume\n",
+                        "type": "string",
+                        "enum": [
+                          "bind",
+                          "volume",
+                          "tmpfs",
+                          "npipe",
+                          "cluster"
+                        ]
+                      },
+                      "Name": {
+                        "description": "Name is the name reference to the underlying data defined by `Source`\ne.g., the volume name.\n",
+                        "type": "string"
+                      },
+                      "Source": {
+                        "description": "Source location of the mount.\n\nFor volumes, this contains the storage location of the volume (within\n`/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains\nthe source (host) part of the bind-mount. For `tmpfs` mount points, this\nfield is empty.\n",
+                        "type": "string"
+                      },
+                      "Destination": {
+                        "description": "Destination is the path relative to the container root (`/`) where\nthe `Source` is mounted inside the container.\n",
+                        "type": "string"
+                      },
+                      "Driver": {
+                        "description": "Driver is the volume driver used to create the volume (if it is a volume).\n",
+                        "type": "string"
+                      },
+                      "Mode": {
+                        "description": "Mode is a comma separated list of options supplied by the user when\ncreating the bind/volume mount.\n\nThe default is platform-specific (`\"z\"` on Linux, empty on Windows).\n",
+                        "type": "string"
+                      },
+                      "RW": {
+                        "description": "Whether the mount is mounted writable (read-write).\n",
+                        "type": "boolean"
+                      },
+                      "Propagation": {
+                        "description": "Propagation describes how mounts are propagated from the host into the\nmount point, and vice-versa. Refer to the [Linux kernel documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)\nfor details. This field is not used on Windows.\n",
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "bad parameter",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "Container"
+      ]
+    }
+  }
+}

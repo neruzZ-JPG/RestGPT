@@ -1,0 +1,160 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "DeleteRepositoryFile API",
+        "version": "1.0.0",
+        "description": "The DeleteRepositoryFile API enables the deletion of a single existing file in a repository. It requires specific attributes such as the branch name, commit message, file path, project ID, etc. Optional details like author email and name can also be provided. Use this API to remove a particular file with a single DELETE request."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}": {
+            "delete": {
+                "operationId": "deleteRepositoryFile",
+                "summary": "Deletes a single existing file in a repository.",
+                "description": "Deletes a single file. To delete multiple files with a single request, see the commits API.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project.",
+                        "required": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "file_path",
+                        "in": "path",
+                        "description": "URL-encoded full path to new file. For example: lib%2Fclass%2Erb.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branch",
+                        "in": "query",
+                        "description": "Name of the new branch to create. The commit is added to this branch.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "commit_message",
+                        "in": "query",
+                        "description": "The commit message.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "author_email",
+                        "in": "query",
+                        "description": "The commit author\u2019s email address.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "author_name",
+                        "in": "query",
+                        "description": "The commit author\u2019s name.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_commit_id",
+                        "in": "query",
+                        "description": "Last known file commit ID.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_branch",
+                        "in": "query",
+                        "description": "Name of the base branch to create the new branch from.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "File deletion was successful.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "Status of the deletion operation, e.g., 'success'."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Additional message related to the deletion, if any."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. The request was malformed or missing required parameters.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "Status of the operation, e.g., 'error'."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error message explaining the reason for the bad request."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found. The file or project was not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "description": "Status of the operation, e.g., 'error'."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error message explaining that the file or project was not found."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

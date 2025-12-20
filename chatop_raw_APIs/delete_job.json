@@ -1,0 +1,50 @@
+{
+  "http://{username}:{token}@localhost:8080/job/{name}/doDelete": {
+    "post": {
+      "description": "Delete a job",
+      "operationId": "postJobDelete",
+      "parameters": [
+        {
+          "name": "name",
+          "description": "Name of the job",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Jenkins-Crumb",
+          "description": "CSRF protection token",
+          "in": "header",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successfully deleted the job"
+        },
+        "401": {
+          "description": "Authentication failed - incorrect username and/or password"
+        },
+        "403": {
+          "description": "Jenkins requires authentication - please set username and password"
+        },
+        "404": {
+          "description": "Job cannot be found on Jenkins instance"
+        }
+      },
+      "security": [
+        {
+          "jenkins_auth": []
+        }
+      ],
+      "tags": [
+        "remoteAccess"
+      ]
+    }
+  }
+}

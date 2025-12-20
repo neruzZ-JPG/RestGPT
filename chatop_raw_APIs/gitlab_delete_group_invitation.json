@@ -1,0 +1,54 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "DeleteGroupInvitation API",
+        "version": "1.0.0",
+        "description": "The DeleteGroupInvitation API enables deletion of a pending group invitation by using the provided group ID and the email address to which the invitation was sent. It returns different status codes based on the outcome, like 204 for success, 403 if unauthorized, 404 if the invitation isn't found, and 409 if deletion fails despite a valid request."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/groups/{id}/invitations/{email}": {
+            "delete": {
+                "operationId": "deleteGroupInvitation",
+                "summary": "Delete a pending invitation to a group",
+                "description": "Deletes a pending invitation by email address.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Required. Integer/String. (The ID or URL-encoded path of the group)",
+                        "required": true,
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "string"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Required. String. (The email address to which the invitation was previously sent)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content. The invitation was successfully deleted."
+                    },
+                    "403": {
+                        "description": "Forbidden. Unauthorized to delete the invitation."
+                    },
+                    "404": {
+                        "description": "Not found. Authorized but no invitation is found for that email address."
+                    },
+                    "409": {
+                        "description": "Conflict. The request was valid but the invitation could not be deleted."
+                    }
+                }
+            }
+        }
+    }
+}

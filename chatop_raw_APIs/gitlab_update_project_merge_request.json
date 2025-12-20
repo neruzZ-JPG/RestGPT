@@ -1,0 +1,644 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "UpdateMergeRequest API",
+        "version": "1.0.0",
+        "description": "The Update Merge Request API enables the modification of an existing merge request. You can change various attributes like the target branch, title, assign or unassign assignees, manage labels, lock or unlock discussions, and more. It requires specific project and merge request IDs and allows for customizing the merge request's details according to your needs."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/merge_requests/{merge_request_iid}": {
+            "put": {
+                "operationId": "updateMergeRequest",
+                "summary": "Updates an existing merge request with specified attributes.",
+                "description": "This endpoint allows you to update an existing merge request by providing various optional and required attributes. You must include at least one non-required attribute in the request.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project. This is a required parameter.",
+                        "required": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "merge_request_iid",
+                        "in": "path",
+                        "description": "The ID of a merge request. This is a required parameter.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "add_labels",
+                        "in": "query",
+                        "description": "Comma-separated label names to add to a merge request. If a label does not already exist, this creates a new project label and assigns it to the merge request. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "allow_collaboration",
+                        "in": "query",
+                        "description": "Allow commits from members who can merge to the target branch. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "allow_maintainer_to_push",
+                        "in": "query",
+                        "description": "Alias of allow_collaboration. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "assignee_id",
+                        "in": "query",
+                        "description": "The ID of the user to assign the merge request to. Set to 0 or provide an empty value to unassign all assignees. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "assignee_ids",
+                        "in": "query",
+                        "description": "The ID of the users to assign the merge request to. Set to 0 or provide an empty value to unassign all assignees. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Description of the merge request. Limited to 1,048,576 characters. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "discussion_locked",
+                        "in": "query",
+                        "description": "Flag indicating if the merge request\u2019s discussion is locked. Only project members can add, edit or resolve comments to locked discussions. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "labels",
+                        "in": "query",
+                        "description": "Comma-separated label names for a merge request. Set to an empty string to unassign all labels. If a label does not already exist, this creates a new project label and assigns it to the merge request. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "milestone_id",
+                        "in": "query",
+                        "description": "The global ID of a milestone to assign the merge request to. Set to 0 or provide an empty value to unassign a milestone. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "remove_labels",
+                        "in": "query",
+                        "description": "Comma-separated label names to remove from a merge request. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "remove_source_branch",
+                        "in": "query",
+                        "description": "Flag indicating if a merge request should remove the source branch when merging. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "reviewer_ids",
+                        "in": "query",
+                        "description": "The ID of the users set as a reviewer to the merge request. Set the value to 0 or provide an empty value to unset all reviewers. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    {
+                        "name": "squash",
+                        "in": "query",
+                        "description": "If true, squash all commits into a single commit on merge. Project settings might override this value. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "state_event",
+                        "in": "query",
+                        "description": "New state (close/reopen). This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "target_branch",
+                        "in": "query",
+                        "description": "The target branch. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Title of MR. This is an optional parameter.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful update of the merge request. Returns an object with detailed information about the updated merge request.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "iid": {
+                                            "type": "integer"
+                                        },
+                                        "project_id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "target_branch": {
+                                            "type": "string"
+                                        },
+                                        "source_branch": {
+                                            "type": "string"
+                                        },
+                                        "upvotes": {
+                                            "type": "integer"
+                                        },
+                                        "downvotes": {
+                                            "type": "integer"
+                                        },
+                                        "author": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "assignee": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "assignees": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "reviewers": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "web_url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "source_project_id": {
+                                            "type": "integer"
+                                        },
+                                        "target_project_id": {
+                                            "type": "integer"
+                                        },
+                                        "labels": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "draft": {
+                                            "type": "boolean"
+                                        },
+                                        "work_in_progress": {
+                                            "type": "boolean"
+                                        },
+                                        "milestone": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "iid": {
+                                                    "type": "integer"
+                                                },
+                                                "project_id": {
+                                                    "type": "integer"
+                                                },
+                                                "title": {
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "due_date": {
+                                                    "type": "string"
+                                                },
+                                                "start_date": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "merge_when_pipeline_succeeds": {
+                                            "type": "boolean"
+                                        },
+                                        "merge_status": {
+                                            "type": "string"
+                                        },
+                                        "detailed_merge_status": {
+                                            "type": "string"
+                                        },
+                                        "merge_error": {
+                                            "type": "string"
+                                        },
+                                        "sha": {
+                                            "type": "string"
+                                        },
+                                        "merge_commit_sha": {
+                                            "type": "string"
+                                        },
+                                        "squash_commit_sha": {
+                                            "type": "string"
+                                        },
+                                        "user_notes_count": {
+                                            "type": "integer"
+                                        },
+                                        "discussion_locked": {
+                                            "type": "boolean"
+                                        },
+                                        "should_remove_source_branch": {
+                                            "type": "boolean"
+                                        },
+                                        "force_remove_source_branch": {
+                                            "type": "boolean"
+                                        },
+                                        "allow_collaboration": {
+                                            "type": "boolean"
+                                        },
+                                        "allow_maintainer_to_push": {
+                                            "type": "boolean"
+                                        },
+                                        "web_url": {
+                                            "type": "string"
+                                        },
+                                        "references": {
+                                            "type": "object",
+                                            "properties": {
+                                                "short": {
+                                                    "type": "string"
+                                                },
+                                                "relative": {
+                                                    "type": "string"
+                                                },
+                                                "full": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "time_stats": {
+                                            "type": "object",
+                                            "properties": {
+                                                "time_estimate": {
+                                                    "type": "integer"
+                                                },
+                                                "total_time_spent": {
+                                                    "type": "integer"
+                                                },
+                                                "human_time_estimate": {
+                                                    "type": "string"
+                                                },
+                                                "human_total_time_spent": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "squash": {
+                                            "type": "boolean"
+                                        },
+                                        "subscribed": {
+                                            "type": "boolean"
+                                        },
+                                        "changes_count": {
+                                            "type": "string"
+                                        },
+                                        "merged_by": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "merge_user": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "merged_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "merge_after": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "prepared_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "closed_by": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "closed_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "latest_build_started_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "latest_build_finished_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "first_deployed_to_production_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "pipeline": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "sha": {
+                                                    "type": "string"
+                                                },
+                                                "ref": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "web_url": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "diff_refs": {
+                                            "type": "object",
+                                            "properties": {
+                                                "base_sha": {
+                                                    "type": "string"
+                                                },
+                                                "head_sha": {
+                                                    "type": "string"
+                                                },
+                                                "start_sha": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "diverged_commits_count": {
+                                            "type": "integer"
+                                        },
+                                        "task_completion_status": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "integer"
+                                                },
+                                                "completed_count": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. The request was malformed or missing required parameters."
+                    },
+                    "401": {
+                        "description": "Unauthorized. The user is not authenticated or does not have the necessary permissions."
+                    },
+                    "403": {
+                        "description": "Forbidden. The user does not have the required permissions to perform this action."
+                    },
+                    "404": {
+                        "description": "Not Found. The specified project or merge request was not found."
+                    },
+                    "500": {
+                        "description": "Internal Server Error. An unexpected error occurred on the server side."
+                    }
+                }
+            }
+        }
+    }
+}

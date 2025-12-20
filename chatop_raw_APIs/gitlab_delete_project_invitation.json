@@ -1,0 +1,52 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "DeleteProjectInvitation API",
+        "version": "1.0.0",
+        "description": "This API enables the deletion of a pending project invitation by using the email address it was sent to. It requires the project ID and the recipient's email. On success, it returns 204 with no content. Error responses include 403 if unauthorized, 404 if the invitation isn't found, and 409 if deletion fails despite a valid request."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/invitations/{email}": {
+            "delete": {
+                "operationId": "deleteProjectInvitation",
+                "summary": "Delete a pending project invitation",
+                "description": "Deletes a pending project invitation by the specified project ID and the recipient's email address.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "The email address to which the invitation was previously sent. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content. The invitation was successfully deleted."
+                    },
+                    "403": {
+                        "description": "Forbidden. Unauthorized to delete the invitation."
+                    },
+                    "404": {
+                        "description": "Not found. Authorized but no invitation is found for that email address."
+                    },
+                    "409": {
+                        "description": "Conflict. The request was valid but the invitation could not be deleted."
+                    }
+                }
+            }
+        }
+    }
+}

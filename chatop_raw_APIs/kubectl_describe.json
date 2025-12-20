@@ -1,0 +1,32 @@
+{
+  "name": "kubectl_describe",
+  "description": "Describe Kubernetes resources by resource type, name, and optionally namespace",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "resourceType": {
+        "type": "string",
+        "description": "Type of resource to describe (e.g., pods, deployments, services, etc.)"
+      },
+      "name": {
+        "type": "string",
+        "description": "Name of the resource to describe"
+      },
+      "namespace": {
+        "type": "string",
+        "description": "Namespace of the resource (optional - defaults to 'default' for namespaced resources)",
+        "default": "default"
+      },
+      "allNamespaces": {
+        "type": "boolean",
+        "description": "If true, describe resources across all namespaces",
+        "default": false
+      }
+    },
+    "required": [
+      "resourceType",
+      "name"
+    ]
+  },
+  "annotations": null
+}

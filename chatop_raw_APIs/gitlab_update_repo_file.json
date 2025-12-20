@@ -1,0 +1,159 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "UpdateSingleFileInRepository API",
+        "version": "1.0.0",
+        "description": "This API enables the update of a single existing file in a repository. It requires details like the branch name, commit message, file content, and file path. Optional attributes include author email, author name, encoding, execute filemode, last commit ID, and start branch. If the commit fails, a 400 Bad Request error is returned."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}": {
+            "put": {
+                "operationId": "updateSingleFileInRepository",
+                "description": "Updates a single existing file in a repository with the provided details.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the project. Required.",
+                        "required": true,
+                        "schema": {
+                            "oneOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "file_path",
+                        "in": "path",
+                        "description": "URL-encoded full path to new file. For example: lib%2Fclass%2Erb. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "branch",
+                        "in": "query",
+                        "description": "Name of the new branch to create. The commit is added to this branch. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "commit_message",
+                        "in": "query",
+                        "description": "The commit message. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "The file\u2019s content. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "author_email",
+                        "in": "query",
+                        "description": "The commit author\u2019s email address. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "author_name",
+                        "in": "query",
+                        "description": "The commit author\u2019s name. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "encoding",
+                        "in": "query",
+                        "description": "Change encoding to base64. Default is text. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "execute_filemode",
+                        "in": "query",
+                        "description": "Enables or disables the execute flag on the file. Can be true or false. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "last_commit_id",
+                        "in": "query",
+                        "description": "Last known file commit ID. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_branch",
+                        "in": "query",
+                        "description": "Name of the base branch to create the new branch from. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated the file. Returns an object containing the 'file_path' and 'branch' details of the updated file.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "file_path": {
+                                            "type": "string"
+                                        },
+                                        "branch": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request error if the commit fails for any reason. Returns a non-specific error message. Possible causes for a failed commit include: The file_path contained /../ (attempted directory traversal); The commit was empty: new file contents were identical to the current file contents; Someone updated the branch with git push while the file edit was in progress; GitLab Shell has a Boolean return code, preventing GitLab from specifying the error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

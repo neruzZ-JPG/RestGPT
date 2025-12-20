@@ -1,0 +1,84 @@
+{
+  "http://localhost:2375/volumes/{name}": {
+    "delete": {
+      "summary": "Remove a volume",
+      "description": "Instruct the driver to remove the volume.",
+      "operationId": "VolumeDelete",
+      "responses": {
+        "204": {
+          "description": "The volume was removed"
+        },
+        "404": {
+          "description": "No such volume or volume driver",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "Volume is in use and cannot be removed",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "description": "Volume name or ID",
+          "type": "string"
+        },
+        {
+          "name": "force",
+          "in": "query",
+          "description": "Force the removal of the volume",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "tags": [
+        "Volume"
+      ]
+    }
+  }
+}

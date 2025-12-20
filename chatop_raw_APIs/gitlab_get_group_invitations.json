@@ -1,0 +1,120 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GitlabInvitationsApi",
+        "version": "1.0.0",
+        "description": "The Gitlab Invitations API enables users to manage and retrieve information about pending group invitations. It allows listing all invitations pending for a group, with options to restrict the results using pagination parameters (page and per_page). You can also search for specific invited members by their invite email. Different valid access levels are defined for sending invitations. The API returns details such as invite email, access level, expiration date, and user information for each invitation."
+    },
+    "paths": {
+        "https://gitlab.com/api/v4/groups/{id}/invitations": {
+            "get": {
+                "operationId": "listGroupInvitations",
+                "summary": "Retrieves a list of pending group invitations viewable by the authenticated user",
+                "description": "Gets a list of invited group members viewable by the authenticated user. Returns invitations to direct members only, and not through inherited ancestors\u2019 groups. This function takes pagination parameters page and per_page to restrict the list of members and also allows searching for specific invited members by their invite email.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID or URL-encoded path of the group. Required.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page to retrieve. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of member invitations to return per page. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "A query string to search for invited members by invite email. Query text must match email address exactly. When empty, returns all invitations. Optional.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with an array of pending group invitation details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "format": "int64"
+                                            },
+                                            "invite_email": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "access_level": {
+                                                "type": "integer"
+                                            },
+                                            "expires_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "user_name": {
+                                                "type": "string"
+                                            },
+                                            "created_by_name": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "invite_email",
+                                            "created_at",
+                                            "access_level",
+                                            "expires_at",
+                                            "user_name",
+                                            "created_by_name"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid input parameters"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or missing access token"
+                    },
+                    "403": {
+                        "description": "Forbidden - Insufficient access rights"
+                    },
+                    "404": {
+                        "description": "Not Found - Group with the given ID not found"
+                    }
+                }
+            }
+        }
+    }
+}

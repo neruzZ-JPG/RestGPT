@@ -1,0 +1,117 @@
+{
+  "http://localhost:2375/containers/{id}/logs": {
+    "get": {
+      "summary": "Get container logs",
+      "description": "Get `stdout` and `stderr` logs from a container.\n\nNote: This endpoint works only for containers with the `json-file` or\n`journald` logging driver.\n",
+      "produces": [
+        "application/vnd.docker.raw-stream",
+        "application/vnd.docker.multiplexed-stream"
+      ],
+      "operationId": "ContainerLogs",
+      "responses": {
+        "200": {
+          "description": "logs returned as a stream in response body.\nFor the stream format, [see the documentation for the attach endpoint](#operation/ContainerAttach).\nNote that unlike the attach endpoint, the logs endpoint does not\nupgrade the connection and does not set Content-Type.\n",
+          "schema": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "404": {
+          "description": "no such container",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID or name of the container",
+          "type": "string"
+        },
+        {
+          "name": "follow",
+          "in": "query",
+          "description": "Keep connection after returning logs.",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "stdout",
+          "in": "query",
+          "description": "Return logs from `stdout`",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "stderr",
+          "in": "query",
+          "description": "Return logs from `stderr`",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "since",
+          "in": "query",
+          "description": "Only return logs since this time, as a UNIX timestamp",
+          "type": "integer",
+          "default": 0
+        },
+        {
+          "name": "until",
+          "in": "query",
+          "description": "Only return logs before this time, as a UNIX timestamp",
+          "type": "integer",
+          "default": 0
+        },
+        {
+          "name": "timestamps",
+          "in": "query",
+          "description": "Add timestamps to every log line",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "tail",
+          "in": "query",
+          "description": "Only return this number of log lines from the end of the logs.\nSpecify as an integer or `all` to output all log lines.\n",
+          "type": "string",
+          "default": "all"
+        }
+      ],
+      "tags": [
+        "Container"
+      ]
+    }
+  }
+}

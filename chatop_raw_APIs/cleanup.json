@@ -1,0 +1,9 @@
+{
+  "name": "cleanup",
+  "description": "Cleanup all managed resources",
+  "inputSchema": {
+    "type": "object",
+    "properties": {}
+  },
+  "annotations": null
+}

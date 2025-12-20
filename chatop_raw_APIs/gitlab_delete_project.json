@@ -1,0 +1,26 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}": {
+        "delete": {
+            "description": "This OAS defines a DELETE operation for `/projects/{id}`. Function: Delete a project. Input: `id` (integer, project's ID/path). Response: `200` indicates success. Tags: `projects-api`.",
+            "tags": [
+                "projects-api"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID or URL-encoded path of the project."
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "success"
+                }
+            }
+        }
+    }
+}

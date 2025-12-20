@@ -1,0 +1,246 @@
+{
+  "http://localhost:2375/build": {
+    "post": {
+      "summary": "Build an image",
+      "description": "Build an image from a tar archive with a `Dockerfile` in it.\n\nThe `Dockerfile` specifies how the image is built from the tar archive. It is typically in the archive's root, but can be at a different path or have a different name by specifying the `dockerfile` parameter. [See the `Dockerfile` reference for more information](https://docs.docker.com/engine/reference/builder/).\n\nThe Docker daemon performs a preliminary validation of the `Dockerfile` before starting the build, and returns an error if the syntax is incorrect. After that, each instruction is run one-by-one until the ID of the new image is output.\n\nThe build is canceled if the client drops the connection by quitting or being killed.\n",
+      "operationId": "ImageBuild",
+      "consumes": [
+        "application/octet-stream"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "name": "inputStream",
+          "in": "body",
+          "description": "A tar archive compressed with one of the following algorithms: identity (no compression), gzip, bzip2, xz.",
+          "schema": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        {
+          "name": "dockerfile",
+          "in": "query",
+          "description": "Path within the build context to the `Dockerfile`. This is ignored if `remote` is specified and points to an external `Dockerfile`.",
+          "type": "string",
+          "default": "Dockerfile"
+        },
+        {
+          "name": "t",
+          "in": "query",
+          "description": "A name and optional tag to apply to the image in the `name:tag` format. If you omit the tag the default `latest` value is assumed. You can provide several `t` parameters.",
+          "type": "string"
+        },
+        {
+          "name": "extrahosts",
+          "in": "query",
+          "description": "Extra hosts to add to /etc/hosts",
+          "type": "string"
+        },
+        {
+          "name": "remote",
+          "in": "query",
+          "description": "A Git repository URI or HTTP/HTTPS context URI. If the URI points to a single text file, the file’s contents are placed into a file called `Dockerfile` and the image is built from that file. If the URI points to a tarball, the file is downloaded by the daemon and the contents therein used as the context for the build. If the URI points to a tarball and the `dockerfile` parameter is also specified, there must be a file with the corresponding path inside the tarball.",
+          "type": "string"
+        },
+        {
+          "name": "q",
+          "in": "query",
+          "description": "Suppress verbose build output.",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "nocache",
+          "in": "query",
+          "description": "Do not use the cache when building the image.",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "cachefrom",
+          "in": "query",
+          "description": "JSON array of images used for build cache resolution.",
+          "type": "string"
+        },
+        {
+          "name": "pull",
+          "in": "query",
+          "description": "Attempt to pull the image even if an older image exists locally.",
+          "type": "string"
+        },
+        {
+          "name": "rm",
+          "in": "query",
+          "description": "Remove intermediate containers after a successful build.",
+          "type": "boolean",
+          "default": true
+        },
+        {
+          "name": "forcerm",
+          "in": "query",
+          "description": "Always remove intermediate containers, even upon failure.",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "name": "memory",
+          "in": "query",
+          "description": "Set memory limit for build.",
+          "type": "integer"
+        },
+        {
+          "name": "memswap",
+          "in": "query",
+          "description": "Total memory (memory + swap). Set as `-1` to disable swap.",
+          "type": "integer"
+        },
+        {
+          "name": "cpushares",
+          "in": "query",
+          "description": "CPU shares (relative weight).",
+          "type": "integer"
+        },
+        {
+          "name": "cpusetcpus",
+          "in": "query",
+          "description": "CPUs in which to allow execution (e.g., `0-3`, `0,1`).",
+          "type": "string"
+        },
+        {
+          "name": "cpuperiod",
+          "in": "query",
+          "description": "The length of a CPU period in microseconds.",
+          "type": "integer"
+        },
+        {
+          "name": "cpuquota",
+          "in": "query",
+          "description": "Microseconds of CPU time that the container can get in a CPU period.",
+          "type": "integer"
+        },
+        {
+          "name": "buildargs",
+          "in": "query",
+          "description": "JSON map of string pairs for build-time variables. Users pass these values at build-time. Docker uses the buildargs as the environment context for commands run via the `Dockerfile` RUN instruction, or for variable expansion in other `Dockerfile` instructions. This is not meant for passing secret values.\n\nFor example, the build arg `FOO=bar` would become `{\"FOO\":\"bar\"}` in JSON. This would result in the query parameter `buildargs={\"FOO\":\"bar\"}`. Note that `{\"FOO\":\"bar\"}` should be URI component encoded.\n\n[Read more about the buildargs instruction.](https://docs.docker.com/engine/reference/builder/#arg)\n",
+          "type": "string"
+        },
+        {
+          "name": "shmsize",
+          "in": "query",
+          "description": "Size of `/dev/shm` in bytes. The size must be greater than 0. If omitted the system uses 64MB.",
+          "type": "integer"
+        },
+        {
+          "name": "squash",
+          "in": "query",
+          "description": "Squash the resulting images layers into a single layer. *(Experimental release only.)*",
+          "type": "boolean"
+        },
+        {
+          "name": "labels",
+          "in": "query",
+          "description": "Arbitrary key/value labels to set on the image, as a JSON map of string pairs.",
+          "type": "string"
+        },
+        {
+          "name": "networkmode",
+          "in": "query",
+          "description": "Sets the networking mode for the run commands during build. Supported\nstandard values are: `bridge`, `host`, `none`, and `container:<name|id>`.\nAny other value is taken as a custom network's name or ID to which this\ncontainer should connect to.\n",
+          "type": "string"
+        },
+        {
+          "name": "Content-type",
+          "in": "header",
+          "type": "string",
+          "enum": [
+            "application/x-tar"
+          ],
+          "default": "application/x-tar"
+        },
+        {
+          "name": "X-Registry-Config",
+          "in": "header",
+          "description": "This is a base64-encoded JSON object with auth configurations for multiple registries that a build may refer to.\n\nThe key is a registry URL, and the value is an auth configuration object, [as described in the authentication section](#section/Authentication). For example:\n\n```\n{\n  \"docker.example.com\": {\n    \"username\": \"janedoe\",\n    \"password\": \"hunter2\"\n  },\n  \"https://index.docker.io/v1/\": {\n    \"username\": \"mobydock\",\n    \"password\": \"conta1n3rize14\"\n  }\n}\n```\n\nOnly the registry domain name (and port if not the default 443) are required. However, for legacy reasons, the Docker Hub registry must be specified with both a `https://` prefix and a `/v1/` suffix even though Docker will prefer to use the v2 registry API.\n",
+          "type": "string"
+        },
+        {
+          "name": "platform",
+          "in": "query",
+          "description": "Platform in the format os[/arch[/variant]]",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "target",
+          "in": "query",
+          "description": "Target build stage",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "outputs",
+          "in": "query",
+          "description": "BuildKit output configuration",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "version",
+          "in": "query",
+          "type": "string",
+          "default": "1",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "description": "Version of the builder backend to use.\n\n- `1` is the first generation classic (deprecated) builder in the Docker daemon (default)\n- `2` is [BuildKit](https://github.com/moby/buildkit)\n"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "no error"
+        },
+        "400": {
+          "description": "Bad parameter",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "Image"
+      ]
+    }
+  }
+}

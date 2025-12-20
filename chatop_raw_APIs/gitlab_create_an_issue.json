@@ -1,0 +1,273 @@
+{
+    "https://gitlab.com/api/v4/projects/{id}/issues": {
+        "post": {
+            "description": "Function: Create an issue for a specific project. Input: Project ID in path, various details like title, assignee IDs etc in request body. Response: Success status with issue details like ID, title, assignees, creation time etc in JSON format.",
+            "tags": [
+                "Issues"
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "required": true,
+                    "in": "path",
+                    "description": "The ID of the issue"
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "assignee_ids": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    },
+                                    "description": "The ID of the user(s) to assign the issue to."
+                                },
+                                "confidential": {
+                                    "type": "boolean",
+                                    "description": "Set an issue to be confidential. Default is false."
+                                },
+                                "created_at": {
+                                    "type": "string",
+                                    "description": "When the issue was created. Date time string, ISO 8601 formatted, for example 2016-03-11T03:45:40Z. Requires administrator or project/group owner rights."
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "The description of an issue. Limited to 1,048,576 characters."
+                                },
+                                "discussion_to_resolve": {
+                                    "type": "string",
+                                    "description": "The ID of a discussion to resolve. This fills out the issue with a default description and mark the discussion as resolved. Use in combination with merge_request_to_resolve_discussions_of."
+                                },
+                                "due_date": {
+                                    "type": "string",
+                                    "description": "The due date. Date time string in the format YEAR-MONTH-DAY, for example 2016-03-11"
+                                },
+                                "epic_id": {
+                                    "type": "integer",
+                                    "description": "ID of the epic to add the issue to. Valid values are greater than or equal to 0."
+                                },
+                                "epic_iid": {
+                                    "type": "integer",
+                                    "description": "IID of the epic to add the issue to. Valid values are greater than or equal to 0. (deprecated, will be removed in version 5)"
+                                },
+                                "iid": {
+                                    "oneOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "description": "The internal ID of the project\u2019s issue (requires administrator or project owner rights)"
+                                },
+                                "labels": {
+                                    "type": "string",
+                                    "description": "Comma-separated label names for an issue"
+                                },
+                                "merge_request_to_resolve_discussions_of": {
+                                    "type": "integer",
+                                    "description": "The IID of a merge request in which to resolve all issues. This fills out the issue with a default description and mark all discussions as resolved. When passing a description or title, these values take precedence over the default values."
+                                },
+                                "milestone_id": {
+                                    "type": "integer",
+                                    "description": "The global ID of a milestone to assign issue"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "description": "The title of an issue"
+                                },
+                                "weight": {
+                                    "type": "integer",
+                                    "description": "The weight of the issue. Valid values are greater than or equal to 0."
+                                }
+                            },
+                            "required": [
+                                "title"
+                            ]
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "success",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "project_id": {
+                                        "type": "integer"
+                                    },
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "created_at": {
+                                        "type": "string"
+                                    },
+                                    "iid": {
+                                        "type": "integer"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "type": "string"
+                                    },
+                                    "assignees": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "assignee": {
+                                        "type": "string"
+                                    },
+                                    "labels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "upvotes": {
+                                        "type": "integer"
+                                    },
+                                    "downvotes": {
+                                        "type": "integer"
+                                    },
+                                    "merge_requests_count": {
+                                        "type": "integer"
+                                    },
+                                    "author": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "avatar_url": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "web_url": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "updated_at": {
+                                        "type": "string"
+                                    },
+                                    "closed_at": {
+                                        "type": "string"
+                                    },
+                                    "closed_by": {
+                                        "type": "string"
+                                    },
+                                    "milestone": {
+                                        "type": "string"
+                                    },
+                                    "subscribed": {
+                                        "type": "boolean"
+                                    },
+                                    "user_notes_count": {
+                                        "type": "integer"
+                                    },
+                                    "due_date": {
+                                        "type": "string"
+                                    },
+                                    "web_url": {
+                                        "type": "string"
+                                    },
+                                    "references": {
+                                        "type": "object",
+                                        "properties": {
+                                            "short": {
+                                                "type": "string"
+                                            },
+                                            "relative": {
+                                                "type": "string"
+                                            },
+                                            "full": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "time_stats": {
+                                        "type": "object",
+                                        "properties": {
+                                            "time_estimate": {
+                                                "type": "integer"
+                                            },
+                                            "total_time_spent": {
+                                                "type": "integer"
+                                            },
+                                            "human_time_estimate": {
+                                                "type": "string"
+                                            },
+                                            "human_total_time_spent": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "confidential": {
+                                        "type": "boolean"
+                                    },
+                                    "discussion_locked": {
+                                        "type": "boolean"
+                                    },
+                                    "_links": {
+                                        "type": "object",
+                                        "properties": {
+                                            "self": {
+                                                "type": "string"
+                                            },
+                                            "notes": {
+                                                "type": "string"
+                                            },
+                                            "award_emoji": {
+                                                "type": "string"
+                                            },
+                                            "project": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "task_completion_status": {
+                                        "type": "object",
+                                        "properties": {
+                                            "count": {
+                                                "type": "integer"
+                                            },
+                                            "completed_count": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
