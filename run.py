@@ -12,6 +12,9 @@ from langchain.llms import OpenAIChat
 from utils import reduce_openapi_spec, ColorPrint
 from utils import ReducedOpenAPISpec
 from model import RestGPT
+import logging.config
+import os
+from pathlib import Path
 
 logger = logging.getLogger()
 
@@ -24,16 +27,28 @@ def main():
     os.environ['SPOTIPY_CLIENT_ID'] = config['spotipy_client_id']
     os.environ['SPOTIPY_CLIENT_SECRET'] = config['spotipy_client_secret']
     os.environ['SPOTIPY_REDIRECT_URI'] = config['spotipy_redirect_uri']
-        
-    logging.basicConfig(
-        format="%(message)s",
-        handlers=[logging.StreamHandler(ColorPrint())],
-    )
-    logger.setLevel(logging.INFO)
+    
+    scenario = config["scenario"]
+    index = config["index"]
+    query = config["query"]
 
-    scenario = input("Please select a scenario (TMDB/Spotify): ")
-    scenario = scenario.lower()
-
+    def setup_logging():
+        """设置统一的日志配置"""
+        # 创建日志目录（如果不存在）
+        log_dir = Path(f"logs/{scenario}")
+        log_dir.mkdir(exist_ok=True, parents=True)
+        log_file = log_dir / f"{index}.log"
+        logging.basicConfig(
+            level = logging.INFO,
+            format="%(message)s",
+            handlers=[
+                logging.FileHandler(log_file, encoding='utf-8'),
+                logging.StreamHandler(ColorPrint())],
+        )
+    
+    setup_logging()
+    
+    scenario = scenario.split("_")[0]
     if scenario == 'tmdb':
         with open("specs/tmdb_oas.json") as f:
             raw_tmdb_api_spec = json.load(f)
@@ -106,23 +121,28 @@ def main():
 
     requests_wrapper = Requests(headers=headers)
 
-    llm = OpenAIChat(
-        model_name="deepseek-v3.2", 
+    planner_llm = OpenAIChat(
+        model_name="gpt-5.1", 
         temperature=1.0, 
         max_tokens=700,
     )
-    rest_gpt = RestGPT(llm, api_spec=api_spec, scenario=scenario, requests_wrapper=requests_wrapper, simple_parser=False)
+    tool_llm = OpenAIChat(
+        model_name='gpt-5-nano',
+        temerature=1.0,
+        max_token=700,
+    )
+    rest_gpt = RestGPT(planner_llm=planner_llm, tool_llm=tool_llm, api_spec=api_spec, scenario=scenario, requests_wrapper=requests_wrapper, simple_parser=False)
 
-    if scenario == 'tmdb':
-        query_example = "Give me the number of movies directed by Sofia Coppola"
-    elif scenario == 'spotify':
-        query_example = "Add Summertime Sadness by Lana Del Rey in my first playlist"
-    else:
-        query_example = "No query example for your scenario, input your query"
-    print(f"Example instruction: {query_example}")
-    query = input("Please input an instruction (Press ENTER to use the example instruction): ")
-    if query == '':
-        query = query_example
+    # if scenario == 'tmdb':
+    #     query_example = "Give me the number of movies directed by Sofia Coppola"
+    # elif scenario == 'spotify':
+    #     query_example = "Add Summertime Sadness by Lana Del Rey in my first playlist"
+    # else:
+    #     query_example = "No query example for your scenario, input your query"
+    # print(f"Example instruction: {query_example}")
+    # query = input("Please input an instruction (Press ENTER to use the example instruction): ")
+    # if query == '':
+    #     query = query_example
     
     logger.info(f"Query: {query}")
 

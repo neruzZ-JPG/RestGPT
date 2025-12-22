@@ -22,7 +22,8 @@ logger = logging.getLogger(__name__)
 class RestGPT(Chain):
     """Consists of an agent using tools."""
 
-    llm: BaseLLM
+    planner_llm: BaseLLM
+    tool_llm: BaseLLM
     api_spec: ReducedOpenAPISpec
     planner: Planner
     api_selector: APISelector
@@ -36,7 +37,8 @@ class RestGPT(Chain):
 
     def __init__(
         self,
-        llm: BaseLLM,
+        planner_llm: BaseLLM,
+        tool_llm: BaseLLM,
         api_spec: ReducedOpenAPISpec,
         scenario: str,
         requests_wrapper: RequestsWrapper,
@@ -53,11 +55,12 @@ class RestGPT(Chain):
         # if scenario not in ['tmdb', 'spotify']:
         #     raise ValueError(f"Invalid scenario {scenario}")
         
-        planner = Planner(llm=llm, scenario=scenario)
-        api_selector = APISelector(llm=llm, scenario=scenario, api_spec=api_spec)
+        planner = Planner(llm=planner_llm, scenario=scenario)
+        api_selector = APISelector(llm=tool_llm, scenario=scenario, api_spec=api_spec)
 
         super().__init__(
-            llm=llm, api_spec=api_spec, planner=planner, api_selector=api_selector, scenario=scenario,
+            planner_llm=planner_llm, tool_llm = tool_llm,
+            api_spec=api_spec, planner=planner, api_selector=api_selector, scenario=scenario,
             requests_wrapper=requests_wrapper, simple_parser=simple_parser, callback_manager=callback_manager, **kwargs
         )
 
@@ -151,7 +154,7 @@ class RestGPT(Chain):
 
             finished = re.match(r"No API call needed.(.*)", api_plan)
             if not finished:
-                executor = Caller(llm=self.llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
+                executor = Caller(llm=self.tool_llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
                 execution_res = executor.run(api_plan=api_plan, background=api_selector_background)
             else:
                 execution_res = finished.group(1)
@@ -168,7 +171,7 @@ class RestGPT(Chain):
                 
                 finished = re.match(r"No API call needed.(.*)", api_plan)
                 if not finished:
-                    executor = Caller(llm=self.llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
+                    executor = Caller(llm=self.tool_llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
                     execution_res = executor.run(api_plan=api_plan, background=api_selector_background)
                 else:
                     execution_res = finished.group(1)

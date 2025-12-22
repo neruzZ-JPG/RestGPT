@@ -61,7 +61,7 @@ def merge_all_jsons(input_folder, output_file):
 
 if __name__ == "__main__":
     # 配置路径
-    system = "kubernetes"
+    system = "docker"
     INPUT_FOLDER = f"./APIs/{system}"  # 你的原始文件目录
     OUTPUT_FILE = f"./specs/{system}.json" # 输出给 RestGPT 用的文件
     

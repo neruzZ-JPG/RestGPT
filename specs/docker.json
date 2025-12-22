@@ -257,6 +257,84 @@
         }
       }
     },
+    "http://localhost:2375/exec/{id}/json": {
+      "get": {
+        "description": "Return low-level information about an exec instance.",
+        "summary": "Inspect an exec instance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Exec instance ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "description": "No error",
+          "schema": {
+            "type": "object",
+            "title": "ExecInspectResponse",
+            "properties": {
+              "CanRemove": {
+                "type": "boolean"
+              },
+              "DetachKeys": {
+                "type": "string"
+              },
+              "ID": {
+                "type": "string"
+              },
+              "Running": {
+                "type": "boolean"
+              },
+              "ExitCode": {
+                "type": "integer"
+              },
+              "ProcessConfig": {
+                "type": "object",
+                "properties": {
+                  "privileged": {
+                    "type": "boolean"
+                  },
+                  "user": {
+                    "type": "string"
+                  },
+                  "tty": {
+                    "type": "boolean"
+                  },
+                  "entrypoint": {
+                    "type": "string"
+                  },
+                  "arguments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "OpenStdin": {
+                "type": "boolean"
+              },
+              "OpenStderr": {
+                "type": "boolean"
+              },
+              "OpenStdout": {
+                "type": "boolean"
+              },
+              "ContainerID": {
+                "type": "string"
+              },
+              "Pid": {
+                "type": "integer",
+                "description": "The system process ID for the exec process."
+              }
+            }
+          }
+        }
+      }
+    },
     "http://localhost:2375/images/{name}/json": {
       "get": {
         "description": "Return low-level information about an image.",
@@ -1567,6 +1645,24 @@
               }
             }
           }
+        }
+      }
+    },
+    "http://localhost:2375/exec/{id}/start": {
+      "post": {
+        "description": "Starts a previously set up exec instance. If detach is true, this endpoint\nreturns immediately after starting the command. Otherwise, it sets up an\ninteractive session with the command.\n",
+        "summary": "Start an exec instance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Exec instance ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "description": "No error"
         }
       }
     },

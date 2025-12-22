@@ -198,7 +198,7 @@ class ResponseParser(Chain):
                 template=LLM_SUMMARIZE_TEMPLATE,
                 partial_variables={
                     "api_path": api_path,
-                    "api_description": api_doc['description'],
+                    "api_description": api_doc.get('description', api_doc.get('summary', '')),
                 },
                 input_variables=["query", "json", "api_param", "response_description"]
             )
@@ -225,7 +225,7 @@ class ResponseParser(Chain):
             template=CODE_PARSING_SCHEMA_TEMPLATE,
             partial_variables={
                 "api_path": api_path,
-                "api_description": api_doc['description'],
+                "api_description": api_doc.get('description', api_doc.get('summary', '')),
                 "response_schema": response_schema,
                 "response_example": response_example,
             },
@@ -235,7 +235,7 @@ class ResponseParser(Chain):
             template=CODE_PARSING_RESPONSE_TEMPLATE,
             partial_variables={
                 "api_path": api_path,
-                "api_description": api_doc['description'],
+                "api_description": api_doc.get('description', api_doc.get('summary', '')),
                 "response_schema": response_schema,
             },
             input_variables=["query", "json", "api_param"]
@@ -244,7 +244,7 @@ class ResponseParser(Chain):
             template=LLM_PARSING_TEMPLATE,
             partial_variables={
                 "api_path": api_path,
-                "api_description": api_doc['description'],
+                "api_description": api_doc.get('description', api_doc.get('summary', '')),
             },
             input_variables=["query", "json", "api_param", "response_description"]
         )

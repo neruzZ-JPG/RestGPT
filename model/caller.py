@@ -175,33 +175,42 @@ class Caller(Chain):
         return scratchpad
 
     def _get_action_and_input(self, llm_output: str) -> Tuple[str, str]:
+        # 1. 定义截断关键词（一旦出现这些词，说明后面的都是幻觉）
+        # 包含常见的几种变体
+        stop_tokens = ["Response:", "Execution Result:", "Observation:"]
+
+        # 2. 优先尝试匹配 Operation（API 调用）
+        # 即使模型输出了 Execution Result，只要前面有 Operation，就说明需要先执行操作
+        regex = r"Operation:[\s]*(.*?)[\n]*Input:[\s]*(.*)"
+        match = re.search(regex, llm_output, re.DOTALL)
+        
+        if match:
+            action = match.group(1).strip()
+            action_input = match.group(2)
+
+            # === 核心修复：强制截断幻觉内容 ===
+            for stop_token in stop_tokens:
+                if stop_token in action_input:
+                    # 只保留 stop_token 之前的内容
+                    action_input = action_input.split(stop_token)[0]
+            # ==============================
+
+            action_input = action_input.strip().strip('`')
+            
+            # 简单的 JSON 容错处理
+            action_input = fix_json_error(action_input)
+            
+            logger.info(f"Detected Action: {action}")
+            logger.info(f"Action Input: {action_input}")
+            
+            return action, action_input
+
+        # 3. 只有在确定没有 Operation 的情况下，才检查是否是最终结果
         if "Execution Result:" in llm_output:
             return "Execution Result", llm_output.split("Execution Result:")[-1].strip()
         
-        # \s matches against tab/newline/whitespace
-        regex = r"Operation:[\s]*(.*?)[\n]*Input:[\s]*(.*)"
-        match = re.search(regex, llm_output, re.DOTALL)
-        if not match:
-            # TODO: not match, just return
-            raise ValueError(f"Could not parse LLM output: `{llm_output}`")
-        
-        action = match.group(1).strip()
-        action_input = match.group(2)
-
-        # === FIX 1: 截断 LLM 产生的幻觉 Response ===
-        if "Response:" in action_input:
-            action_input = action_input.split("Response:")[0]
-        
-        action_input = action_input.strip().strip('`')
-        # ==========================================
-
-        if action not in ["GET", "POST", "DELETE", "PUT"]:
-            raise NotImplementedError
-        
-        # avoid error in the JSON format
-        action_input = fix_json_error(action_input)
-
-        return action, action_input
+        # 4. 如果既没有操作也没有结果，抛出异常
+        raise ValueError(f"Could not parse LLM output: `{llm_output}`")
     
     def _get_response(self, action: str, action_input: str) -> str:
         action_input = action_input.strip().strip('`')
@@ -246,7 +255,7 @@ class Caller(Chain):
             response_text = response
         else:
             raise NotImplementedError
-        
+        logger.info(f"response_text is {response_text}")
         return response_text, params, request_body, desc, query
     
     def _call(self, inputs: Dict[str, str]) -> Dict[str, str]:
@@ -301,15 +310,24 @@ class Caller(Chain):
 
         while self._should_continue(iterations, time_elapsed):
             scratchpad = self._construct_scratchpad(intermediate_steps)
+            # if scratchpad:
+            #     logger.info(f"--- [DEBUG] Current Scratchpad (Memory) ---\n{scratchpad}\n ------------------------------------------ scratchpad end ")
+            # else:
+            #     logger.info("--- [DEBUG] Current Scratchpad is EMPTY (First Run or Amnesia) ---")
             caller_chain_output = caller_chain.run(api_plan=api_plan, background=inputs['background'], agent_scratchpad=scratchpad)
+            
+            if "Response:" in caller_chain_output:
+                caller_chain_output = caller_chain_output.split("Response:")[0].strip()
+            
             logger.info(f"Caller: {caller_chain_output}")
-
+            
             action, action_input = self._get_action_and_input(caller_chain_output)
+            
             if action == "Execution Result":
                 return {"result": action_input}
             response, params, request_body, desc, query = self._get_response(action, action_input)
 
-            called_endpoint_name = action + ' ' + json.loads(action_input)['url'].replace(api_url, '')
+            called_endpoint_name = action + ' ' + json.loads(action_input)['url']
             called_endpoint_name = get_matched_endpoint(self.api_spec, called_endpoint_name)[0]
             api_path = api_url + called_endpoint_name.split(' ')[-1]
             api_doc_for_parser = endpoint_docs_by_name.get(called_endpoint_name)

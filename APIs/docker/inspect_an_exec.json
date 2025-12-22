@@ -1,0 +1,123 @@
+{
+  "http://localhost:2375/exec/{id}/json": {
+    "get": {
+      "summary": "Inspect an exec instance",
+      "description": "Return low-level information about an exec instance.",
+      "operationId": "ExecInspect",
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "No error",
+          "schema": {
+            "type": "object",
+            "title": "ExecInspectResponse",
+            "properties": {
+              "CanRemove": {
+                "type": "boolean"
+              },
+              "DetachKeys": {
+                "type": "string"
+              },
+              "ID": {
+                "type": "string"
+              },
+              "Running": {
+                "type": "boolean"
+              },
+              "ExitCode": {
+                "type": "integer"
+              },
+              "ProcessConfig": {
+                "type": "object",
+                "properties": {
+                  "privileged": {
+                    "type": "boolean"
+                  },
+                  "user": {
+                    "type": "string"
+                  },
+                  "tty": {
+                    "type": "boolean"
+                  },
+                  "entrypoint": {
+                    "type": "string"
+                  },
+                  "arguments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "OpenStdin": {
+                "type": "boolean"
+              },
+              "OpenStderr": {
+                "type": "boolean"
+              },
+              "OpenStdout": {
+                "type": "boolean"
+              },
+              "ContainerID": {
+                "type": "string"
+              },
+              "Pid": {
+                "type": "integer",
+                "description": "The system process ID for the exec process."
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No such exec instance",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Server error",
+          "schema": {
+            "description": "Represents an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "properties": {
+              "message": {
+                "description": "The error message.",
+                "type": "string",
+                "x-nullable": false
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Exec instance ID",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "tags": [
+        "Exec"
+      ]
+    }
+  }
+}

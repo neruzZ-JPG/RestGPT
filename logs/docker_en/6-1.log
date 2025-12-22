@@ -1,0 +1,393 @@
+Query: Query the detailed information of the docker container named 'jenkins'.
+query is Query the detailed information of the docker container named 'jenkins'.
+planner received input: Query the detailed information of the docker container named 'jenkins'.
+Plan step 1: Call the Docker API to get detailed information (inspect data) for the container with the name `jenkins`.
+Planner: Plan step 1: Call the Docker API to get detailed information (inspect data) for the container with the name `jenkins`.
+API Selector: Background: No background
+User query: Plan step 1: Call the Docker API to get detailed information (inspect data) for the container with the name `jenkins`.
+GET http://localhost:2375/containers/json
+API response: This will return a list of containers. Identify the container whose Names includes "/jenkins" and note its ID for the next step.
+Instruction: continue
+Caller: Background: No background
+Plan: Step 1: Call the Docker API to get a list of containers through GET http://localhost:2375/containers/json and locate the container whose Names includes "/jenkins" and capture its Id for subsequent steps.
+Thought: I will execute a GET request to the Docker API to retrieve all containers, then scan the returned list to find the container whose Names array contains the string "/jenkins". If found, I will extract the container's Id to be used for any next planned steps (inspect, stop, etc.). If not found, I will report that the Jenkins container could not be located.
+Operation: GET
+Input: {
+  "url": "http://localhost:2375/containers/json",
+  "params": {},
+  "description": "The API response is a list of Docker containers. We will locate the container whose Names array contains '/jenkins' and extract its ID for the next step.",
+  "output_instructions": "From the response, identify the container object where one of the Names equals '/jenkins' or includes the string '/jenkins' in its Names array. Retrieve the 'Id' value for that container. If such a container is found, present its ID clearly. If none is found, indicate that Jenkins container could not be found."
+}
+Detected Action: GET
+Action Input: {
+  "url": "http://localhost:2375/containers/json",
+  "params": {},
+  "description": "The API response is a list of Docker containers. We will locate the container whose Names array contains '/jenkins' and extract its ID for the next step.",
+  "output_instructions": "From the response, identify the container object where one of the Names equals '/jenkins' or includes the string '/jenkins' in its Names array. Retrieve the 'Id' value for that container. If such a container is found, present its ID clearly. If none is found, indicate that Jenkins container could not be found."
+}
+response_text is [{"Id":"fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20","Names":["/jenkins"],"Image":"jenkins/jenkins:2.505","ImageID":"sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a","Command":"/usr/bin/tini -- /usr/local/bin/jenkins.sh","Created":1765965575,"Ports":[{"IP":"0.0.0.0","PrivatePort":50000,"PublicPort":50000,"Type":"tcp"},{"IP":"::","PrivatePort":50000,"PublicPort":50000,"Type":"tcp"},{"IP":"0.0.0.0","PrivatePort":8080,"PublicPort":8080,"Type":"tcp"},{"IP":"::","PrivatePort":8080,"PublicPort":8080,"Type":"tcp"}],"Labels":{"org.opencontainers.image.description":"The Jenkins Continuous Integration and Delivery server","org.opencontainers.image.licenses":"MIT","org.opencontainers.image.revision":"ae79f4234fac7ff1f4f28c220d2b3eaf9fec6fd2","org.opencontainers.image.source":"https://github.com/jenkinsci/docker","org.opencontainers.image.title":"Official Jenkins Docker image","org.opencontainers.image.url":"https://www.jenkins.io/","org.opencontainers.image.vendor":"Jenkins project","org.opencontainers.image.version":"2.505"},"State":"running","Status":"Up 5 days","HostConfig":{"NetworkMode":"bridge"},"NetworkSettings":{"Networks":{"bridge":{"IPAMConfig":null,"Links":null,"Aliases":null,"MacAddress":"22:d0:1c:7c:e2:84","DriverOpts":null,"GwPriority":0,"NetworkID":"efc710711a32c1c3bced81edc4355346ef48c131a421fad46c0765eb7369d604","EndpointID":"8eec68a49f64b1bd40cdb6c729c78876bed38a9f9286dd4ed5af0a0f481970cc","Gateway":"172.17.0.1","IPAddress":"172.17.0.2","IPPrefixLen":16,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"DNSNames":null}}},"Mounts":[{"Type":"volume","Name":"jenkins-data","Source":"/var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data","Destination":"/var/jenkins_home","Driver":"local","Mode":"z","RW":true,"Propagation":""},{"Type":"bind","Source":"/var/run/docker.sock","Destination":"/var/run/docker.sock","Mode":"","RW":true,"Propagation":"rprivate"}]}]
+
+Parser: Container ID: fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20
+Caller: Background: No background
+Plan: Step 1: Call the Docker API to get a list of containers through GET http://localhost:2375/containers/json and locate the container whose Names includes "/jenkins" and capture its Id for subsequent steps.
+Thought: I will execute a GET request to the Docker API to retrieve all containers, then scan the returned list to find the container whose Names array contains the string "/jenkins". If found, I will extract the container's Id to be used for any next planned steps (inspect, stop, etc.). If not found, I will report that the Jenkins container could not be located.
+Operation: GET
+Input: {
+  "url": "http://localhost:2375/containers/json",
+  "params": {},
+  "description": "The API response is a list of Docker containers. We will locate the container whose Names array contains '/jenkins' and extract its ID for the next step.",
+  "output_instructions": "From the response, identify the container object where one of the Names equals '/jenkins' or includes the string '/jenkins' in its Names array. Retrieve the 'Id' value for that container. If such a container is found, present its ID clearly. If none is found, indicate that Jenkins container could not be found."
+}
+Detected Action: GET
+Action Input: {
+  "url": "http://localhost:2375/containers/json",
+  "params": {},
+  "description": "The API response is a list of Docker containers. We will locate the container whose Names array contains '/jenkins' and extract its ID for the next step.",
+  "output_instructions": "From the response, identify the container object where one of the Names equals '/jenkins' or includes the string '/jenkins' in its Names array. Retrieve the 'Id' value for that container. If such a container is found, present its ID clearly. If none is found, indicate that Jenkins container could not be found."
+}
+response_text is [{"Id":"fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20","Names":["/jenkins"],"Image":"jenkins/jenkins:2.505","ImageID":"sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a","Command":"/usr/bin/tini -- /usr/local/bin/jenkins.sh","Created":1765965575,"Ports":[{"IP":"0.0.0.0","PrivatePort":50000,"PublicPort":50000,"Type":"tcp"},{"IP":"::","PrivatePort":50000,"PublicPort":50000,"Type":"tcp"},{"IP":"0.0.0.0","PrivatePort":8080,"PublicPort":8080,"Type":"tcp"},{"IP":"::","PrivatePort":8080,"PublicPort":8080,"Type":"tcp"}],"Labels":{"org.opencontainers.image.description":"The Jenkins Continuous Integration and Delivery server","org.opencontainers.image.licenses":"MIT","org.opencontainers.image.revision":"ae79f4234fac7ff1f4f28c220d2b3eaf9fec6fd2","org.opencontainers.image.source":"https://github.com/jenkinsci/docker","org.opencontainers.image.title":"Official Jenkins Docker image","org.opencontainers.image.url":"https://www.jenkins.io/","org.opencontainers.image.vendor":"Jenkins project","org.opencontainers.image.version":"2.505"},"State":"running","Status":"Up 5 days","HostConfig":{"NetworkMode":"bridge"},"NetworkSettings":{"Networks":{"bridge":{"IPAMConfig":null,"Links":null,"Aliases":null,"MacAddress":"22:d0:1c:7c:e2:84","DriverOpts":null,"GwPriority":0,"NetworkID":"efc710711a32c1c3bced81edc4355346ef48c131a421fad46c0765eb7369d604","EndpointID":"8eec68a49f64b1bd40cdb6c729c78876bed38a9f9286dd4ed5af0a0f481970cc","Gateway":"172.17.0.1","IPAddress":"172.17.0.2","IPPrefixLen":16,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"DNSNames":null}}},"Mounts":[{"Type":"volume","Name":"jenkins-data","Source":"/var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data","Destination":"/var/jenkins_home","Driver":"local","Mode":"z","RW":true,"Propagation":""},{"Type":"bind","Source":"/var/run/docker.sock","Destination":"/var/run/docker.sock","Mode":"","RW":true,"Propagation":"rprivate"}]}]
+
+Parser: Container ID: fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20
+Caller: Background: No background
+
+Plan: 
+- Step 1: Call the Docker API to get a list of containers through GET http://localhost:2375/containers/json and locate the container whose Names includes "/jenkins" and capture its Id for subsequent steps.
+- Step 2: Call the Docker API to get detailed information (inspect data) for the container with the name "jenkins" by performing GET http://localhost:2375/containers/{container_id}/json using the ID obtained in Step 1.
+
+Thought: I have already located the Jenkins container and captured its ID as fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20. The next logical step is to retrieve the detailed inspect data for this container to fulfill the request for detailed information.
+
+Operation: GET
+Input: {
+  "url": "http://localhost:2375/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/json",
+  "description": "The API response is the detailed inspect data for the Jenkins container identified by ID fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20.",
+  "output_instructions": "Provide a detailed summary of the Jenkins container from the inspect data. Include the container Id, Image, Command, Created timestamp, State (including Running status and StartedAt), Status, NetworkSettings (IP address and port mappings), Name (should be '/jenkins'), and Mounts (with source and destination paths). If available, note any Labels and Entrypoint/Cmd configurations. The summary should clearly indicate whether the Jenkins container is currently running, its image version, and how it is exposed to the host (port mappings)."
+}
+Detected Action: GET
+Action Input: {
+  "url": "http://localhost:2375/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/json",
+  "description": "The API response is the detailed inspect data for the Jenkins container identified by ID fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20.",
+  "output_instructions": "Provide a detailed summary of the Jenkins container from the inspect data. Include the container Id, Image, Command, Created timestamp, State (including Running status and StartedAt), Status, NetworkSettings (IP address and port mappings), Name (should be '/jenkins'), and Mounts (with source and destination paths). If available, note any Labels and Entrypoint/Cmd configurations. The summary should clearly indicate whether the Jenkins container is currently running, its image version, and how it is exposed to the host (port mappings)."
+}
+response_text is {"Id":"fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20","Created":"2025-12-17T09:59:35.31925344Z","Path":"/usr/bin/tini","Args":["--","/usr/local/bin/jenkins.sh"],"State":{"Status":"running","Running":true,"Paused":false,"Restarting":false,"OOMKilled":false,"Dead":false,"Pid":29501,"ExitCode":0,"Error":"","StartedAt":"2025-12-17T09:59:35.48251269Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a","ResolvConfPath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/resolv.conf","HostnamePath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/hostname","HostsPath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/hosts","LogPath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20-json.log","Name":"/jenkins","RestartCount":0,"Driver":"overlay2","Platform":"linux","MountLabel":"","ProcessLabel":"","AppArmorProfile":"docker-default","ExecIDs":["7546a83fc47e1c5dde73b413f5430823d6b0682aa2cfad9dd9dcb30206cc764a"],"HostConfig":{"Binds":["jenkins-data:/var/jenkins_home","/var/run/docker.sock:/var/run/docker.sock"],"ContainerIDFile":"","LogConfig":{"Type":"json-file","Config":{}},"NetworkMode":"bridge","PortBindings":{"50000/tcp":[{"HostIp":"","HostPort":"50000"}],"8080/tcp":[{"HostIp":"","HostPort":"8080"}]},"RestartPolicy":{"Name":"no","MaximumRetryCount":0},"AutoRemove":true,"VolumeDriver":"","VolumesFrom":null,"ConsoleSize":[12,115],"CapAdd":null,"CapDrop":null,"CgroupnsMode":"private","Dns":[],"DnsOptions":[],"DnsSearch":[],"ExtraHosts":null,"GroupAdd":null,"IpcMode":"private","Cgroup":"","Links":null,"OomScoreAdj":0,"PidMode":"","Privileged":false,"PublishAllPorts":false,"ReadonlyRootfs":false,"SecurityOpt":null,"UTSMode":"","UsernsMode":"","ShmSize":67108864,"Runtime":"runc","Isolation":"","CpuShares":0,"Memory":0,"NanoCpus":0,"CgroupParent":"","BlkioWeight":0,"BlkioWeightDevice":[],"BlkioDeviceReadBps":[],"BlkioDeviceWriteBps":[],"BlkioDeviceReadIOps":[],"BlkioDeviceWriteIOps":[],"CpuPeriod":0,"CpuQuota":0,"CpuRealtimePeriod":0,"CpuRealtimeRuntime":0,"CpusetCpus":"","CpusetMems":"","Devices":[],"DeviceCgroupRules":null,"DeviceRequests":null,"MemoryReservation":0,"MemorySwap":0,"MemorySwappiness":null,"OomKillDisable":null,"PidsLimit":null,"Ulimits":[],"CpuCount":0,"CpuPercent":0,"IOMaximumIOps":0,"IOMaximumBandwidth":0,"MaskedPaths":["/proc/asound","/proc/acpi","/proc/interrupts","/proc/kcore","/proc/keys","/proc/latency_stats","/proc/timer_list","/proc/timer_stats","/proc/sched_debug","/proc/scsi","/sys/firmware","/sys/devices/virtual/powercap"],"ReadonlyPaths":["/proc/bus","/proc/fs","/proc/irq","/proc/sys","/proc/sysrq-trigger"]},"GraphDriver":{"Data":{"ID":"fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20","LowerDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8-init/diff:/var/snap/docker/common/var-lib-docker/overlay2/c43e429b1a730e59f9794d9e181d35b2c01d5d8bea45b9eb01e5840adb8f85a0/diff:/var/snap/docker/common/var-lib-docker/overlay2/c5b7c0a43b3ea21b41252882b940019601c6968bc4094b39f92a2e0cb091b1b0/diff:/var/snap/docker/common/var-lib-docker/overlay2/5e3b55d6533fc98e27890cb3c3557b959e4a0e1953eba73dcec021c7a383c21e/diff:/var/snap/docker/common/var-lib-docker/overlay2/22ae6d370416af5203c252a1ef6b552015369567434d42d850f6fcfe00afa0c2/diff:/var/snap/docker/common/var-lib-docker/overlay2/8eb7dc746a505f713ebaab4aef1f64052607acd707ccea6c0f92c032d0980b55/diff:/var/snap/docker/common/var-lib-docker/overlay2/41cf58bccf53edf0d9270742a8ed79b698ad416f99eb5f2d85fc9d38ee599ce2/diff:/var/snap/docker/common/var-lib-docker/overlay2/8b86b408ddc2aa807c29a1f24df47920f98d449f834a6716bd11f34161b3e927/diff:/var/snap/docker/common/var-lib-docker/overlay2/48c00c0653c6022c010d892f6db6014d8c2a25b1e74e5a328de16aa4e7ac7a1f/diff:/var/snap/docker/common/var-lib-docker/overlay2/3b67f4c75a3121b868743bb47116108e921fbb3be77c62de9e614463e3f812ce/diff:/var/snap/docker/common/var-lib-docker/overlay2/dc4031f668321a95a4e4260da622cc38b0d13f45010adf09034d5b79c26752e3/diff:/var/snap/docker/common/var-lib-docker/overlay2/b4b0e58f8c8663753fcf51cbf9994cc53c2b2b8dcf5951a8ab73a8cfbcf04dd5/diff:/var/snap/docker/common/var-lib-docker/overlay2/b3513fa4c344c90ec6056378335daf1b11fa7eea95696b5da2c19584d9961526/diff","MergedDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8/merged","UpperDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8/diff","WorkDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8/work"},"Name":"overlay2"},"Mounts":[{"Type":"volume","Name":"jenkins-data","Source":"/var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data","Destination":"/var/jenkins_home","Driver":"local","Mode":"z","RW":true,"Propagation":""},{"Type":"bind","Source":"/var/run/docker.sock","Destination":"/var/run/docker.sock","Mode":"","RW":true,"Propagation":"rprivate"}],"Config":{"Hostname":"fa869b5fe2c8","Domainname":"","User":"root","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"ExposedPorts":{"50000/tcp":{},"8080/tcp":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","LANG=C.UTF-8","JENKINS_HOME=/var/jenkins_home","JENKINS_SLAVE_AGENT_PORT=50000","REF=/usr/share/jenkins/ref","JENKINS_VERSION=2.505","JENKINS_UC=https://updates.jenkins.io","JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental","JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals","COPY_REFERENCE_FILE_LOG=/var/jenkins_home/copy_reference_file.log","JAVA_HOME=/opt/java/openjdk"],"Cmd":null,"Image":"jenkins/jenkins:2.505","Volumes":{"/var/jenkins_home":{}},"WorkingDir":"","Entrypoint":["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"],"OnBuild":null,"Labels":{"org.opencontainers.image.description":"The Jenkins Continuous Integration and Delivery server","org.opencontainers.image.licenses":"MIT","org.opencontainers.image.revision":"ae79f4234fac7ff1f4f28c220d2b3eaf9fec6fd2","org.opencontainers.image.source":"https://github.com/jenkinsci/docker","org.opencontainers.image.title":"Official Jenkins Docker image","org.opencontainers.image.url":"https://www.jenkins.io/","org.opencontainers.image.vendor":"Jenkins project","org.opencontainers.image.version":"2.505"}},"NetworkSettings":{"Bridge":"","SandboxID":"95da3a310bb25b5fea41cf9ee4317654a958b573cbdad2a8dec9ee3844ae7e91","SandboxKey":"/run/snap.docker/netns/95da3a310bb2","Ports":{"50000/tcp":[{"HostIp":"0.0.0.0","HostPort":"50000"},{"HostIp":"::","HostPort":"50000"}],"8080/tcp":[{"HostIp":"0.0.0.0","HostPort":"8080"},{"HostIp":"::","HostPort":"8080"}]},"HairpinMode":false,"LinkLocalIPv6Address":"","LinkLocalIPv6PrefixLen":0,"SecondaryIPAddresses":null,"SecondaryIPv6Addresses":null,"EndpointID":"8eec68a49f64b1bd40cdb6c729c78876bed38a9f9286dd4ed5af0a0f481970cc","Gateway":"172.17.0.1","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"IPAddress":"172.17.0.2","IPPrefixLen":16,"IPv6Gateway":"","MacAddress":"22:d0:1c:7c:e2:84","Networks":{"bridge":{"IPAMConfig":null,"Links":null,"Aliases":null,"MacAddress":"22:d0:1c:7c:e2:84","DriverOpts":null,"GwPriority":0,"NetworkID":"efc710711a32c1c3bced81edc4355346ef48c131a421fad46c0765eb7369d604","EndpointID":"8eec68a49f64b1bd40cdb6c729c78876bed38a9f9286dd4ed5af0a0f481970cc","Gateway":"172.17.0.1","IPAddress":"172.17.0.2","IPPrefixLen":16,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"DNSNames":null}}}}
+
+Parser: Container Jenkins inspect summary
+
+- Id: fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20
+- Name: /jenkins
+- Image: jenkins/jenkins:2.505 (Image ID: sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a)
+- Created: 2025-12-17T09:59:35.31925344Z
+- Command:
+  - Entrypoint: ["/usr/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
+  - Cmd: null (no separate CMD override)
+  - Full invocation (as shown): /usr/bin/tini -- /usr/local/bin/jenkins.sh
+- State:
+  - Status: running
+  - Running: true
+  - StartedAt: 2025-12-17T09:59:35.48251269Z
+  - FinishedAt: 0001-01-01T00:00:00Z (not finished)
+  - Pid: 29501
+  - ExitCode: 0
+- Network settings:
+  - IP address (container): 172.17.0.2
+  - Gateway: 172.17.0.1
+  - Ports exposed to host:
+    - 8080/tcp -> Host 0.0.0.0:8080 and ::1:8080 (IPv6)
+    - 50000/tcp -> Host 0.0.0.0:50000 and ::1:50000
+  - Network: bridge (Docker bridge network)
+- Mounts:
+  - Source: /var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data
+    Destination: /var/jenkins_home
+    Type: volume
+    RW: true
+    Driver: local
+  - Source: /var/run/docker.sock
+    Destination: /var/run/docker.sock
+    Type: bind
+    RW: true
+    Propagation: rprivate
+- Name and path details:
+  - Name: jenkins-data (volume) mounted at /var/jenkins_home
+  - Docker socket bind mounted at /var/run/docker.sock (allows Docker socket access from container)
+- Host configuration:
+  - RestartPolicy: no
+  - AutoRemove: true
+  - PidMode: 
+  - Privileged: false
+  - Runtime: runc
+  - CgroupnsMode: private
+- Environment (sample, from Config.Env):
+  - JENKINS_HOME=/var/jenkins_home
+  - JENKINS_VERSION=2.505
+  - JAVA_HOME=/opt/java/openjdk
+  - Other environment variables related to PATH, LANG, and Jenkins updates
+- Entrypoint/Cmd details (available):
+  - Entrypoint: /usr/bin/tini -- /usr/local/bin/jenkins.sh
+  - Cmd: null (no separate CMD)
+- Labels (selected examples):
+  - org.opencontainers.image.description: The Jenkins Continuous Integration and Delivery server
+  - org.opencontainers.image.version: 2.505
+  - (and other OpenContainers image metadata labels)
+
+Notes:
+- The Jenkins container is currently running (State.Status: running, StartedAt shown above).
+- It exposes Jenkins UI on port 8080 of the host (host port 8080) and provides an agent port on 50000 (host port 50000).
+- Image version is 2.505 ( Jenkins official image tag: jenkins/jenkins:2.505 ).
+- The container uses a volume mapped to /var/jenkins_home for persistent data and binds Docker socket for Docker-in-Docker style access inside the container.
+Caller: Background: No background
+Plan: 
+- Step 1: Call the Docker API to get a list of containers through GET http://localhost:2375/containers/json and locate the container whose Names includes "/jenkins" and capture its Id for subsequent steps.
+- Step 2: Call the Docker API to get detailed information (inspect data) for the container with the name "jenkins" by performing GET http://localhost:2375/containers/{container_id}/json using the ID obtained in Step 1.
+Thought: I have already located the Jenkins container and captured its ID as fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20. The next logical step is to retrieve the detailed inspect data for this container to fulfill the request for detailed information.
+Operation: GET
+Input: {
+  "url": "http://localhost:2375/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/json",
+  "description": "The API response is the detailed inspect data for the Jenkins container identified by ID fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20.",
+  "output_instructions": "Provide a detailed summary of the Jenkins container from the inspect data. Include the container Id, Image, Command, Created timestamp, State (including Running status and StartedAt), Status, NetworkSettings (IP address and port mappings), Name (should be '/jenkins'), and Mounts (with source and destination paths). If available, note any Labels and Entrypoint/Cmd configurations. The summary should clearly indicate whether the Jenkins container is currently running, its image version, and how it is exposed to the host (port mappings)."
+}
+Detected Action: GET
+Action Input: {
+  "url": "http://localhost:2375/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/json",
+  "description": "The API response is the detailed inspect data for the Jenkins container identified by ID fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20.",
+  "output_instructions": "Provide a detailed summary of the Jenkins container from the inspect data. Include the container Id, Image, Command, Created timestamp, State (including Running status and StartedAt), Status, NetworkSettings (IP address and port mappings), Name (should be '/jenkins'), and Mounts (with source and destination paths). If available, note any Labels and Entrypoint/Cmd configurations. The summary should clearly indicate whether the Jenkins container is currently running, its image version, and how it is exposed to the host (port mappings)."
+}
+response_text is {"Id":"fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20","Created":"2025-12-17T09:59:35.31925344Z","Path":"/usr/bin/tini","Args":["--","/usr/local/bin/jenkins.sh"],"State":{"Status":"running","Running":true,"Paused":false,"Restarting":false,"OOMKilled":false,"Dead":false,"Pid":29501,"ExitCode":0,"Error":"","StartedAt":"2025-12-17T09:59:35.48251269Z","FinishedAt":"0001-01-01T00:00:00Z"},"Image":"sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a","ResolvConfPath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/resolv.conf","HostnamePath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/hostname","HostsPath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/hosts","LogPath":"/var/snap/docker/common/var-lib-docker/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20-json.log","Name":"/jenkins","RestartCount":0,"Driver":"overlay2","Platform":"linux","MountLabel":"","ProcessLabel":"","AppArmorProfile":"docker-default","ExecIDs":["7546a83fc47e1c5dde73b413f5430823d6b0682aa2cfad9dd9dcb30206cc764a"],"HostConfig":{"Binds":["jenkins-data:/var/jenkins_home","/var/run/docker.sock:/var/run/docker.sock"],"ContainerIDFile":"","LogConfig":{"Type":"json-file","Config":{}},"NetworkMode":"bridge","PortBindings":{"50000/tcp":[{"HostIp":"","HostPort":"50000"}],"8080/tcp":[{"HostIp":"","HostPort":"8080"}]},"RestartPolicy":{"Name":"no","MaximumRetryCount":0},"AutoRemove":true,"VolumeDriver":"","VolumesFrom":null,"ConsoleSize":[12,115],"CapAdd":null,"CapDrop":null,"CgroupnsMode":"private","Dns":[],"DnsOptions":[],"DnsSearch":[],"ExtraHosts":null,"GroupAdd":null,"IpcMode":"private","Cgroup":"","Links":null,"OomScoreAdj":0,"PidMode":"","Privileged":false,"PublishAllPorts":false,"ReadonlyRootfs":false,"SecurityOpt":null,"UTSMode":"","UsernsMode":"","ShmSize":67108864,"Runtime":"runc","Isolation":"","CpuShares":0,"Memory":0,"NanoCpus":0,"CgroupParent":"","BlkioWeight":0,"BlkioWeightDevice":[],"BlkioDeviceReadBps":[],"BlkioDeviceWriteBps":[],"BlkioDeviceReadIOps":[],"BlkioDeviceWriteIOps":[],"CpuPeriod":0,"CpuQuota":0,"CpuRealtimePeriod":0,"CpuRealtimeRuntime":0,"CpusetCpus":"","CpusetMems":"","Devices":[],"DeviceCgroupRules":null,"DeviceRequests":null,"MemoryReservation":0,"MemorySwap":0,"MemorySwappiness":null,"OomKillDisable":null,"PidsLimit":null,"Ulimits":[],"CpuCount":0,"CpuPercent":0,"IOMaximumIOps":0,"IOMaximumBandwidth":0,"MaskedPaths":["/proc/asound","/proc/acpi","/proc/interrupts","/proc/kcore","/proc/keys","/proc/latency_stats","/proc/timer_list","/proc/timer_stats","/proc/sched_debug","/proc/scsi","/sys/firmware","/sys/devices/virtual/powercap"],"ReadonlyPaths":["/proc/bus","/proc/fs","/proc/irq","/proc/sys","/proc/sysrq-trigger"]},"GraphDriver":{"Data":{"ID":"fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20","LowerDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8-init/diff:/var/snap/docker/common/var-lib-docker/overlay2/c43e429b1a730e59f9794d9e181d35b2c01d5d8bea45b9eb01e5840adb8f85a0/diff:/var/snap/docker/common/var-lib-docker/overlay2/c5b7c0a43b3ea21b41252882b940019601c6968bc4094b39f92a2e0cb091b1b0/diff:/var/snap/docker/common/var-lib-docker/overlay2/5e3b55d6533fc98e27890cb3c3557b959e4a0e1953eba73dcec021c7a383c21e/diff:/var/snap/docker/common/var-lib-docker/overlay2/22ae6d370416af5203c252a1ef6b552015369567434d42d850f6fcfe00afa0c2/diff:/var/snap/docker/common/var-lib-docker/overlay2/8eb7dc746a505f713ebaab4aef1f64052607acd707ccea6c0f92c032d0980b55/diff:/var/snap/docker/common/var-lib-docker/overlay2/41cf58bccf53edf0d9270742a8ed79b698ad416f99eb5f2d85fc9d38ee599ce2/diff:/var/snap/docker/common/var-lib-docker/overlay2/8b86b408ddc2aa807c29a1f24df47920f98d449f834a6716bd11f34161b3e927/diff:/var/snap/docker/common/var-lib-docker/overlay2/48c00c0653c6022c010d892f6db6014d8c2a25b1e74e5a328de16aa4e7ac7a1f/diff:/var/snap/docker/common/var-lib-docker/overlay2/3b67f4c75a3121b868743bb47116108e921fbb3be77c62de9e614463e3f812ce/diff:/var/snap/docker/common/var-lib-docker/overlay2/dc4031f668321a95a4e4260da622cc38b0d13f45010adf09034d5b79c26752e3/diff:/var/snap/docker/common/var-lib-docker/overlay2/b4b0e58f8c8663753fcf51cbf9994cc53c2b2b8dcf5951a8ab73a8cfbcf04dd5/diff:/var/snap/docker/common/var-lib-docker/overlay2/b3513fa4c344c90ec6056378335daf1b11fa7eea95696b5da2c19584d9961526/diff","MergedDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8/merged","UpperDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8/diff","WorkDir":"/var/snap/docker/common/var-lib-docker/overlay2/b946deed9aab838d0221af641db3a31dc3cbde737add40a2b5bb5a9a24eaf4c8/work"},"Name":"overlay2"},"Mounts":[{"Type":"volume","Name":"jenkins-data","Source":"/var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data","Destination":"/var/jenkins_home","Driver":"local","Mode":"z","RW":true,"Propagation":""},{"Type":"bind","Source":"/var/run/docker.sock","Destination":"/var/run/docker.sock","Mode":"","RW":true,"Propagation":"rprivate"}],"Config":{"Hostname":"fa869b5fe2c8","Domainname":"","User":"root","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"ExposedPorts":{"50000/tcp":{},"8080/tcp":{}},"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":["PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","LANG=C.UTF-8","JENKINS_HOME=/var/jenkins_home","JENKINS_SLAVE_AGENT_PORT=50000","REF=/usr/share/jenkins/ref","JENKINS_VERSION=2.505","JENKINS_UC=https://updates.jenkins.io","JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental","JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals","COPY_REFERENCE_FILE_LOG=/var/jenkins_home/copy_reference_file.log","JAVA_HOME=/opt/java/openjdk"],"Cmd":null,"Image":"jenkins/jenkins:2.505","Volumes":{"/var/jenkins_home":{}},"WorkingDir":"","Entrypoint":["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"],"OnBuild":null,"Labels":{"org.opencontainers.image.description":"The Jenkins Continuous Integration and Delivery server","org.opencontainers.image.licenses":"MIT","org.opencontainers.image.revision":"ae79f4234fac7ff1f4f28c220d2b3eaf9fec6fd2","org.opencontainers.image.source":"https://github.com/jenkinsci/docker","org.opencontainers.image.title":"Official Jenkins Docker image","org.opencontainers.image.url":"https://www.jenkins.io/","org.opencontainers.image.vendor":"Jenkins project","org.opencontainers.image.version":"2.505"}},"NetworkSettings":{"Bridge":"","SandboxID":"95da3a310bb25b5fea41cf9ee4317654a958b573cbdad2a8dec9ee3844ae7e91","SandboxKey":"/run/snap.docker/netns/95da3a310bb2","Ports":{"50000/tcp":[{"HostIp":"0.0.0.0","HostPort":"50000"},{"HostIp":"::","HostPort":"50000"}],"8080/tcp":[{"HostIp":"0.0.0.0","HostPort":"8080"},{"HostIp":"::","HostPort":"8080"}]},"HairpinMode":false,"LinkLocalIPv6Address":"","LinkLocalIPv6PrefixLen":0,"SecondaryIPAddresses":null,"SecondaryIPv6Addresses":null,"EndpointID":"8eec68a49f64b1bd40cdb6c729c78876bed38a9f9286dd4ed5af0a0f481970cc","Gateway":"172.17.0.1","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"IPAddress":"172.17.0.2","IPPrefixLen":16,"IPv6Gateway":"","MacAddress":"22:d0:1c:7c:e2:84","Networks":{"bridge":{"IPAMConfig":null,"Links":null,"Aliases":null,"MacAddress":"22:d0:1c:7c:e2:84","DriverOpts":null,"GwPriority":0,"NetworkID":"efc710711a32c1c3bced81edc4355346ef48c131a421fad46c0765eb7369d604","EndpointID":"8eec68a49f64b1bd40cdb6c729c78876bed38a9f9286dd4ed5af0a0f481970cc","Gateway":"172.17.0.1","IPAddress":"172.17.0.2","IPPrefixLen":16,"IPv6Gateway":"","GlobalIPv6Address":"","GlobalIPv6PrefixLen":0,"DNSNames":null}}}}
+
+Parser:  Jenkins container inspection summary
+
+- Container Id: fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20
+- Name: /jenkins
+- Image: jenkins/jenkins:2.505
+  - Image digest: sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a
+- Created: 2025-12-17T09:59:35.31925344Z
+
+- Entrypoint / Cmd:
+  - Entrypoint: ["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"]
+  - Path: "/usr/bin/tini"
+  - Args: ["--","/usr/local/bin/jenkins.sh"]
+  - Cmd in Config: null
+  - Note: The container runs via tini as the entrypoint and invokes the Jenkins startup script.
+
+- State:
+  - Status: running
+  - Running: true
+  - StartedAt: 2025-12-17T09:59:35.48251269Z
+  - FinishedAt: 0001-01-01T00:00:00Z
+  - ExitCode: 0
+  - Paused: false
+  - Restarting: false
+  - OOMKilled: false
+  - Dead: false
+
+- NetworkSettings:
+  - IP Address: 172.17.0.2 (bridge network)
+  - Gateway: 172.17.0.1
+  - Ports (host mappings):
+    - 50000/tcp -> Host 0.0.0.0:50000 and :: (IPv6)
+    - 8080/tcp -> Host 0.0.0.0:8080 and :: (IPv6)
+  - Network: bridge (with EndpointID 8eec68a49f64b1bd40cdb6c729c78876bed38a9f9286dd4ed5af0a0f481970cc)
+
+- Mounts:
+  - Volume:
+    - Source: /var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data
+    - Destination: /var/jenkins_home
+    - Type: volume
+    - RW: true
+    - Mode: z
+  - Bind mount:
+    - Source: /var/run/docker.sock
+    - Destination: /var/run/docker.sock
+    - Type: bind
+    - RW: true
+
+- ExposedPorts (in container config):
+  - 50000/tcp
+  - 8080/tcp
+
+- Config (notable fields):
+  - Hostname: fa869b5fe2c8
+  - Domainname: 
+  - User: root
+  - Env includes PATH, LANG, JENKINS_HOME, JENKINS_VERSION, JAVA_HOME, etc.
+  - Image: jenkins/jenkins:2.505
+  - ExposedPorts: 50000/tcp, 8080/tcp
+  - Entrypoint: ["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"]
+  - Cmd: null
+  - Volumes: {"/var/jenkins_home":{}}
+  - WorkingDir: ""
+  - Labels (image metadata):
+    - org.opencontainers.image.description: "The Jenkins Continuous Integration and Delivery server"
+    - org.opencontainers.image.licenses: "MIT"
+    - org.opencontainers.image.revision: "ae79f4234fac7ff1f4f28c220d2b3eaf9fec6fd2"
+    - org.opencontainers.image.source: "https://github.com/jenkinsci/docker"
+    - org.opencontainers.image.title: "Official Jenkins Docker image"
+    - org.opencontainers.image.url: "https://www.jenkins.io/"
+    - org.opencontainers.image.vendor: "Jenkins project"
+    - org.opencontainers.image.version: "2.505"
+
+- HostConfig:
+  - Binds: 
+    - "jenkins-data:/var/jenkins_home"
+    - "/var/run/docker.sock:/var/run/docker.sock"
+  - AutoRemove: true
+  - NetworkMode: bridge
+  - PortBindings as above (50000/tcp -> 50000, 8080/tcp -> 8080)
+  - RestartPolicy: Name: "no"
+  - ReadonlyRootfs: false
+  - Runtime: "runc"
+  - ShmSize: 67108864
+
+Summary remarks:
+- The Jenkins container is currently running (Status: running) and was started at 2025-12-17T09:59:35.48251269Z.
+- The container uses the official Jenkins image (2.505) and runs via tini as the entrypoint with Jenkins startup script /usr/local/bin/jenkins.sh.
+- It is exposed to the host on:
+  - port 8080 (HTTP UI) mapped to host 0.0.0.0:8080 and ::8080
+  - port 50000 (JNLP/agent) mapped to host 0.0.0.0:50000 and ::50000
+- Mounts include a named volume (jenkins-data) mounted at /var/jenkins_home and a bind mount to the Docker socket at /var/run/docker.sock, with AutoRemove enabled for the container.
+- The container hostname matches the ID prefix and the container name is /jenkins.
+Caller: Execution Result:
+Successfully called GET http://localhost:2375/containers/json to retrieve the list of Docker containers and identified the Jenkins container with ID fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20 (Name: /jenkins). Then called GET http://localhost:2375/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/json to obtain the detailed inspect data for this container. The Jenkins container is currently running and uses the image jenkins/jenkins:2.505.
+
+Detailed inspect summary:
+- Container Id: fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20
+- Name: /jenkins
+- Image: jenkins/jenkins:2.505
+  - Image digest: sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a
+- Created: 2025-12-17T09:59:35.31925344Z
+- Entrypoint/Cmd:
+  - Entrypoint: ["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"]
+  - Cmd: null (no separate CMD override)
+  - Full invocation: /usr/bin/tini -- /usr/local/bin/jenkins.sh
+- State:
+  - Status: running
+  - Running: true
+  - StartedAt: 2025-12-17T09:59:35.48251269Z
+  - FinishedAt: 0001-01-01T00:00:00Z
+  - ExitCode: 0
+  - Paused: false
+  - Restarting: false
+  - OOMKilled: false
+  - Dead: false
+- NetworkSettings:
+  - IP Address: 172.17.0.2 (bridge network)
+  - Gateway: 172.17.0.1
+  - Ports (host mappings):
+    - 50000/tcp -> Host 0.0.0.0:50000 and :: (IPv6)
+    - 8080/tcp -> Host 0.0.0.0:8080 and :: (IPv6)
+  - Network: bridge
+- Mounts:
+  - Volume:
+    - Source: /var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data
+    - Destination: /var/jenkins_home
+    - Type: volume
+    - RW: true
+    - Mode: z
+  - Bind mount:
+    - Source: /var/run/docker.sock
+    - Destination: /var/run/docker.sock
+    - Type: bind
+    - RW: true
+- ExposedPorts (in container config): 50000/tcp, 8080/tcp
+- Config:
+  - Hostname: fa869b5fe2c8
+  - User: root
+  - Env includes PATH, LANG, JENKINS_HOME=/var/jenkins_home, JENKINS_VERSION=2.505, JAVA_HOME=/opt/java/openjdk, etc.
+  - Image: jenkins/jenkins:2.505
+  - Entrypoint: ["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"]
+  - Volumes: {"/var/jenkins_home":{}}
+  - WorkingDir: ""
+  - Labels: contains image metadata such as org.opencontainers.image.description, version, source, title, etc.
+- HostConfig:
+  - Binds: 
+    - "jenkins-data:/var/jenkins_home"
+    - "/var/run/docker.sock:/var/run/docker.sock"
+  - AutoRemove: true
+  - NetworkMode: bridge
+  - PortBindings:
+    - 50000/tcp -> 50000
+    - 8080/tcp -> 8080
+  - RestartPolicy: no
+  - ReadonlyRootfs: false
+  - Runtime: runc
+  - ShmSize: 67108864
+
+Summary:
+- The Jenkins container is currently running with ID fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20.
+- It uses the official Jenkins image tag 2.505 and runs via the tini init process to start Jenkins.
+- Jenkins UI is exposed on port 8080 of the host (host mapping 0.0.0.0:8080, plus IPv6 ::8080), and the agent port 50000 is exposed on host 0.0.0.0:50000 (and IPv6 equivalents).
+- The container has a persistent data volume mounted at /var/jenkins_home (volume named jenkins-data) and a bind mount to the Docker daemon socket at /var/run/docker.sock, enabling Docker socket access from within the container.
+- Network is the default bridge network with container IP 172.17.0.2 and gateway 172.17.0.1.
+- Environment includes JENKINS_HOME=/var/jenkins_home and JENKINS_VERSION=2.505, among others; the container is configured to auto-remove on stop (AutoRemove: true).
+- The container name is /jenkins, matching the requested Jenkins container.
+planner received input: Query the detailed information of the docker container named 'jenkins'.
+
+Planner: 
+API Selector: Background: Successfully called GET http://localhost:2375/containers/json to retrieve the list of Docker containers and identified the Jenkins container with ID fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20 (Name: /jenkins). Then called GET http://localhost:2375/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/json to obtain the detailed inspect data for this container. The Jenkins container is currently running and uses the image jenkins/jenkins:2.505.
+
+Detailed inspect summary:
+- Container Id: fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20
+- Name: /jenkins
+- Image: jenkins/jenkins:2.505
+  - Image digest: sha256:eb8fcafb6c8526ba989b8769f289ce3ccda717e5c28966b7176a344c7cb3a18a
+- Created: 2025-12-17T09:59:35.31925344Z
+- Entrypoint/Cmd:
+  - Entrypoint: ["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"]
+  - Cmd: null (no separate CMD override)
+  - Full invocation: /usr/bin/tini -- /usr/local/bin/jenkins.sh
+- State:
+  - Status: running
+  - Running: true
+  - StartedAt: 2025-12-17T09:59:35.48251269Z
+  - FinishedAt: 0001-01-01T00:00:00Z
+  - ExitCode: 0
+  - Paused: false
+  - Restarting: false
+  - OOMKilled: false
+  - Dead: false
+- NetworkSettings:
+  - IP Address: 172.17.0.2 (bridge network)
+  - Gateway: 172.17.0.1
+  - Ports (host mappings):
+    - 50000/tcp -> Host 0.0.0.0:50000 and :: (IPv6)
+    - 8080/tcp -> Host 0.0.0.0:8080 and :: (IPv6)
+  - Network: bridge
+- Mounts:
+  - Volume:
+    - Source: /var/snap/docker/common/var-lib-docker/volumes/jenkins-data/_data
+    - Destination: /var/jenkins_home
+    - Type: volume
+    - RW: true
+    - Mode: z
+  - Bind mount:
+    - Source: /var/run/docker.sock
+    - Destination: /var/run/docker.sock
+    - Type: bind
+    - RW: true
+- ExposedPorts (in container config): 50000/tcp, 8080/tcp
+- Config:
+  - Hostname: fa869b5fe2c8
+  - User: root
+  - Env includes PATH, LANG, JENKINS_HOME=/var/jenkins_home, JENKINS_VERSION=2.505, JAVA_HOME=/opt/java/openjdk, etc.
+  - Image: jenkins/jenkins:2.505
+  - Entrypoint: ["/usr/bin/tini","--","/usr/local/bin/jenkins.sh"]
+  - Volumes: {"/var/jenkins_home":{}}
+  - WorkingDir: ""
+  - Labels: contains image metadata such as org.opencontainers.image.description, version, source, title, etc.
+- HostConfig:
+  - Binds: 
+    - "jenkins-data:/var/jenkins_home"
+    - "/var/run/docker.sock:/var/run/docker.sock"
+  - AutoRemove: true
+  - NetworkMode: bridge
+  - PortBindings:
+    - 50000/tcp -> 50000
+    - 8080/tcp -> 8080
+  - RestartPolicy: no
+  - ReadonlyRootfs: false
+  - Runtime: runc
+  - ShmSize: 67108864
+
+User query: 
+
+
+GET http://localhost:2375/containers/fa869b5fe2c827432a9ce2c42ea430c3e459efc9fd8b376f64c1f14d5851ec20/logs?stdout=true&stderr=true&tail=200
+API response:
