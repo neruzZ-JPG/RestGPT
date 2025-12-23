@@ -2022,6 +2022,163 @@
         }
       }
     },
+    "https://gitlab.com/api/v4/projects/{id}/invitations": {
+      "post": {
+        "description": "This endpoint allows you to add a new member to a project. You can either provide a user ID or an email address to invite the new member. Various attributes such as access level, expiration date, etc., can be specified as needed.",
+        "summary": "Adds a new member to a project by specifying a user ID or inviting by email.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. This is a required parameter.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The request body should contain the details of the new member to be added to the project. You can provide either an email or a user ID along with other optional attributes like access level, expiration date, etc.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "description": "The email of the new member or multiple emails separated by commas. This is required if user_id isn’t provided.",
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "description": "The ID of the new member or multiple IDs separated by commas. This is required if email isn’t provided.",
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "access_level": {
+                    "description": "A valid access level. This is a required parameter.",
+                    "type": "integer"
+                  },
+                  "expires_at": {
+                    "description": "A date string in the format YEAR-MONTH-DAY. This is an optional parameter.",
+                    "type": "string"
+                  },
+                  "invite_source": {
+                    "description": "The source of the invitation that starts the member creation process. See this issue. This is an optional parameter.",
+                    "type": "string"
+                  },
+                  "member_role_id": {
+                    "description": "Assigns the new member to the provided custom role. (Introduced) in GitLab 16.6. Ultimate only. This is an optional parameter.",
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "required": [
+                  "email",
+                  "user_id",
+                  "access_level"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "description": "Successful operation. Returns a JSON object with status indicating success if all emails were successfully sent, or error along with a message object containing error details for each email/user_id if there was an error sending the email. If administrator approval for role promotions is applicable, it may also return a JSON object with queued_users object containing details about queued requests for administrator approval and status set to success.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "description": "Indicates the status of the operation. Can be either 'success' or 'error'.",
+                    "type": "string",
+                    "enum": [
+                      "success",
+                      "error"
+                    ]
+                  },
+                  "message": {
+                    "description": "If the status is 'error', this object contains error details for each email/user_id. The keys are the email addresses or user names and the values are the corresponding error messages.",
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "queued_users": {
+                    "description": "If administrator approval for role promotions is applicable, this object contains details about queued requests for administrator approval. The keys are the user names and the values are the corresponding status messages.",
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Gets a list of invited project members viewable by the authenticated user. Returns invitations to direct members only, and not through inherited ancestors’ groups. This function takes pagination parameters page and per_page to restrict the list of members. Also allows searching for invited members by invite email.",
+        "summary": "List all invitations pending for a project",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. Required.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful operation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The unique identifier of the invitation"
+                    },
+                    "invite_email": {
+                      "type": "string",
+                      "description": "The email address to which the invitation was sent"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The date and time when the invitation was created"
+                    },
+                    "access_level": {
+                      "type": "integer",
+                      "description": "The access level of the invited member. Valid access levels are: 0 (No access), 5 (Minimal access), 10 (Guest), 15 (Planner), 20 (Reporter), 30 (Developer), 40 (Maintainer), 50 (Owner)"
+                    },
+                    "expires_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The date and time when the invitation expires"
+                    },
+                    "user_name": {
+                      "type": "string",
+                      "description": "The name of the invited user"
+                    },
+                    "created_by_name": {
+                      "type": "string",
+                      "description": "The name of the user who created the invitation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "https://gitlab.com/api/v4/groups/{id}/issues": {
       "get": {
         "description": "Function: Retrieves group issues in GitLab. Inputs: Various query params like assignee, author details, dates etc. to filter. Responses: Returns issue details in JSON array (200). Allows fine-grained issue retrieval based on multiple criteria for a given group ID.",
@@ -2289,6 +2446,178 @@
         }
       }
     },
+    "https://gitlab.com/api/v4/users/{id}/events": {
+      "get": {
+        "description": "Retrieves the contribution events for the specified user, sorted from newest to oldest with optional filtering and pagination capabilities. Scope read_user or api is required. Events associated with epics are not available using API.",
+        "summary": "Get the contribution events for the specified user, sorted from newest to oldest.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Required. Integer. (The ID or Username of the user)",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful response with an array of contribution events",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "title": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "project_id": {
+                      "type": "integer"
+                    },
+                    "action_name": {
+                      "type": "string"
+                    },
+                    "target_id": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "target_iid": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "target_type": {
+                      "type": "string"
+                    },
+                    "author_id": {
+                      "type": "integer"
+                    },
+                    "target_title": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "author_username": {
+                      "type": "string"
+                    },
+                    "imported": {
+                      "type": "boolean"
+                    },
+                    "imported_from": {
+                      "type": "string"
+                    },
+                    "push_data": {
+                      "type": "object",
+                      "properties": {
+                        "commit_count": {
+                          "type": "integer"
+                        },
+                        "action": {
+                          "type": "string"
+                        },
+                        "ref_type": {
+                          "type": "string"
+                        },
+                        "commit_from": {
+                          "type": "string"
+                        },
+                        "commit_to": {
+                          "type": "string"
+                        },
+                        "ref": {
+                          "type": "string"
+                        },
+                        "commit_title": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "note": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "body": {
+                          "type": "string"
+                        },
+                        "attachment": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "author": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "username": {
+                              "type": "string"
+                            },
+                            "id": {
+                              "type": "integer"
+                            },
+                            "state": {
+                              "type": "string"
+                            },
+                            "avatar_url": {
+                              "type": "string"
+                            },
+                            "web_url": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "system": {
+                          "type": "boolean"
+                        },
+                        "noteable_id": {
+                          "type": "integer"
+                        },
+                        "noteable_type": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "https://gitlab.com/api/v4/search": {
       "get": {
         "description": "The OAS for '/search' (GET) enables searching. Inputs: scope, search query, optional filters like state, confidential. Can sort results. Responses (200): JSON array of objects with details like id, name. Returns relevant search results based on provided parameters.",
@@ -2380,6 +2709,84 @@
         }
       }
     },
+    "https://gitlab.com/api/v4/groups/{id}/invitations/{email}": {
+      "put": {
+        "description": "This endpoint updates a pending invitation's access level or access expiry date for a given group. You need to provide the group ID and the email address the invitation was previously sent to. Optionally, you can also specify a new access level and/or an expiry date.",
+        "summary": "Updates a pending invitation's access level or access expiry date for a specific group.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the group.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "oneOf": [
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "description": "The email address the invitation was previously sent to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful update of the invitation.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expires_at": {
+                    "type": "string",
+                    "description": "The updated expiry date of the invitation in ISO 8601 format."
+                  },
+                  "access_level": {
+                    "type": "integer",
+                    "description": "The updated access level of the invitation."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a pending invitation by email address.",
+        "summary": "Delete a pending invitation to a group",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Required. Integer/String. (The ID or URL-encoded path of the group)",
+            "required": true,
+            "schema": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "description": "Required. String. (The email address to which the invitation was previously sent)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "https://gitlab.com/api/v4/projects/{id}/unstar": {
       "post": {
         "description": "Function: Unstar a project. Input: 'id' (integer, project's ID or URL-encoded path). Response: On success (200), returns JSON object with details like id, description, etc. of the project.",
@@ -2429,6 +2836,1289 @@
                     "type": "array",
                     "items": {
                       "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "https://gitlab.com/api/v4/projects/{id}/merge_requests/{merge_request_iid}": {
+      "get": {
+        "description": "Retrieves detailed information about a single merge request based on the provided project ID and merge request internal ID. Optionally includes additional details like commits count and rebase progress.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "merge_request_iid",
+            "in": "path",
+            "description": "The internal ID of the merge request.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful retrieval of merge request details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "approvals_before_merge": {
+                    "description": "Number of approvals required before this merge request can merge. To configure approval rules, see Merge request approvals API. Deprecated in GitLab 16.0. Premium and Ultimate only.",
+                    "type": "integer"
+                  },
+                  "assignee": {
+                    "description": "First assignee of the merge request.",
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "assignees": {
+                    "description": "Assignees of the merge request.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "author": {
+                    "description": "User who created this merge request.",
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "blocking_discussions_resolved": {
+                    "description": "Indicates if all discussions are resolved only if all are required before merge request can be merged.",
+                    "type": "boolean"
+                  },
+                  "changes_count": {
+                    "description": "Number of changes made on the merge request. Empty when the merge request is created, and populates asynchronously. A string, not an integer. When a merge request has too many changes to display and store, the value is capped at 1000 and returns the string \"1000+\". See Empty API Fields for new merge requests.",
+                    "type": "string"
+                  },
+                  "closed_at": {
+                    "description": "Timestamp of when the merge request was closed.",
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "closed_by": {
+                    "description": "User who closed this merge request.",
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "created_at": {
+                    "description": "Timestamp of when the merge request was created.",
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "description": {
+                    "description": "Description of the merge request. Contains Markdown rendered as HTML for caching.",
+                    "type": "string"
+                  },
+                  "detailed_merge_status": {
+                    "description": "Detailed merge status of the merge request. See merge status for a list of potential values.",
+                    "type": "string"
+                  },
+                  "diff_refs": {
+                    "description": "References of the base SHA, the head SHA, and the start SHA for this merge request. Corresponds to the latest diff version of the merge request. Empty when the merge request is created, and populates asynchronously. See Empty API fields for new merge requests.",
+                    "type": "object",
+                    "properties": {
+                      "base_sha": {
+                        "type": "string"
+                      },
+                      "head_sha": {
+                        "type": "string"
+                      },
+                      "start_sha": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "discussion_locked": {
+                    "description": "Indicates if comments on the merge request are locked to members only.",
+                    "type": "boolean"
+                  },
+                  "downvotes": {
+                    "description": "Number of downvotes for the merge request.",
+                    "type": "integer"
+                  },
+                  "draft": {
+                    "description": "Indicates if the merge request is a draft.",
+                    "type": "boolean"
+                  },
+                  "first_contribution": {
+                    "description": "Indicates if the merge request is the first contribution of the author.",
+                    "type": "boolean"
+                  },
+                  "first_deployed_to_production_at": {
+                    "description": "Timestamp of when the first deployment finished.",
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "force_remove_source_branch": {
+                    "description": "Indicates if the project settings lead to source branch deletion after merge.",
+                    "type": "boolean"
+                  },
+                  "has_conflicts": {
+                    "description": "Indicates if merge request has conflicts and cannot merge. Dependent on the merge_status property. Returns false unless merge_status is cannot_be_merged.",
+                    "type": "boolean"
+                  },
+                  "head_pipeline": {
+                    "description": "Pipeline running on the branch HEAD of the merge request. Use instead of pipeline, because it contains more complete information.",
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "iid": {
+                        "type": "integer"
+                      },
+                      "project_id": {
+                        "type": "integer"
+                      },
+                      "sha": {
+                        "type": "string"
+                      },
+                      "ref": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "source": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      },
+                      "before_sha": {
+                        "type": "string"
+                      },
+                      "tag": {
+                        "type": "boolean"
+                      },
+                      "yaml_errors": {
+                        "type": "string"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          },
+                          "web_url": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "started_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "finished_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "committed_at": {
+                        "type": "string"
+                      },
+                      "duration": {
+                        "type": "integer"
+                      },
+                      "queued_duration": {
+                        "type": "integer"
+                      },
+                      "coverage": {
+                        "type": "string"
+                      },
+                      "detailed_status": {
+                        "type": "object",
+                        "properties": {
+                          "icon": {
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "group": {
+                            "type": "string"
+                          },
+                          "tooltip": {
+                            "type": "string"
+                          },
+                          "has_details": {
+                            "type": "boolean"
+                          },
+                          "details_path": {
+                            "type": "string"
+                          },
+                          "illustration": {
+                            "type": "string"
+                          },
+                          "favicon": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "id": {
+                    "description": "ID of the merge request.",
+                    "type": "integer"
+                  },
+                  "iid": {
+                    "description": "Internal ID of the merge request.",
+                    "type": "integer"
+                  },
+                  "labels": {
+                    "description": "Labels of the merge request.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "latest_build_finished_at": {
+                  "description": "Timestamp of when the latest build for the merge request finished.",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "latest_build_started_at": {
+                  "description": "Timestamp of when the latest build for the merge request started.",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "merge_commit_sha": {
+                  "description": "SHA of the merge request commit. Returns null until merged.",
+                  "type": "string"
+                },
+                "merge_error": {
+                  "description": "Error message shown when a merge has failed. To check mergeability, use detailed_merge_status instead",
+                  "type": "string"
+                },
+                "merge_user": {
+                  "description": "The user who merged this merge request, the user who set it to auto-merge, or null.",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "avatar_url": {
+                      "type": "string"
+                    },
+                    "web_url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "merge_status": {
+                  "description": "Status of the merge request. Can be unchecked, checking, can_be_merged, cannot_be_merged, or cannot_be_merged_recheck. Affects the has_conflicts property. For important notes on response data, see Single merge request response notes. Deprecated in GitLab 15.6. Use detailed_merge_status instead.",
+                  "type": "string"
+                },
+                "merge_when_pipeline_succeeds": {
+                  "description": "Indicates if the merge is set to merge when its pipeline succeeds.",
+                  "type": "boolean"
+                },
+                "merged_at": {
+                  "description": "Timestamp of when the merge request merged.",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "merged_by": {
+                  "description": "User who merged this merge request or set it to auto-merge. Deprecated in GitLab 14.7, and scheduled for removal in API version 5. Use merge_user instead.",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "avatar_url": {
+                      "type": "string"
+                    },
+                    "web_url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "milestone": {
+                  "description": "Milestone of the merge request.",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "avatar_url": {
+                      "type": "string"
+                    },
+                    "web_url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "pipeline": {
+                  "description": "Pipeline running on the branch HEAD of the merge request. Consider using head_pipeline instead, as it contains more information.",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "iid": {
+                      "type": "integer"
+                    },
+                    "project_id": {
+                      "type": "integer"
+                    },
+                    "sha": {
+                      "type": "string"
+                    },
+                    "ref": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "web_url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "prepared_at": {
+                  "description": "Timestamp of when the merge request was prepared. This field populates one time, only after all the preparation steps complete, and is not updated if more changes are added.",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "project_id": {
+                  "description": "ID of the merge request project.",
+                  "type": "integer"
+                },
+                "reference": {
+                  "description": "Internal reference of the merge request. Returned in shortened format by default. Deprecated in GitLab 12.7, and scheduled for removal in API version 5. Use references instead.",
+                  "type": "string"
+                },
+                "references": {
+                  "description": "Internal references of the merge request. Includes short, relative, and full references. references.relative is relative to the merge request’s group or project. When fetched from the merge request’s project, relative and short formats are identical. When requested across groups or projects, relative and full formats are identical.",
+                  "type": "object",
+                  "properties": {
+                    "short": {
+                      "type": "string"
+                    },
+                    "relative": {
+                      "string": "string"
+                    },
+                    "full": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "reviewers": {
+                  "description": "Reviewers of the merge request.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "sha": {
+                  "description": "Diff head SHA of the merge request.",
+                  "type": "string"
+                },
+                "should_remove_source_branch": {
+                  "description": "Indicates if the source branch of the merge request should be deleted after merge.",
+                  "type": "boolean"
+                },
+                "source_branch": {
+                  "description": "Source branch of the matter request.",
+                  "type": "string"
+                },
+                "source_project_id": {
+                  "description": "ID of the merge request source project.",
+                  "type": "integer"
+                },
+                "squash": {
+                  "description": "Indicates if squash on merge is enabled.",
+                  "type": "boolean"
+                },
+                "squash_commit_sha": {
+                  "description": "SHA of the squash commit. Empty until merged.",
+                  "type": "string"
+                },
+                "state": {
+                  "description": "State of the merge request. Can be opened, closed, merged or locked.",
+                  "type": "string"
+                },
+                "subscribed": {
+                  "description": "Indicates if the current authenticated user subscribes to this merge request.",
+                  "type": "boolean"
+                },
+                "target_branch": {
+                  "description": "Target branch of the merge request.",
+                  "type": "string"
+                },
+                "target_project_id": {
+                  "description": "ID of the merge request target project.",
+                  "type": "integer"
+                },
+                "task_completion_status": {
+                  "description": "Completion status of tasks.",
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    },
+                    "completed_count": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "title": {
+                  "description": "Title of the merge request.",
+                  "type": "string"
+                },
+                "updated_at": {
+                  "description": "Timestamp of when the merge request was updated.",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "upvotes": {
+                  "description": "Number of upvotes for the merge request.",
+                  "type": "integer"
+                },
+                "user": {
+                  "description": "Permissions of the user requested for the merge request.",
+                  "type": "object",
+                  "properties": {
+                    "can_merge": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "user_notes_count": {
+                  "description": "User notes count of the merge request.",
+                  "type": "integer"
+                },
+                "web_url": {
+                  "description": "Web URL of the merge request.",
+                  "type": "string"
+                },
+                "work_in_progress": {
+                  "description": "Deprecated: Use draft instead. Indicates if the merge request is a draft.",
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "This endpoint allows you to update an existing merge request by providing various optional and required attributes. You must include at least one non-required attribute in the request.",
+        "summary": "Updates an existing merge request with specified attributes.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. This is a required parameter.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "merge_request_iid",
+            "in": "path",
+            "description": "The ID of a merge request. This is a required parameter.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful update of the merge request. Returns an object with detailed information about the updated merge request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "iid": {
+                    "type": "integer"
+                  },
+                  "project_id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "target_branch": {
+                    "type": "string"
+                  },
+                  "source_branch": {
+                    "type": "string"
+                  },
+                  "upvotes": {
+                    "type": "integer"
+                  },
+                  "downvotes": {
+                    "type": "integer"
+                  },
+                  "author": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "assignees": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "reviewers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "source_project_id": {
+                    "type": "integer"
+                  },
+                  "target_project_id": {
+                    "type": "integer"
+                  },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "draft": {
+                    "type": "boolean"
+                  },
+                  "work_in_progress": {
+                    "type": "boolean"
+                  },
+                  "milestone": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "iid": {
+                        "type": "integer"
+                      },
+                      "project_id": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "due_date": {
+                        "type": "string"
+                      },
+                      "start_date": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merge_when_pipeline_succeeds": {
+                    "type": "boolean"
+                  },
+                  "merge_status": {
+                    "type": "string"
+                  },
+                  "detailed_merge_status": {
+                    "type": "string"
+                  },
+                  "merge_error": {
+                    "type": "string"
+                  },
+                  "sha": {
+                    "type": "string"
+                  },
+                  "merge_commit_sha": {
+                    "type": "string"
+                  },
+                  "squash_commit_sha": {
+                    "type": "string"
+                  },
+                  "user_notes_count": {
+                    "type": "integer"
+                  },
+                  "discussion_locked": {
+                    "type": "boolean"
+                  },
+                  "should_remove_source_branch": {
+                    "type": "boolean"
+                  },
+                  "force_remove_source_branch": {
+                    "type": "boolean"
+                  },
+                  "allow_collaboration": {
+                    "type": "boolean"
+                  },
+                  "allow_maintainer_to_push": {
+                    "type": "boolean"
+                  },
+                  "web_url": {
+                    "type": "string"
+                  },
+                  "references": {
+                    "type": "object",
+                    "properties": {
+                      "short": {
+                        "type": "string"
+                      },
+                      "relative": {
+                        "type": "string"
+                      },
+                      "full": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "time_stats": {
+                    "type": "object",
+                    "properties": {
+                      "time_estimate": {
+                        "type": "integer"
+                      },
+                      "total_time_spent": {
+                        "type": "integer"
+                      },
+                      "human_time_estimate": {
+                        "type": "string"
+                      },
+                      "human_total_time_spent": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "squash": {
+                    "type": "boolean"
+                  },
+                  "subscribed": {
+                    "type": "boolean"
+                  },
+                  "changes_count": {
+                    "type": "string"
+                  },
+                  "merged_by": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merge_user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merged_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "merge_after": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "prepared_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "closed_by": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "closed_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "latest_build_started_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "latest_build_finished_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "first_deployed_to_production_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "pipeline": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "sha": {
+                        "type": "string"
+                      },
+                      "ref": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "diff_refs": {
+                    "type": "object",
+                    "properties": {
+                      "base_sha": {
+                        "type": "string"
+                      },
+                      "head_sha": {
+                        "type": "string"
+                      },
+                      "start_sha": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "diverged_commits_count": {
+                    "type": "integer"
+                  },
+                  "task_completion_status": {
+                    "type": "object",
+                    "properties": {
+                      "count": {
+                        "type": "integer"
+                      },
+                      "completed_count": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Only accessible to administrators and project owners. Deletes the merge request in question.",
+        "summary": "Deletes a specific merge request",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. Required. Can be an integer or a string.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "merge_request_iid",
+            "in": "path",
+            "description": "The internal ID of the merge request. Required. Must be an integer.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "description": "The merge request has been successfully deleted",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "A confirmation message indicating the merge request has been successfully deleted"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "https://gitlab.com/api/v4/projects/{project_id}/events": {
+      "get": {
+        "description": "This endpoint retrieves a list of visible events for a specific project. Optional parameters can be used to filter the events by action type, target type, date range, and sort the events in ascending or descending order.",
+        "summary": "Get a list of visible events for a particular project.",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "Required. The ID or URL-encoded path of the project.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful operation. Returns an array of event objects.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The ID of the event."
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the event (may be null)."
+                    },
+                    "project_id": {
+                      "type": "integer",
+                      "description": "The ID of the project associated with the event."
+                    },
+                    "action_name": {
+                      "type": "string",
+                      "description": "The name of the action associated with the event."
+                    },
+                    "target_id": {
+                      "type": "integer",
+                      "description": "The ID of the target associated with the event."
+                    },
+                    "target_iid": {
+                      "type": "integer",
+                      "description": "The internal ID of the target associated with the event."
+                    },
+                    "target_type": {
+                      "type": "string",
+                      "description": "The type of the target associated with the event."
+                    },
+                    "author_id": {
+                      "type": "integer",
+                      "description": "The ID of the author of the event."
+                    },
+                    "target_title": {
+                      "type": "string",
+                      "description": "The title of the target associated with the event (may be null)."
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "The date and time when the event was created."
+                    },
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the author."
+                        },
+                        "username": {
+                          "type": "string",
+                          "description": "The username of the author."
+                        },
+                        "id": {
+                          "type": "integer",
+                          "description": "The ID of the author."
+                        },
+                        "state": {
+                          "type": "string",
+                          "description": "The state of the author (e.g., active)."
+                        },
+                        "avatar_url": {
+                          "type": "string",
+                          "description": "The URL of the author's avatar."
+                        },
+                        "web_url": {
+                          "type": "string",
+                          "description": "The web URL of the author."
+                        }
+                      },
+                      "description": "Information about the author of the event."
+                    },
+                    "author_username": {
+                      "type": "string",
+                      "description": "The username of the author."
+                    },
+                    "imported": {
+                      "type": "boolean",
+                      "description": "The imported status of the event."
+                    },
+                    "imported_from": {
+                      "type": "string",
+                      "description": "The source from which the event was imported (if applicable)."
                     }
                   }
                 }
@@ -2621,6 +4311,378 @@
         }
       }
     },
+    "https://gitlab.com/api/v4/events": {
+      "get": {
+        "description": "This endpoint retrieves a list of events for the currently authenticated user. You can optionally filter the events by action type, target type, date range, and sort them in ascending or descending order by created_at.",
+        "summary": "Retrieves a list of events for the currently authenticated user with optional filtering and sorting.",
+        "parameters": [],
+        "responses": {
+          "description": "Successful response with an array of event objects.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "project_id": {
+                      "type": "number"
+                    },
+                    "action_name": {
+                      "type": "string"
+                    },
+                    "target_id": {
+                      "type": "number"
+                    },
+                    "target_iid": {
+                      "type": "number"
+                    },
+                    "target_type": {
+                      "type": "string"
+                    },
+                    "author_id": {
+                      "type": "number"
+                    },
+                    "target_title": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "number"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "author_username": {
+                      "type": "string"
+                    },
+                    "imported": {
+                      "type": "boolean"
+                    },
+                    "imported_from": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}": {
+      "get": {
+        "description": "Retrieves information about a file in a repository including name, size, and Base64 encoded content.",
+        "summary": "Retrieve file information from repository",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Required. Integer or string. (The ID or URL-encoded path of the project.)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file_path",
+            "in": "path",
+            "description": "Required. String. (URL encoded full path to new file, such as lib%2Fclass%2Erb.)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ref",
+            "in": "query",
+            "description": "Required. String. (The name of branch, tag or commit.)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful retrieval of file information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_name": {
+                    "type": "string"
+                  },
+                  "file_path": {
+                    "type": "string"
+                  },
+                  "size": {
+                    "type": "integer"
+                  },
+                  "encoding": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "content_sha256": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "type": "string"
+                  },
+                  "blob_id": {
+                    "type": "string"
+                  },
+                  "commit_id": {
+                    "type": "string"
+                  },
+                  "last_commit_id": {
+                    "type": "string"
+                  },
+                  "execute_filemode": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a single file. To delete multiple files with a single request, see the commits API.",
+        "summary": "Deletes a single existing file in a repository.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "file_path",
+            "in": "path",
+            "description": "URL-encoded full path to new file. For example: lib%2Fclass%2Erb.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "query",
+            "description": "Name of the new branch to create. The commit is added to this branch.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "commit_message",
+            "in": "query",
+            "description": "The commit message.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "description": "File deletion was successful.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the deletion operation, e.g., 'success'."
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Additional message related to the deletion, if any."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Updates a single existing file in a repository with the provided details.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. Required.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "file_path",
+            "in": "path",
+            "description": "URL-encoded full path to new file. For example: lib%2Fclass%2Erb. Required.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "query",
+            "description": "Name of the new branch to create. The commit is added to this branch. Required.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "commit_message",
+            "in": "query",
+            "description": "The commit message. Required.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "description": "The file’s content. Required.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successfully updated the file. Returns an object containing the 'file_path' and 'branch' details of the updated file.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_path": {
+                    "type": "string"
+                  },
+                  "branch": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Function: Manages files in a project's repository. Input: Project ID (integer) and file path (string). Response (200): Returns details like file name, size etc. as a JSON object on successful operation.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "file_path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "description": "success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_name": {
+                    "type": "string"
+                  },
+                  "file_path": {
+                    "type": "string"
+                  },
+                  "size": {
+                    "type": "integer"
+                  },
+                  "encoding": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "content_sha256": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "type": "string"
+                  },
+                  "blob_id": {
+                    "type": "string"
+                  },
+                  "commit_id": {
+                    "type": "string"
+                  },
+                  "last_commit_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "https://gitlab.com/api/v4/groups/{id}/search": {
       "get": {
         "description": "Function: Search within a group owned by authenticated user. Inputs: group ID/URL-encoded path, search scope, query, etc. Responses: 200 returns array of objects with details like name, created_at. Allows filtering/sorting search results for issues, merge requests etc.",
@@ -2795,6 +4857,1497 @@
             }
           }
         }
+      }
+    },
+    "https://gitlab.com/api/v4/projects/{id}/merge_requests/{merge_request_iid}/merge": {
+      "put": {
+        "description": "Merge a specific merge request with optional customizations.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Required. Integer or string. The ID or URL-encoded path of the project.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "merge_request_iid",
+            "in": "path",
+            "description": "Required. Integer. The internal ID of the merge request.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful merge request operation. Returns an object with detailed information about the merged merge request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "iid": {
+                    "type": "integer"
+                  },
+                  "project_id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "target_branch": {
+                    "type": "string"
+                  },
+                  "source_branch": {
+                    "type": "string"
+                  },
+                  "upvotes": {
+                    "type": "integer"
+                  },
+                  "downvotes": {
+                    "type": "integer"
+                  },
+                  "author": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "assignees": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "reviewers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "source_project_id": {
+                    "type": "integer"
+                  },
+                  "target_project_id": {
+                    "type": "integer"
+                  },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "draft": {
+                    "type": "boolean"
+                  },
+                  "work_in_progress": {
+                    "type": "boolean"
+                  },
+                  "milestone": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "iid": {
+                        "type": "integer"
+                      },
+                      "project_id": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "due_date": {
+                        "type": "string"
+                      },
+                      "start_date": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merge_when_pipeline_succeeds": {
+                    "type": "boolean"
+                  },
+                  "merge_status": {
+                    "type": "string"
+                  },
+                  "detailed_merge_status": {
+                    "type": "string"
+                  },
+                  "merge_error": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "sha": {
+                    "type": "string"
+                  },
+                  "merge_commit_sha": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "squash_commit_sha": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user_notes_count": {
+                    "type": "integer"
+                  },
+                  "discussion_locked": {
+                    "type": "boolean",
+                    "nullable": true
+                  },
+                  "should_remove_source_branch": {
+                    "type": "boolean"
+                  },
+                  "force_remove_source_branch": {
+                    "type": "boolean"
+                  },
+                  "allow_collaboration": {
+                    "type": "boolean"
+                  },
+                  "allow_maintainer_to_push": {
+                    "type": "boolean"
+                  },
+                  "web_url": {
+                    "type": "string"
+                  },
+                  "references": {
+                    "type": "object",
+                    "properties": {
+                      "short": {
+                        "type": "string"
+                      },
+                      "relative": {
+                        "type": "string"
+                      },
+                      "full": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "time_stats": {
+                    "type": "object",
+                    "properties": {
+                      "time_estimate": {
+                        "type": "integer"
+                      },
+                      "total_time_spent": {
+                        "type": "integer"
+                      },
+                      "human_time_estimate": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "human_total_time_spent": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "squash": {
+                    "type": "boolean"
+                  },
+                  "subscribed": {
+                    "type": "boolean"
+                  },
+                  "changes_count": {
+                    "type": "string"
+                  },
+                  "merged_by": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merge_user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merged_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "merge_after": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "prepared_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "closed_by": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "closed_at": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "latest_build_started_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "latest_build_finished_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "first_deployed_to_production_at": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "pipeline": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "sha": {
+                        "type": "string"
+                      },
+                      "ref": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "diff_refs": {
+                    "type": "object",
+                    "properties": {
+                      "base_sha": {
+                        "type": "string"
+                      },
+                      "head_sha": {
+                        "type": "string"
+                      },
+                      "start_sha": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "diverged_commits_count": {
+                    "type": "integer"
+                  },
+                  "task_completion_status": {
+                    "type": "object",
+                    "properties": {
+                      "count": {
+                        "type": "integer"
+                      },
+                      "completed_count": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "https://gitlab.com/api/v4/projects/{id}/merge_requests": {
+      "get": {
+        "description": "Retrieves merge requests for a specific project with optional filtering and pagination.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Required. Integer or string. (The ID or URL-encoded path of the project.)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful operation. Returns an array of objects, each containing detailed information about a merge request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "iid": {
+                      "type": "integer"
+                    },
+                    "approvals_before_merge": {
+                      "type": "integer"
+                    },
+                    "assignee": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "locked": {
+                          "type": "boolean"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "assignees": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          },
+                          "web_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "locked": {
+                          "type": "boolean"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "blocking_discussions_resolved": {
+                      "type": "boolean"
+                    },
+                    "closed_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "closed_by": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "locked": {
+                          "type": "boolean"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "detailed_merge_status": {
+                      "type": "string"
+                    },
+                    "discussion_locked": {
+                      "type": "boolean"
+                    },
+                    "downvotes": {
+                      "type": "integer"
+                    },
+                    "draft": {
+                      "type": "boolean"
+                    },
+                    "force_remove_source_branch": {
+                      "type": "boolean"
+                    },
+                    "has_conflicts": {
+                      "type": "boolean"
+                    },
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "merge_commit_sha": {
+                      "type": "string"
+                    },
+                    "merge_status": {
+                      "type": "string"
+                    },
+                    "merge_user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "locked": {
+                          "type": "boolean"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "merge_when_pipeline_succeeds": {
+                      "type": "boolean"
+                    },
+                    "merged_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "merged_by": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "locked": {
+                          "type": "boolean"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "milestone": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "iid": {
+                          "type": "integer"
+                        },
+                        "project_id": {
+                          "type": "integer"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "due_date": {
+                          "type": "string"
+                        },
+                        "start_date": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "prepared_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "project_id": {
+                      "type": "integer"
+                    },
+                    "reference": {
+                      "type": "string"
+                    },
+                    "references": {
+                      "type": "object",
+                      "properties": {
+                        "short": {
+                          "type": "string"
+                        },
+                        "relative": {
+                          "type": "string"
+                        },
+                        "full": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "reviewers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          },
+                          "web_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "sha": {
+                      "type": "string"
+                    },
+                    "should_remove_source_branch": {
+                      "type": "boolean"
+                    },
+                    "source_branch": {
+                      "type": "string"
+                    },
+                    "source_project_id": {
+                      "type": "integer"
+                    },
+                    "squash": {
+                      "type": "boolean"
+                    },
+                    "squash_commit_sha": {
+                      "type": "string"
+                    },
+                    "squash_on_merge": {
+                      "type": "boolean"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "target_branch": {
+                      "type": "string"
+                    },
+                    "target_project_id": {
+                      "type": "integer"
+                    },
+                    "task_completion_status": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "completed_count": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "time_stats": {
+                      "type": "object",
+                      "properties": {
+                        "time_estimate": {
+                          "type": "integer"
+                        },
+                        "total_time_spent": {
+                          "type": "integer"
+                        },
+                        "human_time_estimate": {
+                          "type": "string"
+                        },
+                        "human_total_time_spent": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "upvotes": {
+                      "type": "integer"
+                    },
+                    "user_notes_count": {
+                      "type": "integer"
+                    },
+                    "web_url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "This endpoint creates a new merge request with the provided details.",
+        "summary": "Creates a new merge request",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. Required.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The details of the merge request to be created.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "source_branch": {
+                    "type": "string",
+                    "description": "The source branch. Required."
+                  },
+                  "target_branch": {
+                    "type": "string",
+                    "description": "The target branch. Required."
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Title of MR. Required."
+                  },
+                  "allow_collaboration": {
+                    "type": "boolean",
+                    "description": "Allow commits from members who can merge to the target branch. Optional."
+                  },
+                  "approvals_before_merge": {
+                    "type": "integer",
+                    "description": "Number of approvals required before this merge request can merge. Deprecated in GitLab 16.0. Premium and Ultimate only. Optional."
+                  },
+                  "allow_maintainer_to_push": {
+                    "type": "boolean",
+                    "description": "Alias of allow_collaboration. Optional."
+                  },
+                  "assignee_id": {
+                    "type": "integer",
+                    "description": "Assignee user ID. Optional."
+                  },
+                  "assignee_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "The ID of the users to assign the merge request to. Set to 0 or provide an empty value to unassign all assignees. Optional."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the merge request. Limited to 1,048,576 characters. Optional."
+                  },
+                  "labels": {
+                    "type": "string",
+                    "description": "Labels for the merge request, as a comma-separated list. If a label does not already exist, this creates a new project label and assigns it to the merge request. Optional."
+                  },
+                  "milestone_id": {
+                    "type": "integer",
+                    "description": "The global ID of a milestone. Optional."
+                  },
+                  "remove_source_branch": {
+                    "type": "boolean",
+                    "description": "Flag indicating if a merge request should remove the source branch when merging. Optional."
+                  },
+                  "reviewer_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "The ID of the users added as a reviewer to the merge request. If set to 0 or left empty, no reviewers are added. Optional."
+                  },
+                  "squash": {
+                    "type": "boolean",
+                    "description": "If true, squash all commits into a single commit on merge. Project settings might override this value. Optional."
+                  },
+                  "target_project_id": {
+                    "type": "integer",
+                    "description": "Numeric ID of the target project. Optional."
+                  }
+                },
+                "required": [
+                  "source_branch",
+                  "target_branch",
+                  "title"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "description": "Successful creation of the merge request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "iid": {
+                    "type": "integer"
+                  },
+                  "project_id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "imported": {
+                    "type": "boolean"
+                  },
+                  "imported_from": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "target_branch": {
+                    "type": "string"
+                  },
+                  "source_branch": {
+                    "type": "string"
+                  },
+                  "upvotes": {
+                    "type": "integer"
+                  },
+                  "downvotes": {
+                    "type": "integer"
+                  },
+                  "author": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "source_project_id": {
+                    "type": "integer"
+                  },
+                  "target_project_id": {
+                    "type": "integer"
+                  },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "draft": {
+                    "type": "boolean"
+                  },
+                  "work_in_progress": {
+                    "type": "boolean"
+                  },
+                  "milestone": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "iid": {
+                        "type": "integer"
+                      },
+                      "project_id": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "due_date": {
+                        "type": "string"
+                      },
+                      "start_date": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merge_when_pipeline_succeeds": {
+                    "type": "boolean"
+                  },
+                  "merge_status": {
+                    "type": "string"
+                  },
+                  "detailed_merge_status": {
+                    "type": "string"
+                  },
+                  "merge_error": {
+                    "type": "string"
+                  },
+                  "sha": {
+                    "type": "string"
+                  },
+                  "merge_commit_sha": {
+                    "type": "string"
+                  },
+                  "squash_commit_sha": {
+                    "type": "string"
+                  },
+                  "user_notes_count": {
+                    "type": "integer"
+                  },
+                  "discussion_locked": {
+                    "type": "boolean"
+                  },
+                  "should_remove_source_branch": {
+                    "type": "boolean"
+                  },
+                  "force_remove_source_branch": {
+                    "type": "boolean"
+                  },
+                  "allow_collaboration": {
+                    "type": "boolean"
+                  },
+                  "allow_maintainer_to_push": {
+                    "type": "boolean"
+                  },
+                  "web_url": {
+                    "type": "string"
+                  },
+                  "references": {
+                    "type": "object",
+                    "properties": {
+                      "short": {
+                        "type": "string"
+                      },
+                      "relative": {
+                        "type": "string"
+                      },
+                      "full": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "time_stats": {
+                    "type": "object",
+                    "properties": {
+                      "time_estimate": {
+                        "type": "integer"
+                      },
+                      "total_time_spent": {
+                        "type": "integer"
+                      },
+                      "human_time_estimate": {
+                        "type": "string"
+                      },
+                      "human_total_time_spent": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "squash": {
+                    "type": "boolean"
+                  },
+                  "subscribed": {
+                    "type": "boolean"
+                  },
+                  "changes_count": {
+                    "type": "string"
+                  },
+                  "merged_by": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merge_user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "merged_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "merge_after": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "prepared_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "closed_by": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "avatar_url": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "closed_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "latest_build_started_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "latest_build_finished_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "first_deployed_to_production_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "pipeline": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "sha": {
+                        "type": "string"
+                      },
+                      "ref": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "web_url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "diff_refs": {
+                    "type": "object",
+                    "properties": {
+                      "base_sha": {
+                        "type": "string"
+                      },
+                      "head_sha": {
+                        "type": "string"
+                      },
+                      "start_sha": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "diverged_commits_count": {
+                    "type": "integer"
+                  },
+                  "task_completion_status": {
+                    "type": "object",
+                    "properties": {
+                      "count": {
+                        "type": "integer"
+                      },
+                      "completed_count": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "iid",
+                  "project_id",
+                  "title",
+                  "description",
+                  "state",
+                  "imported",
+                  "created_at",
+                  "updated_at",
+                  "target_branch",
+                  "source_branch",
+                  "upvotes",
+                  "upvotes",
+                  "author",
+                  "assignee",
+                  "source_project_id",
+                  "target_project_id",
+                  "labels",
+                  "draft",
+                  "work_in_progress",
+                  "milestone",
+                  "merge_when_pipeline_succeeds",
+                  "merge_status",
+                  "detailed_merge_status",
+                  "merge_error",
+                  "sha",
+                  "merge_commit_sha",
+                  "squash_commit_sha",
+                  "user_notes_count",
+                  "discussion_locked",
+                  "should_remove_source_branch",
+                  "force_remove_source_branch",
+                  "allow_collaboration",
+                  "allow_maintainer_to_push",
+                  "web_url",
+                  "references",
+                  "time_stats",
+                  "squash",
+                  "subscribed",
+                  "changes_count",
+                  "merged_by",
+                  "merge_user",
+                  "merged_at",
+                  "merge_after",
+                  "prepared_at",
+                  "closed_by",
+                  "closed_at",
+                  "latest_build_started_at",
+                  "latest_build_finished_at",
+                  "first_deployed_to_production_at",
+                  "pipeline",
+                  "diff_refs",
+                  "diverged_commits_count",
+                  "task_completion_status"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "https://gitlab.com/api/v4/projects/{id}/invitations/{email}": {
+      "put": {
+        "description": "This endpoint updates a pending invitation's access level or access expiry date for a given project. The user needs to provide the project ID and the email address the invitation was previously sent to. Optionally, the access level and expiry date can be set.",
+        "summary": "Updates a pending invitation's access level or access expiry date for a project.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. Required.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "description": "The email address the invitation was previously sent to. Required.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful update of the invitation.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "access_level": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a pending project invitation by the specified project ID and the recipient's email address.",
+        "summary": "Delete a pending project invitation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the project. Required.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "description": "The email address to which the invitation was previously sent. Required.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "https://gitlab.com/api/v4/projects/{id}/repository/branches": {
@@ -4637,6 +8190,534 @@
         }
       }
     },
+    "https://gitlab.com/api/v4/groups/{id}/merge_requests": {
+      "get": {
+        "description": "This endpoint retrieves merge requests for a specific group and its subgroups. You can filter and sort the results using various query parameters.",
+        "summary": "Retrieves merge requests for a specific group and its subgroups based on provided filters and sorting options.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Required. Integer or string. The ID or URL-encoded path of the group.",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful response containing an array of merge request objects.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "iid": {
+                      "type": "integer"
+                    },
+                    "project_id": {
+                      "type": "integer"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "imported": {
+                      "type": "boolean"
+                    },
+                    "imported_from": {
+                      "type": "string"
+                    },
+                    "merged_by": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "merge_user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "merged_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "merge_after": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "prepared_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "closed_by": {
+                      "type": "object",
+                      "nullable": true
+                    },
+                    "closed_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "target_branch": {
+                      "type": "string"
+                    },
+                    "source_branch": {
+                      "type": "string"
+                    },
+                    "upvotes": {
+                      "type": "integer"
+                    },
+                    "downvotes": {
+                      "type": "integer"
+                    },
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "assignee": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "assignees": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          },
+                          "web_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "reviewers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          },
+                          "web_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "source_project_id": {
+                      "type": "integer"
+                    },
+                    "target_project_id": {
+                      "type": "integer"
+                    },
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "draft": {
+                      "type": "boolean"
+                    },
+                    "work_in_progress": {
+                      "type": "boolean"
+                    },
+                    "milestone": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "iid": {
+                          "type": "integer"
+                        },
+                        "project_id": {
+                          "type": "integer"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "due_date": {
+                          "type": "string"
+                        },
+                        "start_date": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "merge_when_pipeline_succeeds": {
+                      "type": "boolean"
+                    },
+                    "merge_status": {
+                      "type": "string"
+                    },
+                    "detailed_merge_status": {
+                      "type": "string"
+                    },
+                    "sha": {
+                      "type": "string"
+                    },
+                    "merge_commit_sha": {
+                      "type": "string"
+                    },
+                    "squash_commit_sha": {
+                      "type": "string"
+                    },
+                    "user_notes_count": {
+                      "type": "integer"
+                    },
+                    "discussion_locked": {
+                      "type": "boolean"
+                    },
+                    "should_remove_source_branch": {
+                      "type": "boolean"
+                    },
+                    "force_remove_source_branch": {
+                      "type": "boolean"
+                    },
+                    "web_url": {
+                      "type": "string"
+                    },
+                    "references": {
+                      "type": "object",
+                      "properties": {
+                        "short": {
+                          "type": "string"
+                        },
+                        "relative": {
+                          "type": "string"
+                        },
+                        "full": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "time_stats": {
+                      "type": "object",
+                      "properties": {
+                        "time_estimate": {
+                          "type": "integer"
+                        },
+                        "total_time_spent": {
+                          "type": "integer"
+                        },
+                        "human_time_estimate": {
+                          "type": "string"
+                        },
+                        "human_total_time_spent": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "squash": {
+                      "type": "boolean"
+                    },
+                    "task_completion_status": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "completed_count": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "has_conflicts": {
+                      "type": "boolean"
+                    },
+                    "blocking_discussions_resolved": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "https://gitlab.com/api/v4/groups/{id}/invitations": {
+      "post": {
+        "description": "This endpoint allows you to add a new member to a specific group. You can either provide a user ID or an email address to invite the new member. Additionally, you need to set a valid access level for the new member. There are also optional parameters like 'expires_at', 'invite_source', and'member_role_id' (Ultimate only, introduced in GitLab 16.6) that can be used to further customize the invitation process.",
+        "summary": "Adds a new member to a group by specifying a user ID or inviting by email and sets a valid access level for the new member.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the group. This is required to identify the specific group to which the new member will be added.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "oneOf": [
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "access_level",
+            "in": "query",
+            "description": "A valid access level. This is required to set the appropriate access rights for the new member.",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The request body is not used for this endpoint. The required and optional parameters are passed as query parameters or path parameters as described above.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "description": "Successful operation. Returns a JSON object with'status' key indicating'success' if all emails were successfully sent or 'error' if there was an error sending the email. In case of error, the'message' key contains details about the errors for each email/user. If administrator approval for role promotions is turned on and relevant conditions are met, the output may also include a 'queued_users' key with details about queued requests for administrator approval and'status' as'success'.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "success",
+                      "error"
+                    ]
+                  },
+                  "message": {
+                    "type": "object",
+                    "description": "Details about the errors for each email/user in case of error. The keys are the email addresses or usernames and the values are the error messages.",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "queued_users": {
+                    "type": "object",
+                    "description": "Details about queued requests for administrator approval if relevant conditions are met. The keys are the usernames and the values are the status messages related to the queued requests.",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Gets a list of invited group members viewable by the authenticated user. Returns invitations to direct members only, and not through inherited ancestors’ groups. This function takes pagination parameters page and per_page to restrict the list of members and also allows searching for specific invited members by their invite email.",
+        "summary": "Retrieves a list of pending group invitations viewable by the authenticated user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID or URL-encoded path of the group. Required.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "description": "Successful response with an array of pending group invitation details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "invite_email": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "access_level": {
+                      "type": "integer"
+                    },
+                    "expires_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "user_name": {
+                      "type": "string"
+                    },
+                    "created_by_name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "invite_email",
+                    "created_at",
+                    "access_level",
+                    "expires_at",
+                    "user_name",
+                    "created_by_name"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "https://gitlab.com/api/v4/projects/{id}/search": {
       "get": {
         "description": "Function: Search within a project. Inputs: Project ID, search scope, query, etc. Responses: Returns array of objects with details like ID, title, state etc. on success. Filters results by various criteria like state, confidentiality for specific scopes.",
@@ -5111,6 +9192,396 @@
         }
       }
     },
+    "https://gitlab.com/api/v4/merge_requests": {
+      "get": {
+        "description": "Retrieves a list of merge requests based on various filtering and sorting options.",
+        "parameters": [],
+        "responses": {
+          "description": "Successful response with an array of merge request objects.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "iid": {
+                      "type": "integer"
+                    },
+                    "project_id": {
+                      "type": "integer"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "imported": {
+                      "type": "boolean"
+                    },
+                    "imported_from": {
+                      "type": "string"
+                    },
+                    "merged_by": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "merge_user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "merged_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "merge_after": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "prepared_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "closed_by": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "closed_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "target_branch": {
+                      "type": "string"
+                    },
+                    "source_branch": {
+                      "type": "string"
+                    },
+                    "upvotes": {
+                      "type": "integer"
+                    },
+                    "downvotes": {
+                      "type": "integer"
+                    },
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "assignee": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "avatar_url": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "assignees": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          },
+                          "web_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "reviewers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "avatar_url": {
+                            "type": "string"
+                          },
+                          "web_url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "source_project_id": {
+                      "type": "integer"
+                    },
+                    "target_project_id": {
+                      "type": "integer"
+                    },
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "draft": {
+                      "type": "boolean"
+                    },
+                    "work_in_progress": {
+                      "type": "boolean"
+                    },
+                    "milestone": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "iid": {
+                          "type": "integer"
+                        },
+                        "project_id": {
+                          "type": "integer"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "due_date": {
+                          "type": "string"
+                        },
+                        "start_date": {
+                          "type": "string"
+                        },
+                        "web_url": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "merge_when_pipeline_succeeds": {
+                      "type": "boolean"
+                    },
+                    "merge_status": {
+                      "type": "string"
+                    },
+                    "detailed_merge_status": {
+                      "type": "string"
+                    },
+                    "sha": {
+                      "type": "string"
+                    },
+                    "merge_commit_sha": {
+                      "type": "string"
+                    },
+                    "squash_commit_sha": {
+                      "type": "string"
+                    },
+                    "user_notes_count": {
+                      "type": "integer"
+                    },
+                    "discussion_locked": {
+                      "type": "boolean"
+                    },
+                    "should_remove_source_branch": {
+                      "type": "boolean"
+                    },
+                    "force_remove_source_branch": {
+                      "type": "boolean"
+                    },
+                    "allow_collaboration": {
+                      "type": "boolean"
+                    },
+                    "allow_maintainer_to_push": {
+                      "type": "boolean"
+                    },
+                    "web_url": {
+                      "type": "string"
+                    },
+                    "references": {
+                      "type": "object",
+                      "properties": {
+                        "short": {
+                          "type": "string"
+                        },
+                        "relative": {
+                          "type": "string"
+                        },
+                        "full": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "time_stats": {
+                      "type": "object",
+                      "properties": {
+                        "time_estimate": {
+                          "type": "integer"
+                        },
+                        "total_time_spent": {
+                          "type": "integer"
+                        },
+                        "human_time_estimate": {
+                          "type": "string"
+                        },
+                        "human_total_time_spent": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "squash": {
+                      "type": "boolean"
+                    },
+                    "task_completion_status": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "completed_count": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "https://gitlab.com/api/v4/projects/{id}/star": {
       "post": {
         "description": "The OAS function is to handle starring a project. Input is the project's integer ID in the path. Response on 200 is success with details like ID, description, etc. in JSON format about the project.",
@@ -5161,71 +9632,6 @@
                     "items": {
                       "type": "object"
                     }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}": {
-      "post": {
-        "description": "Function: Manages files in a project's repository. Input: Project ID (integer) and file path (string). Response (200): Returns details like file name, size etc. as a JSON object on successful operation.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "file_path",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "description": "success",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file_name": {
-                    "type": "string"
-                  },
-                  "file_path": {
-                    "type": "string"
-                  },
-                  "size": {
-                    "type": "integer"
-                  },
-                  "encoding": {
-                    "type": "string"
-                  },
-                  "content": {
-                    "type": "string"
-                  },
-                  "content_sha256": {
-                    "type": "string"
-                  },
-                  "ref": {
-                    "type": "string"
-                  },
-                  "blob_id": {
-                    "type": "string"
-                  },
-                  "commit_id": {
-                    "type": "string"
-                  },
-                  "last_commit_id": {
-                    "type": "string"
                   }
                 }
               }

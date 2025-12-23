@@ -205,10 +205,28 @@ class ResponseParser(Chain):
             super().__init__(llm=llm, llm_parsing_prompt=llm_parsing_prompt)
             return
 
+        # === FIX: 智能 Schema 提取 (兼容 Array 和 Object) ===
+        target_content = None
         if 'application/json' in api_doc['responses']['content']:
-            response_schema = json.dumps(api_doc['responses']['content']['application/json']["schema"]['properties'], indent=4)
+            target_content = api_doc['responses']['content']['application/json']
         elif 'application/json; charset=utf-8' in api_doc['responses']['content']:
-            response_schema = json.dumps(api_doc['responses']['content']['application/json; charset=utf-8']["schema"]['properties'], indent=4)
+            target_content = api_doc['responses']['content']['application/json; charset=utf-8']
+        
+        response_schema = "{}" # 默认值
+        if target_content and 'schema' in target_content:
+            schema = target_content['schema']
+            
+            if 'properties' in schema:
+                final_schema = schema['properties']
+            elif 'items' in schema:
+                if 'properties' in schema['items']:
+                    final_schema = [schema['items']['properties']]
+                else:
+                    final_schema = [schema['items']]
+            else:
+                final_schema = schema
+            
+            response_schema = json.dumps(final_schema, indent=4)
         encoder = tiktoken.encoding_for_model('text-davinci-003')
         encoded_schema = encoder.encode(response_schema)
         max_schema_length = 2500

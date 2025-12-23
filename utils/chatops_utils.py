@@ -105,22 +105,23 @@ def reduce_openapi_spec(spec: dict, dereference: bool = False, only_required: bo
     # 注意：你的 key 是完整的 URL (https://...), RestGPT 通常把 server 和 path 分开
     # 这里我们把完整的 URL 当作 endpoint name 处理
     endpoints = []
-    
+    paths_dict = spec.get("paths", spec)
     # 遍历你的根字典
-    for url, operations in spec.items():
-        # 你的 JSON 中，url 对应的值是一个包含 "post", "get" 等方法的字典
+    for route, operations in paths_dict.items():
+        # 过滤掉非字典项 (比如 openapi: "3.0.0" 这种 metadata)
         if not isinstance(operations, dict):
             continue
             
         for operation_name, docs in operations.items():
-            # 过滤非 HTTP 方法
             if operation_name.lower() not in ["get", "post", "patch", "delete", "put"]:
                 continue
-                
-            # 构造 endpoint 标识: "POST https://api.github.com/..."
-            endpoint_name = f"{operation_name.upper()} {url}"
             
-            # 提取描述
+            # 构造 endpoint name
+            # 如果 route 已经是完整 URL (https://...), 就直接用
+            # 如果 route 是相对路径 (/users), 也直接用
+            # 后续在 merge_all_jsons 里再统一清洗
+            endpoint_name = f"{operation_name.upper()} {route}"
+            
             description = docs.get("summary") or docs.get("description") or ""
             
             endpoints.append(

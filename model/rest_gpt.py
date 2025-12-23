@@ -154,7 +154,7 @@ class RestGPT(Chain):
 
             finished = re.match(r"No API call needed.(.*)", api_plan)
             if not finished:
-                executor = Caller(llm=self.tool_llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
+                executor = Caller(llm=self.tool_llm,plan_llm=self.planner_llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
                 execution_res = executor.run(api_plan=api_plan, background=api_selector_background)
             else:
                 execution_res = finished.group(1)
@@ -171,7 +171,7 @@ class RestGPT(Chain):
                 
                 finished = re.match(r"No API call needed.(.*)", api_plan)
                 if not finished:
-                    executor = Caller(llm=self.tool_llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
+                    executor = Caller(llm=self.tool_llm, plan_llm=self.planner_llm, api_spec=self.api_spec, scenario=self.scenario, simple_parser=self.simple_parser, requests_wrapper=self.requests_wrapper)
                     execution_res = executor.run(api_plan=api_plan, background=api_selector_background)
                 else:
                     execution_res = finished.group(1)

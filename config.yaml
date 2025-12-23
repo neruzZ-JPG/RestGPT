@@ -9,6 +9,6 @@ spotipy_client_secret: gasgd
 spotipy_redirect_uri: gasdg
 
 
-scenario: docker_en
-index: 7
-query: Query the logs of the docker container named 'jenkins' and return the details of the last log entry.
+scenario: gitlab_en
+index: 5
+query: "How many pending invitations are there currently in the GitLab group with ID 97683359?"

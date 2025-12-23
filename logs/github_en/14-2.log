@@ -1,0 +1,15 @@
+Query: I want to know all issues I have permission to view, including issues in my personal repositories and repositories of organizations I belong to.
+query is I want to know all issues I have permission to view, including issues in my personal repositories and repositories of organizations I belong to.
+planner received input: I want to know all issues I have permission to view, including issues in my personal repositories and repositories of organizations I belong to.
+User query: I want to know all issues I have permission to view, including issues in my personal repositories and repositories of organizations I belong to.  
+
+Plan step 1: Call the API to list all issues visible to the authenticated user, including issues from personal repositories and organization repositories where the user has access (e.g., use the “list issues assigned to the authenticated user or visible in accessible repositories” endpoint, without restricting to a single repository or organization).
+Planner: User query: I want to know all issues I have permission to view, including issues in my personal repositories and repositories of organizations I belong to.  
+
+Plan step 1: Call the API to list all issues visible to the authenticated user, including issues from personal repositories and organization repositories where the user has access (e.g., use the “list issues assigned to the authenticated user or visible in accessible repositories” endpoint, without restricting to a single repository or organization).
+API Selector: Background: No background
+User query: I want to know all issues I have permission to view, including issues in my personal repositories and repositories of organizations I belong to.
+Plan step 1: Call the API to list all issues visible to the authenticated user across all repositories (personal and organization repositories where the user has access).
+GET https://api.github.com/issues
+API response: (provided by API caller)
+Instruction: If the API response indicates there are more pages of results, continue with the next page by calling GET https://api.github.com/issues?page=2, and so on. Otherwise, report the collected issues.

@@ -1,0 +1,26 @@
+Query: What comments are on pull request No.250 in the repository 'train-ticket' owned by the GitHub organization 'fudanselab'?
+query is What comments are on pull request No.250 in the repository 'train-ticket' owned by the GitHub organization 'fudanselab'?
+planner received input: What comments are on pull request No.250 in the repository 'train-ticket' owned by the GitHub organization 'fudanselab'?
+User query: What comments are on pull request No.250 in the repository 'train-ticket' owned by the GitHub organization 'fudanselab'?
+
+Plan step 1: Call the GitHub API to list all comments associated with pull request number 250 in the repository `fudanselab/train-ticket`, including both review comments and issue-style comments, and return their authors, timestamps, and comment bodies.
+Planner: User query: What comments are on pull request No.250 in the repository 'train-ticket' owned by the GitHub organization 'fudanselab'?
+
+Plan step 1: Call the GitHub API to list all comments associated with pull request number 250 in the repository `fudanselab/train-ticket`, including both review comments and issue-style comments, and return their authors, timestamps, and comment bodies.
+API Selector: Background: No background
+User query: What comments are on pull request No.250 in the repository 'train-ticket' owned by the GitHub organization 'fudanselab'?
+
+Plan step 1: Retrieve all issue-style comments on the pull request (since pull requests are a type of issue in GitHub) to capture one part of the comments.
+GET https://api.github.com/repos/fudanselab/train-ticket/issues/250/comments
+API response: 
+Instruction: continue
+API Selector: The API you called is not in the list of available APIs. Please use another API.
+API Selector: Background: No background
+User query: What comments are on pull request No.250 in the repository 'train-ticket' owned by the GitHub organization 'fudanselab'?
+
+Plan step 1: Call GET /repos/{owner}/{repo}/pulls/{pull_number} to fetch the pull request details, including comment counts (to know how many comments exist in total). This uses the available API endpoint: GET https://api.github.com/repos/fudanselab/train-ticket/pulls/250
+GET https://api.github.com/repos/fudanselab/train-ticket/pulls/250
+API response: 
+Instruction: continue
+
+Note: The available API set here does not provide a direct endpoint to fetch the actual body of pull request comments (review comments or issue-style comments) as a single combined feed. We can see the counts from the PR metadata, but to retrieve the content of each comment, additional endpoints not listed here would be required. If you’d like, I can proceed to post-process the counts and explain what can be retrieved with the current API set, or request access to a broader API surface to fetch the actual comment bodies.

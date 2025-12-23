@@ -1,0 +1,102 @@
+Query: Query all issues in my personal repositories, excluding issues from repositories of organizations I belong to
+query is Query all issues in my personal repositories, excluding issues from repositories of organizations I belong to
+planner received input: Query all issues in my personal repositories, excluding issues from repositories of organizations I belong to
+User query: Query all issues in my personal repositories, excluding issues from repositories of organizations I belong to  
+Plan step 1: Call the GitHub API endpoint that lists all issues assigned to or created by the authenticated user (e.g., GET /issues), requesting all issue fields including the repository each issue belongs to.  
+API response:
+Planner: User query: Query all issues in my personal repositories, excluding issues from repositories of organizations I belong to  
+Plan step 1: Call the GitHub API endpoint that lists all issues assigned to or created by the authenticated user (e.g., GET /issues), requesting all issue fields including the repository each issue belongs to.  
+API response:
+API Selector: Background: No background
+User query: Query all issues in my personal repositories, excluding issues from repositories of organizations I belong to
+Plan step 1: Call the GitHub API endpoint that lists issues assigned to the authenticated user (GET https://api.github.com/issues), requesting all issue fields including the repository each issue belongs to. Then post-process the results to keep only issues whose repository owner is not an Organization. If the repository owner type is not included in the issue data, perform additional calls to GET /repos/{owner}/{repo} for each unique repository to determine owner.type and filter accordingly.
+API response:
+GET https://api.github.com/issues
+Instruction: continue
+Caller: Background: No background
+Plan: Background: No background
+Plan step 1: Call the GitHub API endpoint that lists issues assigned to the authenticated user (GET https://api.github.com/issues), requesting all issue fields including the repository each issue belongs to. Then post-process the results to keep only issues whose repository owner is not an Organization. If the repository owner type is not included in the issue data, perform additional calls to GET /repos/{owner}/{repo} for each unique repository to determine owner.type and filter accordingly.
+Thought: I need to perform a GET request to https://api.github.com/issues to fetch issues assigned to the authenticated user, including repository information, and then filter out any issues belonging to repositories owned by Organizations. Since authentication is required to access this endpoint, and no credentials are provided in this interaction, I cannot execute the API call. Without valid authentication, the API will not return data, so I cannot proceed with the filtering logic or post-processing steps. To continue, a GitHub Personal Access Token (PAT) or an authorization mechanism granting access to the authenticated user's issues is required. Once a token is provided, I will perform the plan exactly as described: fetch issues, filter by repository owner.type != "Organization" (or fetch owner.type via GET /repos/{owner}/{repo} when owner.type is not present in the issue payload), and return the final list of relevant issues with appropriate details.
+Operation: GET
+Input: {
+  "url": "https://api.github.com/issues",
+  "params": {
+    "filter": ""
+  },
+  "description": "List issues assigned to the authenticated user across all visible repositories, including repository information, so that personal repositories can be identified by their repository owner type. This call requires authentication to access the authenticated user's issues.",
+  "output_instructions": "If the API response includes the repository information for each issue, identify and keep only those issues where the repository owner type is not 'Organization'. If the repository owner type is missing from an issue, for each unique repository (owner/repo) encountered, call GET /repos/{owner}/{repo} to fetch the repository's owner.type, then filter to keep only issues whose repository owner type is not 'Organization'. Return the final list of issues that belong to personal repositories (owner.type != 'Organization'), including for each kept issue: issue id, title, repository full name, and owner type. If multiple pages are returned, retrieve all pages and deduplicate by issue id. If authentication is not provided, indicate that the request cannot be made and explain what credentials are needed."
+}
+Detected Action: GET
+Action Input: {
+  "url": "https://api.github.com/issues",
+  "params": {
+    "filter": ""
+  },
+  "description": "List issues assigned to the authenticated user across all visible repositories, including repository information, so that personal repositories can be identified by their repository owner type. This call requires authentication to access the authenticated user's issues.",
+  "output_instructions": "If the API response includes the repository information for each issue, identify and keep only those issues where the repository owner type is not 'Organization'. If the repository owner type is missing from an issue, for each unique repository (owner/repo) encountered, call GET /repos/{owner}/{repo} to fetch the repository's owner.type, then filter to keep only issues whose repository owner type is not 'Organization'. Return the final list of issues that belong to personal repositories (owner.type != 'Organization'), including for each kept issue: issue id, title, repository full name, and owner type. If multiple pages are returned, retrieve all pages and deduplicate by issue id. If authentication is not provided, indicate that the request cannot be made and explain what credentials are needed."
+}
+response_text is {"message":"Validation Failed","errors":[{"value":"","resource":"Issue","field":"filter","code":"invalid"}],"documentation_url":"https://docs.github.com/v3/issues/","status":"422"}
+Code: 
+import os
+import requests
+
+AUTH_TOKEN = os.environ.get('GITHUB_TOKEN')
+HEADERS = {'Authorization': 'token {}'.format(AUTH_TOKEN)} if AUTH_TOKEN else {}
+
+issues = data if isinstance(data, list) else []
+
+if not issues:
+    print('{}'.format([]))
+    raise SystemExit()
+
+if not AUTH_TOKEN:
+    print("Authentication required: provide a GitHub token with access to repository information.")
+    raise SystemExit()
+
+cache = {}
+seen = set()
+results = []
+
+def get_owner_type(owner, repo):
+    key = owner + '/' + repo
+    if key in cache:
+        return cache[key]
+    url = 'https://api.github.com/repos/{}/{}'.format(owner, repo)
+    r = requests.get(url, headers=HEADERS)
+    if r.status_code == 200:
+        otype = r.json().get('owner', {}).get('type')
+        cache[key] = otype
+        return otype
+    elif r.status_code in (401, 403):
+        cache[key] = 'AUTH_ERROR'
+        return 'AUTH_ERROR'
+    else:
+        cache[key] = None
+        return None
+
+for issue in issues:
+    if not isinstance(issue, dict):
+        continue
+    issue_id = issue.get('id')
+    if issue_id in seen:
+        continue
+    seen.add(issue_id)
+    repo_url = issue.get('repository_url')
+    if not repo_url:
+        continue
+    parts = repo_url.rstrip('/').split('/')
+    if len(parts) >= 2:
+        owner = parts[-2]
+        repo = parts[-1]
+    else:
+        continue
+    owner_type = get_owner_type(owner, repo)
+    if owner_type == 'AUTH_ERROR':
+        print("Authentication required: provide a GitHub token with access to repository information.")
+        raise SystemExit()
+    if owner_type is None:
+        continue
+    if owner_type != 'Organization':
+        results.append({'id': issue_id, 'title': issue.get('title'), 'repository_full_name': owner + '/' + repo, 'owner_type': owner_type})
+
+print('{}'.format(results))

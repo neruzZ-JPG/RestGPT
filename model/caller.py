@@ -110,18 +110,19 @@ Thought: {agent_scratchpad}
 
 class Caller(Chain):
     llm: BaseLLM
+    plan_llm: BaseLLM
     api_spec: ReducedOpenAPISpec
     scenario: str
     requests_wrapper: RequestsWrapper
-    max_iterations: Optional[int] = 15
+    max_iterations: Optional[int] = 5
     max_execution_time: Optional[float] = None
     early_stopping_method: str = "force"
     simple_parser: bool = False
     with_response: bool = False
     output_key: str = "result"
 
-    def __init__(self, llm: BaseLLM, api_spec: ReducedOpenAPISpec, scenario: str, requests_wrapper: RequestsWrapper, simple_parser: bool = False, with_response: bool = False) -> None:
-        super().__init__(llm=llm, api_spec=api_spec, scenario=scenario, requests_wrapper=requests_wrapper, simple_parser=simple_parser, with_response=with_response)
+    def __init__(self, llm: BaseLLM, plan_llm: BaseLLM, api_spec: ReducedOpenAPISpec, scenario: str, requests_wrapper: RequestsWrapper, simple_parser: bool = False, with_response: bool = False) -> None:
+        super().__init__(llm=llm, plan_llm=plan_llm, api_spec=api_spec, scenario=scenario, requests_wrapper=requests_wrapper, simple_parser=simple_parser, with_response=with_response)
 
     @property
     def _chain_type(self) -> str:
@@ -174,13 +175,26 @@ class Caller(Chain):
             scratchpad += self.observation_prefix + execution_res + "\n"
         return scratchpad
 
-    def _get_action_and_input(self, llm_output: str) -> Tuple[str, str]:
-        # 1. 定义截断关键词（一旦出现这些词，说明后面的都是幻觉）
-        # 包含常见的几种变体
-        stop_tokens = ["Response:", "Execution Result:", "Observation:"]
+    
 
-        # 2. 优先尝试匹配 Operation（API 调用）
-        # 即使模型输出了 Execution Result，只要前面有 Operation，就说明需要先执行操作
+    def _get_action_and_input(self, llm_output: str) -> Tuple[str, str]:
+        llm_output = llm_output.strip()
+        
+        # 1. 查找关键位置
+        op_pos = llm_output.find("Operation:")
+        result_pos = llm_output.find("Execution Result:")
+        
+        # 2. 优先级判断：如果发现了 Execution Result，且它在 Operation 之前（或没有 Operation）
+        # 这意味着 LLM 想要结束任务
+        if result_pos != -1:
+            if op_pos == -1 or result_pos < op_pos:
+                # 提取结果，并切掉后面可能跟随的 "Operation:" 幻觉
+                final_answer = llm_output.split("Execution Result:")[-1]
+                if "Operation:" in final_answer:
+                    final_answer = final_answer.split("Operation:")[0]
+                return "Execution Result", final_answer.strip()
+
+        # 3. 如果没发现结果，或者 Operation 在前，则解析 Action
         regex = r"Operation:[\s]*(.*?)[\n]*Input:[\s]*(.*)"
         match = re.search(regex, llm_output, re.DOTALL)
         
@@ -188,28 +202,19 @@ class Caller(Chain):
             action = match.group(1).strip()
             action_input = match.group(2)
 
-            # === 核心修复：强制截断幻觉内容 ===
+            # 4. 幻觉截断：防止 JSON 解析错误
+            # 这里不仅截断 Response，也截断可能出现的 Execution Result（如果它出现在 Input 后面）
+            stop_tokens = ["Response:", "Execution Result:", "Observation:", "Thought:"]
             for stop_token in stop_tokens:
                 if stop_token in action_input:
-                    # 只保留 stop_token 之前的内容
                     action_input = action_input.split(stop_token)[0]
-            # ==============================
 
             action_input = action_input.strip().strip('`')
-            
-            # 简单的 JSON 容错处理
             action_input = fix_json_error(action_input)
             
-            logger.info(f"Detected Action: {action}")
-            logger.info(f"Action Input: {action_input}")
-            
             return action, action_input
-
-        # 3. 只有在确定没有 Operation 的情况下，才检查是否是最终结果
-        if "Execution Result:" in llm_output:
-            return "Execution Result", llm_output.split("Execution Result:")[-1].strip()
         
-        # 4. 如果既没有操作也没有结果，抛出异常
+        # 5. 兜底
         raise ValueError(f"Could not parse LLM output: `{llm_output}`")
     
     def _get_response(self, action: str, action_input: str) -> str:
@@ -244,6 +249,10 @@ class Caller(Chain):
             params = data.get("params")
             request_body = data.get("data")
             response = self.requests_wrapper.delete(data["url"], params=params, json=request_body)
+        elif action == "PATCH":
+            params = data.get("params")
+            request_body = data.get("data")
+            response = self.requests_wrapper.patch(data["url"], params=params, data=request_body)
         else:
             raise NotImplementedError
         
@@ -283,8 +292,6 @@ class Caller(Chain):
             
             if target_content and 'schema' in target_content:
                 schema = target_content['schema']
-                # 尝试获取 properties，如果不是对象类型（如 Array 或 ref），则直接使用整个 schema
-                # 这样可以保证代码不崩，LLM 也能看到 schema 结构
                 tmp_docs['responses'] = schema.get('properties', schema)
         # ========================================================
 
@@ -310,21 +317,18 @@ class Caller(Chain):
 
         while self._should_continue(iterations, time_elapsed):
             scratchpad = self._construct_scratchpad(intermediate_steps)
-            # if scratchpad:
-            #     logger.info(f"--- [DEBUG] Current Scratchpad (Memory) ---\n{scratchpad}\n ------------------------------------------ scratchpad end ")
-            # else:
-            #     logger.info("--- [DEBUG] Current Scratchpad is EMPTY (First Run or Amnesia) ---")
             caller_chain_output = caller_chain.run(api_plan=api_plan, background=inputs['background'], agent_scratchpad=scratchpad)
-            
-            if "Response:" in caller_chain_output:
-                caller_chain_output = caller_chain_output.split("Response:")[0].strip()
             
             logger.info(f"Caller: {caller_chain_output}")
             
+            # 直接传原始字符串进去，让解析函数全权负责
             action, action_input = self._get_action_and_input(caller_chain_output)
             
             if action == "Execution Result":
+                logger.info(f"returning execution result: {action_input}")
                 return {"result": action_input}
+            else:
+                logger.info(f"executing operation {action}, task is {action_input}")
             response, params, request_body, desc, query = self._get_response(action, action_input)
 
             called_endpoint_name = action + ' ' + json.loads(action_input)['url']

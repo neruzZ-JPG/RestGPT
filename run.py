@@ -107,7 +107,7 @@ def main():
         )
         if scenario == 'github':
             headers = {
-                "Authorization" : "Bearer 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"
+                "Authorization" : "Bearer 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"
             }
         elif scenario == 'gitlab':
             headers = {
